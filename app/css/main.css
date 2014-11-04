@@ -5,13 +5,3 @@
 	transform: translateX(-50%) translateY(-50%);
 	text-align: center
 }
-
-#leaveMessage
-{
-position: absolute;
-	top: 20%;
-	left :20%;
-	transform: translateX(-50%) translateY(-50%);
-	text-align: center
-
-}
