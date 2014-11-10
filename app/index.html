@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel=stylesheet type=text/css href=css/main.css>
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <body>
+
+<script type='text/javascript' src='../app/js/script.js'></script>
+
+<!-- this will auto-refresh the page so you can change and not have to save and reload, comment out when you want to->
+<meta http-equiv="refresh" content="4" >
+<!-- -->
+
 <div id="login">
 	<button onClick="logIn()">Login</button>
 	<p>or</p>
 	<button onClick="reserveRoom()">Request a Room Reservation</button>
 	<p>or</p>
-	<button onClick="leaveMessage()">Leave a Message</button>	
+	
+<button href="#" onclick="window.open('leaveMessage.html', 'newwindow', 'width=300, height=250'); return false;">Click here to leave a message</button>
+	
 </div>
 </body>
 </html>
+
+
