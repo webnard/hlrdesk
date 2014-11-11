@@ -1,0 +1,29 @@
+{
+  "name": "hlrdesk",
+  "version": "0.0.0",
+  "description": "Hahahaha",
+  "main": "index.js",
+  "dependencies": {
+    "fmontmasson-xcas": "git://github.com/Luke1298/xcas.git#62ad75bbf2e21db5129bb4361cc2dc3fb5c0c7ad",
+    "koa-route": "~2.2.0",
+    "koa": "~0.13.0",
+    "q": "~1.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BYU-ODH/hlrdesk.git"
+  },
+  "keywords": [
+    "Swag"
+  ],
+  "author": "Luke",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BYU-ODH/hlrdesk/issues"
+  },
+  "homepage": "https://github.com/BYU-ODH/hlrdesk"
+}
