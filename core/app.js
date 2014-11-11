@@ -1,7 +1,7 @@
 var _ = require('koa-route')
 var koa = require('koa') //adds koa
 
-global.config=require('./config')
+global.config=require('./config1')
 
 var app = koa();
 
