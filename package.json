@@ -7,7 +7,10 @@
     "fmontmasson-xcas": "git://github.com/Luke1298/xcas.git#62ad75bbf2e21db5129bb4361cc2dc3fb5c0c7ad",
     "koa-route": "~2.2.0",
     "koa": "~0.13.0",
-    "q": "~1.1.1"
+    "q": "~1.1.1",
+    "koa-ejs": "^1.1.2",
+    "koa-static": "^1.4.7",
+    "bluebird": "^2.3.11"
   },
   "devDependencies": {},
   "scripts": {
