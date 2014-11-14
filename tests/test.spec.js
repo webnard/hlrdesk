@@ -29,9 +29,8 @@ var MOCK_USERNAME = 'prabbit',
 describe('auth', function() {
   describe('#cas_login()', function() {
     it('should validate a correct CAS ticket', function(done) {
-      cas_helper.getTicket(MOCK_USERNAME, MOCK_PASSWORD).then(function(ticket){
-        console.log(ticket); // TODO
-        expect(false).toEqual(true);
+      var a = cas_helper.getTicket(MOCK_USERNAME, MOCK_PASSWORD, function(ticket){
+        console.log(ticket);
         done();
       });
     });

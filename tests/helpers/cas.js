@@ -3,7 +3,8 @@ var config = require('../../core/config1');
 var cheerio     = require('cheerio'),
     querystring = require('querystring'),
     Q           = require('q'),
-    request     = require('request'),
+    co          = require('co'),
+    request     = require('co-request'),
     https       = require('https');
 
 function _getCASFieldsFromHTML(html) {
@@ -16,25 +17,26 @@ function _getCASFieldsFromHTML(html) {
   return fields;
 }
 
-exports.getTicket = function(username, password) {
-  var r = request.defaults({jar: true, followRedirect: false});
+exports.getTicket = function (username, password, callback) {
+  co(function *(username, password) {
+    var r = request.defaults({jar: true, followRedirect: false});
 
-  var deferred = Q.defer();
-
-  //var url = config.cas.url + '?service=' + escape(config.localhost);
-  var url = config.cas.url + '?service=' + config.localhost;
-  
-  r.get(url, function(error, response, body) {
-    var fields = _getCASFieldsFromHTML(body);
+    //var url = config.cas.url + '?service=' + escape(config.localhost);
+    var url = config.cas.url + '?service=' + config.localhost;
+    
+    var response = yield r.get(url);
+    var fields = _getCASFieldsFromHTML(response.body);
     fields.username = username;
     fields.password = password;
 
-    r.post(url, {form: fields}, function(error, response, body){
-      var url = response.headers.location;
-      var t = 'ticket='; // TODO - not the easiest-to-read, or most foolproof, way of getting ticket
-      var ticket = url.slice(url.indexOf(t)+t.length);
-      deferred.resolve(ticket);
-    });
+    response = yield r.post(url, {form: fields});
+
+    var url = response.headers.location;
+    var t = 'ticket='; // TODO - not the easiest-to-read, or most foolproof, way of getting ticket
+    var ticket = url.slice(url.indexOf(t)+t.length);
+    return ticket;
+  })(username, password, function(err, body){
+    if(err) console.error(err);
+    callback(body);
   });
-  return deferred.promise;
-}
+};
