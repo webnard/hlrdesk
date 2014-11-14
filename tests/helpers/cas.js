@@ -16,49 +16,24 @@ function _getCASFieldsFromHTML(html) {
   return fields;
 }
 
-function _readStreamData(stream) {
-  var deferred = Q.defer();
-  var data = '';
-
-  stream.on('data', function(chunk) {
-    data += chunk;
-  });
-  stream.on('end', function() {
-    deferred.resolve(data);
-  });
-
-  return deferred.promise;
-}
-
 exports.getTicket = function(username, password) {
+  var r = request.defaults({jar: true, followRedirect: false});
+
   var deferred = Q.defer();
 
-  var url = config.cas.url + '?service=' + escape(config.localhost);
+  //var url = config.cas.url + '?service=' + escape(config.localhost);
+  var url = config.cas.url + '?service=' + config.localhost;
   
-  https.get(url, function(response) {
-    response.setEncoding('utf-8');
+  r.get(url, function(error, response, body) {
+    var fields = _getCASFieldsFromHTML(body);
+    fields.username = username;
+    fields.password = password;
 
-    _readStreamData(response).then(function(html) {
-      var fields = _getCASFieldsFromHTML(html);
-      fields.username = username;
-      fields.password = password;
-
-      var opts = {
-        hostname: config.cas.host,
-        port: config.cas.port,
-        path: config.cas.path,
-        method: 'POST'
-      };
-
-      var req = https.request(opts, function(res){
-        res.on('data', function(chunk){
-          console.log("HEY: ", chunk);
-        });
-        deferred.resolve(fields);
-      });
-
-      req.write(querystring.stringify(fields));
-      req.end();
+    r.post(url, {form: fields}, function(error, response, body){
+      var url = response.headers.location;
+      var t = 'ticket='; // TODO - not the easiest-to-read, or most foolproof, way of getting ticket
+      var ticket = url.slice(url.indexOf(t)+t.length);
+      deferred.resolve(ticket);
     });
   });
   return deferred.promise;
