@@ -21,18 +21,34 @@ config.cas.url = 'https://' + config.cas.host + config.cas.path;
 
 var assert     = require('assert'),
     auth       = require('../core/app_modules/auth'),
+    jasmine    = require('jasmine-node'),
     cas_helper = require('./helpers/cas');
 
 var MOCK_USERNAME = 'prabbit',
     MOCK_PASSWORD = 'prabbitprabbit1';
 
 describe('auth', function() {
+
   describe('#cas_login()', function() {
+    
     it('should validate a correct CAS ticket', function(done) {
       var a = cas_helper.getTicket(MOCK_USERNAME, MOCK_PASSWORD, function(ticket){
-        console.log(ticket);
+        auth.cas_login(ticket).then(function(response) {
+          expect(response.status).toBe(true, "A valid ticket should have a true status");
+          expect(response.username).toBe(MOCK_USERNAME, "CAS should return the same username as whoever logged in");
+          done();
+        });
+      });
+    });
+
+    it('should fail on an incorrect ticket', function(done) {
+      auth.cas_login("deadbeef").then(function(response) {
+        expect(response.status).toBe(false, "Status must be false with a bad ticket");
+        expect(response.username).toEqual(null, "No username should be returned with a bad ticket");
         done();
       });
     });
+
   });
+
 });
