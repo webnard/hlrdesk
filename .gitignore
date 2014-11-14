@@ -1,2 +1,4 @@
 node_modules
 core/config1.js
+*.swp
+npm-debug.log
