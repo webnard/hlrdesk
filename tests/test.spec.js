@@ -6,8 +6,16 @@
 // this helps make sure these tests don't Bjork anything on the live server
 // (if they are run). We can also easily monkeypatch the template to be
 // test-specific
-var proxyquire = require('proxyquire');
-proxyquire('../core/config1', require('../core/config'));
+var mockery = require('mockery');
+
+mockery.enable();
+mockery.warnOnUnregistered(false);
+
+// TODO: come up with a less terrible way of mocking the configuration. Environment vars?
+mockery.registerMock('../../core/config1', require('../core/config'));
+mockery.registerMock('../core/config1', require('../core/config'));
+mockery.registerMock('../config1', require('../core/config'));
+mockery.registerMock('config1', require('../core/config'));
 
 var config = require('../core/config1');
 
@@ -25,6 +33,7 @@ config.cas = {
   port: 443
 }
 config.cas.url = 'https://' + config.cas.host + config.cas.path;
+config.localhost = 'http://localhost'
 
 var assert     = require('assert'),
     auth       = require('../core/app_modules/auth'),
