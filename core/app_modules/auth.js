@@ -1,9 +1,10 @@
 //Gets developers personal config Information
+var config=require('../config1')
 
 var CAS = require('fmontmasson-xcas');
     var cas = new CAS({
         base_url: 'https://cas.byu.edu/cas/',
-        service: global.config.localhost,
+        service: config.localhost,
         version: 2.0
     });
 
