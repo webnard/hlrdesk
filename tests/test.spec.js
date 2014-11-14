@@ -1,7 +1,14 @@
 /**
  * See http://jasmine.github.io/2.0/introduction.html for documentation.
- * Do not load any modules prior to loading and patching the configuratino.
  */
+
+// make it so loading config1.js actually loads the template, config.js
+// this helps make sure these tests don't Bjork anything on the live server
+// (if they are run). We can also easily monkeypatch the template to be
+// test-specific
+var proxyquire = require('proxyquire');
+proxyquire('../core/config1', require('../core/config'));
+
 var config = require('../core/config1');
 
 /**
