@@ -12,11 +12,12 @@
     "koa-static": "^1.4.7",
     "bluebird": "^2.3.11",
     "cheerio": "^0.18.0",
-    "jasmine-node": "^2.0.0"
+    "jasmine-node": "^2.0.0",
+    "request": "^2.48.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node --harmony $(npm root)/jasmine-node/lib/jasmine-node/cli.js tests/test.js"
+    "test": "node --harmony $(npm bin)/jasmine-node tests/"
   },
   "repository": {
     "type": "git",
