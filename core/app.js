@@ -4,7 +4,7 @@ var serve = require('koa-static')
 var render = require('koa-ejs')
 var path = require('path')
 
-global.config=require('./config1')
+var config=require('./config1')
 
 var app = koa();
 
@@ -17,8 +17,8 @@ render(app, {
   // include when we have a layout to use
   layout: false,
   viewExt: 'html',
-  cache: !global.config.debug,
-  debug: global.config.debug,
+  cache: !config.debug,
+  debug: config.debug,
 });
 
 app.use(_.get("/", function *() {
