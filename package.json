@@ -4,22 +4,24 @@
   "description": "Hahahaha",
   "main": "index.js",
   "dependencies": {
-    "fmontmasson-xcas": "git://github.com/Luke1298/xcas.git#62ad75bbf2e21db5129bb4361cc2dc3fb5c0c7ad",
-    "koa-route": "~2.2.0",
-    "koa": "~0.13.0",
-    "q": "~1.1.1",
-    "koa-ejs": "^1.1.2",
-    "koa-static": "^1.4.7",
     "bluebird": "^2.3.11",
     "cheerio": "^0.18.0",
-    "co-request": "^0.2.0",
     "co": "^3.1.0",
-    "jasmine-node": "^1.14.5",
-    "mockery": "^1.4.0"
+    "co-mocha": "^1.0.0",
+    "co-request": "^0.2.0",
+    "expect.js": "^0.3.1",
+    "fmontmasson-xcas": "git://github.com/Luke1298/xcas.git#62ad75bbf2e21db5129bb4361cc2dc3fb5c0c7ad",
+    "koa": "~0.13.0",
+    "koa-ejs": "^1.1.2",
+    "koa-route": "~2.2.0",
+    "koa-static": "^1.4.7",
+    "mocha": "^1.20.1",
+    "mockery": "^1.4.0",
+    "q": "~1.1.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node --harmony $(npm bin)/jasmine-node tests/"
+    "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/"
   },
   "repository": {
     "type": "git",
