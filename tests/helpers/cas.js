@@ -17,7 +17,8 @@ function _getCASFieldsFromHTML(html) {
   return fields;
 }
 
-exports.getTicket = function (username, password, callback) {
+exports.getTicket = function * (username, password) {
+  var deferred = Q.defer();
   co(function *(username, password) {
     var r = request.defaults({jar: true, followRedirect: false});
 
@@ -37,6 +38,7 @@ exports.getTicket = function (username, password, callback) {
     return ticket;
   })(username, password, function(err, body){
     if(err) console.error(err);
-    callback(body);
+    deferred.resolve(body);
   });
+  return deferred.promise;
 };
