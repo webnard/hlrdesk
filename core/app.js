@@ -15,14 +15,17 @@ app.use(serve(path.join(__dirname, '..', 'public')));
 render(app, {
   root: path.join(__dirname, 'templates'),
   // include when we have a layout to use
-  layout: false,
+  layout: 'layout',
   viewExt: 'html',
   cache: !config.debug,
   debug: config.debug,
+  locals: {
+    title: 'HLRDesk'
+  }
 });
 
 app.use(_.get("/", function *() {
-  yield this.render('index');
+  yield this.render('index', {layout: false});
 }));
 
 app.use(_.get("/signin", function *(){
