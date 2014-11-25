@@ -2,16 +2,17 @@
 var config=require('../config1')
 
 var CAS = require('fmontmasson-xcas');
-    var cas = new CAS({
-        base_url: 'https://cas.byu.edu/cas/',
-        service: config.localhost,
-        version: 2.0
-    });
 
 var Q    = require('q');
 
 module.exports = {
-  cas_login: function(ticket) {
+  cas_login: function(ticket, service) {
+    var cas = new CAS({
+        base_url: 'https://cas.byu.edu/cas/',
+        service: service,
+        version: 2.0
+    });
+
     var deferred = Q.defer();
     var obj;
     if (ticket){

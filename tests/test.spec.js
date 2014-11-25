@@ -33,28 +33,30 @@ config.cas = {
   port: 443
 }
 config.cas.url = 'https://' + config.cas.host + config.cas.path;
-config.localhost = 'http://localhost'
+config.localhost = 'http://localhost';
+config.port = 8080;
 
 var expect     = require('expect.js'),
     auth       = require('../core/app_modules/auth'),
     cas_helper = require('./helpers/cas');
 
 var MOCK_USERNAME = 'prabbit',
-    MOCK_PASSWORD = 'prabbitprabbit1';
+    MOCK_PASSWORD = 'prabbitprabbit1',
+    SERVICE = config.localhost + ':' + config.port + '/signin';
 
 describe('auth', function() {
 
   describe('#cas_login()', function() {
    
     it('should fail on an incorrect ticket', function* () {
-      var response = yield auth.cas_login("deadbeef");
+      var response = yield auth.cas_login("deadbeef", SERVICE);
       expect(response.status).to.be(false);
       expect(response.username).to.be(null);
     });
 
     it('should validate a correct CAS ticket', function* () {
-      var ticket = yield cas_helper.getTicket(MOCK_USERNAME, MOCK_PASSWORD);
-      var response = yield auth.cas_login(ticket);
+      var ticket = yield cas_helper.getTicket(MOCK_USERNAME, MOCK_PASSWORD, SERVICE);
+      var response = yield auth.cas_login(ticket, SERVICE);
       expect(response.status).to.be(true);
       expect(response.username).to.be(MOCK_USERNAME);
     });
