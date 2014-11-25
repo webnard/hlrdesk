@@ -25,7 +25,7 @@ render(app, {
 });
 
 app.use(_.get("/", function *() {
-  yield this.render('index', {layout: false});
+  yield this.render('login', {layout: false});
 }));
 
 app.use(_.get("/signin", function *(){
@@ -34,7 +34,9 @@ app.use(_.get("/signin", function *(){
   var obj= yield auth.cas_login(ticket, service);
   if (obj){
     if (obj.status==true){
-      this.body="Hello World";
+     
+      this.redirect('/');
+      return;
     }
     else{
       this.body="There seems to have been a problem. Please try again.";
