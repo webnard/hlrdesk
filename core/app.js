@@ -29,8 +29,9 @@ app.use(_.get("/", function *() {
 }));
 
 app.use(_.get("/signin", function *(){
+  var service = config.localhost + ':' + config.port + '/signin';
   ticket=this.request.query.ticket;
-  var obj= yield auth.cas_login(ticket);
+  var obj= yield auth.cas_login(ticket, service);
   if (obj){
     if (obj.status==true){
       this.body="Hello World";

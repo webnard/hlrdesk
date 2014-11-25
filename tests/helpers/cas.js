@@ -16,13 +16,13 @@ function _getCASFieldsFromHTML(html) {
   return fields;
 }
 
-exports.getTicket = function * (username, password) {
+exports.getTicket = function * (username, password, service) {
   var promise = new Promise(function(resolve, reject) {
     co(function *(username, password) {
       var r = request.defaults({jar: true, followRedirect: false});
 
       //var url = config.cas.url + '?service=' + escape(config.localhost);
-      var url = config.cas.url + '?service=' + config.localhost;
+      var url = config.cas.url + '?service=' + service;
 
       var response = yield r.get(url);
       var fields = _getCASFieldsFromHTML(response.body);
