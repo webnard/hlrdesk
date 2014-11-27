@@ -31,16 +31,13 @@ app.use(_.get("/", function *() {
 app.use(_.get("/signin", function *(){
   var service = config.localhost + ':' + config.port + '/signin';
   ticket=this.request.query.ticket;
-  var obj= yield auth.cas_login(ticket, service);
-  if (obj){
-    if (obj.status==true){
-     
-      this.redirect('/');
-      return;
-    }
-    else{
-      this.body="There seems to have been a problem. Please try again.";
-    }
+
+  try {
+    var obj= yield auth.cas_login(ticket, service);
+    // do something with obj.username
+    this.redirect('/');
+  }catch(e) {
+    this.body="There seems to have been a problem. Please try again.";
   }
 }));
 
