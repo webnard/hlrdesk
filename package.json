@@ -19,7 +19,9 @@
     "mockery": "^1.4.0",
     "q": "~1.1.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "node-sass": "^0.9.6"
+  },
   "scripts": {
     "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/"
   },

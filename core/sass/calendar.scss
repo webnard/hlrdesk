@@ -1,0 +1,48 @@
+$blue: 	#1947A3;
+
+section
+{
+    display: flex;
+    text-align: center;
+}
+
+table
+{
+    border-style: hidden;
+    border-collapse: collapse;
+    
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
+    cursor: default;
+}
+
+td
+{
+    border: 1px solid black;
+    padding: 10px;
+    width: 100px;
+    height: 15px;
+}
+
+#grid
+{
+    display: block;
+    background-color: white;
+    color: black;
+}
+
+td:hover
+{
+    background-color: $blue;
+    cursor: pointer;
+}
+
+th
+{
+    font-weight: bold;
+}
