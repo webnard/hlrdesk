@@ -5,12 +5,10 @@
   "main": "index.js",
   "dependencies": {
     "bluebird": "^2.3.11",
-    "cheerio": "^0.18.0",
+    "byu-cas": "0.0.2",
     "co": "^3.1.0",
     "co-mocha": "^1.0.0",
-    "co-request": "^0.2.0",
     "expect.js": "^0.3.1",
-    "fmontmasson-xcas": "git://github.com/Luke1298/xcas.git#62ad75bbf2e21db5129bb4361cc2dc3fb5c0c7ad",
     "koa": "~0.13.0",
     "koa-ejs": "^1.1.2",
     "koa-route": "~2.2.0",
