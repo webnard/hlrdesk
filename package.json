@@ -21,9 +21,13 @@
     "jscs": "^1.8.1",
     "node-sass": "^0.9.6"
   },
+  "engines": {
+        "node": "0.11.x"
+  },
   "scripts": {
     "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
-    "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/"
+    "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/",
+    "start": "node --harmony --harmony_generators core/app"
   },
   "repository": {
     "type": "git",

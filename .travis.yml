@@ -1,3 +1,16 @@
 language: node_js
 node_js:
-  - "0.11"
+- '0.11'
+before_install:
+- gem install sass
+after_success:
+- "for i in $(ls core/sass/*.scss); do sass --scss $i public/css/$(basename $i.css .scss); done"
+- cp core/config.js core/config1.js
+deploy:
+- provider: heroku
+  skip_cleanup: true
+  on:
+    branch: master
+  run: restart
+  api_key:
+    secure: V8ZQaJ1KiJzu9lVbaX13WCN63uUimznnv71nybAmjXmbIZ/Tn9F6TMBk5R3Psm9AlKHSCFPloFhW6jDmyoBJiBWVVlxUmffGH1kwXjVKcOTTu/3lZJUH1xjSQabQS+OQ8uRBjcDZj/KG3K+YZhck16gsh3/2DzIDN1hJpyPQBKw=

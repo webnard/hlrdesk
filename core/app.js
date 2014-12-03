@@ -67,4 +67,4 @@ app.use(_.get("/signin", function *(){
   }
 }));
 
-app.listen(8080)
+app.listen(config.port)
