@@ -18,16 +18,12 @@
     "q": "~1.1.1"
   },
   "devDependencies": {
-    "jshint": "^2.5.10",
+    "jscs": "^1.8.1",
     "node-sass": "^0.9.6"
   },
   "scripts": {
-    "pretest": "$(npm bin)/jshint core",
+    "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
     "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/"
-  },
-  "jshintConfig": {
-    "indent": 2,
-    "esnext": true
   },
   "repository": {
     "type": "git",
