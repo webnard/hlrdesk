@@ -18,9 +18,11 @@
     "q": "~1.1.1"
   },
   "devDependencies": {
+    "jscs": "^1.8.1",
     "node-sass": "^0.9.6"
   },
   "scripts": {
+    "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
     "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/"
   },
   "repository": {
