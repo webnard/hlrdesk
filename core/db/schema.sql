@@ -38,10 +38,10 @@ SET default_with_oids = false;
 
 --
 -- TOC entry 171 (class 1259 OID 24616)
--- Name: message_table; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: messages; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
-CREATE TABLE message_table (
+CREATE TABLE messages (
     message_id integer NOT NULL,
     title character varying(50) NOT NULL,
     username character varying(50) NOT NULL,
@@ -49,14 +49,14 @@ CREATE TABLE message_table (
 );
 
 
-ALTER TABLE public.message_table OWNER TO postgres;
+ALTER TABLE public.messages OWNER TO postgres;
 
 --
 -- TOC entry 170 (class 1259 OID 24614)
--- Name: message_table_message_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: messages_message_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE message_table_message_id_seq
+CREATE SEQUENCE messages_message_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -64,15 +64,15 @@ CREATE SEQUENCE message_table_message_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.message_table_message_id_seq OWNER TO postgres;
+ALTER TABLE public.messages_message_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 1984 (class 0 OID 0)
 -- Dependencies: 170
--- Name: message_table_message_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: messages_message_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE message_table_message_id_seq OWNED BY message_table.message_id;
+ALTER SEQUENCE messages_message_id_seq OWNED BY messages.message_id;
 
 
 --
@@ -94,25 +94,25 @@ ALTER TABLE public.users OWNER TO postgres;
 -- Name: message_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY message_table ALTER COLUMN message_id SET DEFAULT nextval('message_table_message_id_seq'::regclass);
+ALTER TABLE ONLY messages ALTER COLUMN message_id SET DEFAULT nextval('messages_message_id_seq'::regclass);
 
 
 --
 -- TOC entry 1866 (class 2606 OID 24621)
--- Name: message_table_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
-ALTER TABLE ONLY message_table
-    ADD CONSTRAINT message_table_pkey PRIMARY KEY (message_id);
+ALTER TABLE ONLY messages
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (message_id);
 
 
 --
 -- TOC entry 1868 (class 2606 OID 24623)
--- Name: message_table_title_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: messages_title_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
-ALTER TABLE ONLY message_table
-    ADD CONSTRAINT message_table_title_key UNIQUE (title);
+ALTER TABLE ONLY messages
+    ADD CONSTRAINT messages_title_key UNIQUE (title);
 
 
 --
