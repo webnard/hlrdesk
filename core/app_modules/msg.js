@@ -1,4 +1,4 @@
-var msg = require('./app_modules/msg')
+var msg = require('./app_modules/msg');
 
 var port = msg.port;
 

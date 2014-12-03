@@ -1,17 +1,17 @@
-var _ = require('koa-route')
-var koa = require('koa') //adds koa
-var serve = require('koa-static')
-var render = require('koa-ejs')
-var path = require('path')
+var _ = require('koa-route');
+var koa = require('koa'); //adds koa
+var serve = require('koa-static');
+var render = require('koa-ejs');
+var path = require('path');
 
 var sass = require('node-sass');
 var fs = require('fs');
 
-var config=require('./config1')
+var config=require('./config1');
 
 var app = koa();
 
-var auth = require('./app_modules/auth')
+var auth = require('./app_modules/auth');
 
 if(config.debug) {
   app.use(function *(next) {
@@ -25,14 +25,12 @@ if(config.debug) {
         var css = sass.renderSync({
           file: path.join(sassdir, filename + '.scss'),
         });
+        fs.writeFileSync(path.join(pubdir, filename + '.css'), css);
       }catch(e) {
         console.error(e);
-        yield next;
-        return;
       }
-      fs.writeFileSync(path.join(pubdir, filename + '.css'), css);
     }
-	yield next;
+    yield next;
   });
 }
 
@@ -67,4 +65,4 @@ app.use(_.get("/signin", function *(){
   }
 }));
 
-app.listen(8080)
+app.listen(8080);

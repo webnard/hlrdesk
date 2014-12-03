@@ -1,5 +1,5 @@
 //Gets developers personal config Information
-var config=require('../config1')
+var config=require('../config1');
 var cas = require('byu-cas');
 
 module.exports = {
