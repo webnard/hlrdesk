@@ -3,3 +3,5 @@ core/config1.js
 *.swp
 npm-debug.log
 *.css
+*.css.map
+.sass-cache
