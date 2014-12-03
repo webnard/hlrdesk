@@ -13,6 +13,26 @@ var app = koa();
 
 var auth = require('./app_modules/auth')
 
+
+function db_command(command){
+  var conString = config.database;
+  pg.connect(conString, function(err, client, done) {
+    if(err) {
+      return console.error('error fetching client from pool', err);
+    }
+    client.query(command, function(err, result) {
+      //call `done()` to release the client back to the pool
+      done();
+      client.end();
+      if(err) {
+        return console.error('error running query', err);
+      }
+    });
+  });
+}
+
+
+
 if(config.debug) {
   app.use(function *(next) {
     var matches = this.request.url.match(/^\/css\/(.*)\.css$/);
@@ -57,10 +77,12 @@ app.use(_.get("/", function *() {
 app.use(_.get("/signin", function *(){
   var service = config.localhost + ':' + config.port + '/signin';
   ticket=this.request.query.ticket;
-
   try {
     var obj= yield auth.cas_login(ticket, service);
     // do something with obj.username
+    if obj.username{
+      db_command("INSERT INTO users (netid) SELECT '"+obj.username+"' WHERE NOT EXISTS (SELECT netid FROM users WHERE netid = '"+obj.username+"');")
+    }
     this.redirect('/');
   }catch(e) {
     this.body="There seems to have been a problem. Please try again.";
