@@ -32,7 +32,7 @@ if(config.debug) {
       }
       fs.writeFileSync(path.join(pubdir, filename + '.css'), css);
     }
-	yield next;
+    yield next;
   });
 }
 
