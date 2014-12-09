@@ -3,8 +3,8 @@ var koa = require('koa') //adds koa
 var serve = require('koa-static')
 var render = require('koa-ejs')
 var path = require('path')
+var sassy = require('./app_modules/koa-sassy')
 
-var sass = require('node-sass');
 var fs = require('fs');
 
 var config=require('./config1')
@@ -14,26 +14,14 @@ var app = koa();
 var auth = require('./app_modules/auth')
 
 if(config.debug) {
-  app.use(function *(next) {
-    var matches = this.request.url.match(/^\/css\/(.*)\.css$/);
-    if(matches) {
-      var filename = matches[1];
-      var pubdir = path.join(__dirname, '..', 'public', 'css');
-      var sassdir = path.join(__dirname, 'sass');
+  var sassdir = path.join(__dirname, 'sass');
+  var cssdir = path.join(__dirname, '..', 'public', 'css');
 
-      try {
-        var css = sass.renderSync({
-          file: path.join(sassdir, filename + '.scss'),
-        });
-      }catch(e) {
-        console.error(e);
-        yield next;
-        return;
-      }
-      fs.writeFileSync(path.join(pubdir, filename + '.css'), css);
-    }
-    yield next;
-  });
+  var options = {
+    outDir: cssdir
+  };
+
+  app.use( sassy(sassdir, '/css/', options) );
 }
 
 app.use(serve(path.join(__dirname, '..', 'public')));
