@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "bluebird": "^2.3.11",
-    "byu-cas": "0.0.2",
+    "byu-cas": "1.0.X",
     "co": "^3.1.0",
     "co-mocha": "^1.0.0",
     "expect.js": "^0.3.1",
