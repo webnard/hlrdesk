@@ -14,3 +14,6 @@ deploy:
   run: restart
   api_key:
     secure: V8ZQaJ1KiJzu9lVbaX13WCN63uUimznnv71nybAmjXmbIZ/Tn9F6TMBk5R3Psm9AlKHSCFPloFhW6jDmyoBJiBWVVlxUmffGH1kwXjVKcOTTu/3lZJUH1xjSQabQS+OQ8uRBjcDZj/KG3K+YZhck16gsh3/2DzIDN1hJpyPQBKw=
+
+before_script: 
+- psql -c 'CREATE DATABASE IF NOT EXISTS travis;' -U postgres
