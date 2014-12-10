@@ -27,7 +27,10 @@
   "scripts": {
     "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
     "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/",
-    "start": "node --harmony --harmony_generators core/app"
+    "start": "node --harmony --harmony_generators core/app",
+    "postinstall": "psql -c \"DROP SCHEMA IF EXISTS public cascade ;CREATE SCHEMA public;\"; psql < core/db/schema.sql"
+
+
   },
   "repository": {
     "type": "git",
