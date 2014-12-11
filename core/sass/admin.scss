@@ -1,6 +1,6 @@
 #left_panel {
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
   align-content:stretch;
   height:600px;
   width: 20%;
@@ -39,7 +39,6 @@ flex-direction: column;
   font-family: Verdana, Arial, Sans-Serif;
   opacity: 0.98;
 	float:left;
-	
 }
 
 #leaveMessage
@@ -49,7 +48,6 @@ flex-direction: column;
 	left :20%;
 	transform: translateX(-50%) translateY(-50%);
 	text-align: center;
-
 }
 
 body
@@ -63,7 +61,7 @@ body
 
 .message{
 	height: 10%;
-	widreth: 100%-10px;
+	width: calc(100%-10px);
 	border-radius: 5px ;
 	background-color: #bfbdbe;
 	text-align: left;
@@ -72,7 +70,6 @@ body
 }
 
 .projects{
-
   font-weight:bold;
   width: 100%;
 	height: 40px;
@@ -86,15 +83,16 @@ body
 	align:right;
   background-color: #8c8686;
   border : 0px;
-    -moz-border-radius:7px;
-    -webkit-border-radius:7px;
-     border-radius:7px;
+  -moz-border-radius:7px;
+  -webkit-border-radius:7px;
+  border-radius:7px;
   font-size:1em;
+  outline:none !important;
 }
 
 button{
   height: 6%;
-	width: 100%-10px;
+	width: calc(100%-10px);
 	border-radius: 5px ;
 	background-color: DBD9F2;
 	text-align: center;
@@ -113,12 +111,10 @@ button{
 	color: black;
 	margin:5px;
 	align:right;
-
-
-border : 0px;
-    -moz-border-radius:7px;
-    -webkit-border-radius:7px;
-     border-radius:7px;
+  border : 0px;
+  -moz-border-radius:7px;
+  -webkit-border-radius:7px;
+  border-radius:7px;
 }
 
 .exit{
@@ -145,17 +141,17 @@ border : 0px;
 	align:right;
   background-color: #2b3044;
   border : 0px;
-    -moz-border-radius:7px;
-    -webkit-border-radius:7px;
-     border-radius:7px;
+  -moz-border-radius:7px;
+  -webkit-border-radius:7px;
+  border-radius:7px;
   font-size:1em;
+  outline:none !important;
 }
 
 #logout{
- position: relative;
- bottom: 0;
- right: 0;
-    
+  position: relative;
+  bottom: 0;
+  right: 0; 
 }
 
 #white{
