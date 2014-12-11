@@ -3,7 +3,7 @@ node_js:
 - '0.11'
 before_install:
 - gem install sass
-- psql -c 'CREATE DATABASE IF NOT EXISTS travis;'
+- psql -c 'CREATE DATABASE travis;' -U postgres
 after_success:
 - "for i in $(ls core/sass/*.scss); do sass --scss $i public/css/$(basename $i.css .scss); done"
 - cp core/config.js core/config1.js
