@@ -51,7 +51,7 @@ render(app, {
 });
 
 app.use(_.get("/", function *() {
-  yield this.render('login', {layout: false});
+  yield this.render('admin_index', {layout: false});
 }));
 
 app.use(_.get("/signin", function *(){
