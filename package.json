@@ -12,6 +12,7 @@
     "koa": "~0.13.0",
     "koa-ejs": "^1.1.2",
     "koa-route": "~2.2.0",
+    "koa-socket": "^0.3.0",
     "koa-static": "^1.4.7",
     "mocha": "^1.20.1",
     "mockery": "^1.4.0",
@@ -22,7 +23,7 @@
     "node-sass": "^0.9.6"
   },
   "engines": {
-        "node": "0.11.x"
+    "node": "0.11.x"
   },
   "scripts": {
     "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
