@@ -1,0 +1,174 @@
+#left_panel {
+  display: flex;
+  flex-direction: column;
+  align-content:stretch;
+  height:600px;
+  width: 20%;
+  border-radius: 5px 0px 0px 5px;
+  background-color: #2b3044;
+  text-align: center;
+  color: #FFFFFF;
+  font-family: Verdana, Arial, Sans-Serif;
+  opacity: 0.99;
+  float:left;
+}
+#center_panel {
+  display: flex;
+  flex-direction: column;
+  height:600px;
+  width: 60%;
+  align-content:stretch;
+  background-color: white;
+  text-align: center;
+  color: black;
+  font-family: Verdana, Arial, Sans-Serif;
+  opacity: 0.99;
+  float:left;
+}
+
+#right_panel {
+  display: flex;
+  flex-direction: column;
+  height:600px;
+  width: 20%;
+  align-content:stretch;
+  border-radius: 0px 5px 5px 0px;
+  background-color: #8c8686;
+  text-align: center;
+  color: #FFFFFF;
+  font-family: Verdana, Arial, Sans-Serif;
+  opacity: 0.98;
+  float:left;
+}
+
+#leaveMessage
+{
+  position: absolute;
+  top: 20%;
+  left :20%;
+  transform: translateX(-50%) translateY(-50%);
+  text-align: center;
+}
+
+body
+{	 
+  background-size:cover;
+  display: flex;
+  background-image:  url('http://www.omgubuntu.co.uk/wp-content/uploads/2014/03/Forever-Shady-S.jpg') ;
+  background-repeat:none;
+  background-color: black;
+}
+
+.message{
+  height: 10%;
+  width: calc(100%-10px);
+  border-radius: 5px ;
+  background-color: #bfbdbe;
+  text-align: left;
+  color: black;
+  margin:5px;
+}
+
+.projects{
+  font-weight:bold;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  border-radius: 0px ;
+  text-align: center;
+  color: #FFFFFF;
+  margin:0px;
+  align:right;
+  background-color: #8c8686;
+  border : 0px;
+  -moz-border-radius:7px;
+  -webkit-border-radius:7px;
+  border-radius:7px;
+  font-size:1em;
+  outline:none !important;
+}
+
+button{
+  height: 6%;
+  width: calc(100%-10px);
+  border-radius: 5px ;
+  background-color: #DBD9F2;
+  text-align: center;
+  color: #FFFFFF;
+  margin:5px;
+  align:right;
+}
+
+#add_new{
+  height: 6%;
+  width: 100px;
+  border-radius: 5px ;
+  border: 2px solid #bfbdbe ;
+  background-color: white;
+  text-align: center;
+  color: black;
+  margin:5px;
+  align:right;
+  border : 0px;
+  -moz-border-radius:7px;
+  -webkit-border-radius:7px;
+  border-radius:7px;
+}
+
+.exit{
+  width: 25px;
+  height: 25px;
+  border-radius:100%;
+  background-color: #b40000;
+  align:center;
+  border: 0px;
+  float:right;
+}
+
+.lpanel{
+  font-weight:bold;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  border-radius: 0px ;
+  text-align: center;
+  color: #FFFFFF;
+  margin:0px;
+  align:right;
+  background-color: #2b3044;
+  border : 0px;
+  -moz-border-radius:7px;
+  -webkit-border-radius:7px;
+  border-radius:7px;
+  font-size:1em;
+  outline:none !important;
+  &:hover {
+    background-color: #8c8686;
+  }
+}
+
+#logout{
+  position: relative;
+  bottom: 0;
+  right: 0; 
+}
+
+#white{
+  width:100%;
+  height:5px;
+  background-color: white;
+}
+
+#msg{
+  font-weight:bold;
+  font-size:1.2em;
+}
+
+#tasks{
+  font-weight:bold;
+  font-size:1.2em;
+}
