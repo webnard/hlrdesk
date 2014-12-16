@@ -24,9 +24,9 @@
     "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
     "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/",
     "start": "node --harmony --harmony_generators core/app",
-    "postinstall": "psql -c \"DROP SCHEMA IF EXISTS public cascade ;CREATE SCHEMA public;\"; psql < core/db/schema.sql"
-
-
+    "postinstall": "psql -c \"DROP SCHEMA IF EXISTS public cascade ;CREATE SCHEMA public;\"; psql < core/db/schema.sql",
+    "compile-sass": "./.compile-sass.sh",
+    "stage": "npm run compile-sass && git push dokku@hlrdesk-staging-dokku:hlrdesk-staging $(git symbolic-ref -q HEAD):master"
   },
   "repository": {
     "type": "git",
