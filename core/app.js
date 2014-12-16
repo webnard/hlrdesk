@@ -4,7 +4,6 @@ var serve = require('koa-static')
 var render = require('koa-ejs')
 var path = require('path')
 
-var sass = require('node-sass');
 var fs = require('fs');
 
 var config=require('./config1')
@@ -14,6 +13,7 @@ var app = koa();
 var auth = require('./app_modules/auth')
 
 if(config.debug) {
+  var sass = require('node-sass');
   app.use(function *(next) {
     var matches = this.request.url.match(/^\/css\/(.*)\.css$/);
     if(matches) {
