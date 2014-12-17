@@ -10,6 +10,7 @@ var app = koa();
 
 var auth = require('./app_modules/auth')
 
+console.log(process.env.PORT);
 if(process.env.HLRDESK_DEV) {
   var sass = require('node-sass');
   app.use(function *(next) {
