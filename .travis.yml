@@ -1,13 +1,20 @@
 language: node_js
 node_js:
 - '0.11'
+
 before_install:
+- openssl aes-256-cbc -K $encrypted_8c222350cbad_key -iv $encrypted_8c222350cbad_iv
+  -in .travis/hlrdesk-staging-dokku.enc -out ~\/.ssh/hlrdesk-staging-dokku -d
 - gem install sass
 - psql -c 'CREATE DATABASE travis;' -U postgres
+
 after_success:
-- "for i in $(ls core/sass/*.scss); do sass --scss $i public/css/$(basename $i.css .scss); done"
+- for i in $(ls core/sass/*.scss); do sass --scss $i public/css/$(basename $i.css
+  .scss); done
 - cp core/config.js core/config1.js
-deploy:
+- if [[ "$TRAVIS_BRANCH" == "staging" ]]; then npm run stage; fi
+
+deploy: # see after_success for deployment to staging and master
 - provider: heroku
   skip_cleanup: true
   on:
@@ -15,4 +22,3 @@ deploy:
   run: restart
   api_key:
     secure: V8ZQaJ1KiJzu9lVbaX13WCN63uUimznnv71nybAmjXmbIZ/Tn9F6TMBk5R3Psm9AlKHSCFPloFhW6jDmyoBJiBWVVlxUmffGH1kwXjVKcOTTu/3lZJUH1xjSQabQS+OQ8uRBjcDZj/KG3K+YZhck16gsh3/2DzIDN1hJpyPQBKw=
-
