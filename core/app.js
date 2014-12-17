@@ -6,13 +6,11 @@ var path = require('path')
 
 var fs = require('fs');
 
-var config=require('./config1')
-
 var app = koa();
 
 var auth = require('./app_modules/auth')
 
-if(config.debug) {
+if(process.env.HLRDESK_DEV) {
   var sass = require('node-sass');
   app.use(function *(next) {
     var matches = this.request.url.match(/^\/css\/(.*)\.css$/);
@@ -43,8 +41,8 @@ render(app, {
   // include when we have a layout to use
   layout: 'layout',
   viewExt: 'html',
-  cache: !config.debug,
-  debug: config.debug,
+  cache: !process.env.HLRDESK_DEV,
+  debug: process.env.HLRDESK_DEV,
   locals: {
   title: 'HLRDesk'
   }
@@ -55,7 +53,7 @@ app.use(_.get("/", function *() {
 }));
 
 app.use(_.get("/signin", function *(){
-  var service = config.localhost + ':' + config.port + '/signin';
+  var service = process.env.HLRDESK_HOST + ':' + process.env.PORT + '/signin';
   ticket=this.request.query.ticket;
 
   try {
@@ -67,4 +65,4 @@ app.use(_.get("/signin", function *(){
   }
 }));
 
-app.listen(config.port)
+app.listen(process.env.PORT)

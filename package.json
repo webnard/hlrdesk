@@ -11,19 +11,19 @@
     "koa-static": "^1.4.7"
   },
   "devDependencies": {
-    "jscs": "^1.8.1",
-    "node-sass": "^0.9.6",
-    "mocha": "^1.20.1",
+    "co-mocha": "^1.1.0",
     "expect.js": "^0.3.1",
-    "mockery": "^1.4.0"
+    "jscs": "^1.8.1",
+    "mocha": "^1.20.1",
+    "node-sass": "^0.9.6"
   },
   "engines": {
-        "node": "0.11.x"
+    "node": "0.11.x"
   },
   "scripts": {
     "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
     "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/",
-    "start": "node --harmony --harmony_generators core/app",
+    "start": "bash -c 'if [ -a ~/.pam_environment ]; then eval \"$(< ~/.pam_environment)\" node --harmony core/app; else node --harmony core/app; fi'",
     "postinstall": "psql -c \"DROP SCHEMA IF EXISTS public cascade ;CREATE SCHEMA public;\"; psql < core/db/schema.sql",
     "compile-sass": "./.compile-sass.sh",
     "stage": "git branch -D dokku-staging; CURRENT_BRANCH=$(git symbolic-ref -q HEAD) && git checkout -b dokku-staging && npm run compile-sass && git add -f public/css/* && git commit -m 'Staging' && git push dokku@hlrdesk-staging-dokku:hlrdesk-staging dokku-staging:master -f && git checkout $CURRENT_BRANCH;"
