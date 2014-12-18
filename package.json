@@ -13,13 +13,13 @@
     "koa-ejs": "^1.1.2",
     "koa-route": "~2.2.0",
     "koa-socket": "^0.3.0",
-    "koa-static": "^1.4.7",
-    "mocha": "^1.20.1",
-    "mockery": "^1.4.0",
-    "q": "~1.1.1"
+    "koa-static": "^1.4.7"
   },
   "devDependencies": {
+    "co-mocha": "^1.1.0",
+    "expect.js": "^0.3.1",
     "jscs": "^1.8.1",
+    "mocha": "^1.20.1",
     "node-sass": "^0.9.6"
   },
   "engines": {
@@ -28,10 +28,10 @@
   "scripts": {
     "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
     "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/",
-    "start": "node --harmony --harmony_generators core/app",
-    "postinstall": "psql -c \"DROP SCHEMA IF EXISTS public cascade ;CREATE SCHEMA public;\"; psql < core/db/schema.sql"
-
-
+    "start": "bash -c 'if [ -a ~/.pam_environment ]; then eval \"$(< ~/.pam_environment)\" node --harmony core/app; else node --harmony core/app; fi'",
+    "postinstall": "psql -c \"DROP SCHEMA IF EXISTS public cascade ;CREATE SCHEMA public;\"; psql < core/db/schema.sql",
+    "compile-sass": "./.compile-sass.sh",
+    "stage": "./.stage.sh"
   },
   "repository": {
     "type": "git",
