@@ -8,7 +8,10 @@ var app = koa();
 
 var auth = require('./app_modules/auth')
 
-if(process.env.HLRDESK_DEV) {
+const ENV = process.env;
+const SERVICE = auth.service(ENV.HLRDESK_HOST, ENV.PORT, '/signin', !ENV.HLRDESK_DEV);
+
+if(ENV.HLRDESK_DEV) {
   app.use(require('./app_modules/koa-sassy').Sassy);
 }
 
@@ -19,8 +22,8 @@ render(app, {
   // include when we have a layout to use
   layout: 'layout',
   viewExt: 'html',
-  cache: !process.env.HLRDESK_DEV,
-  debug: process.env.HLRDESK_DEV,
+  cache: !ENV.HLRDESK_DEV,
+  debug: ENV.HLRDESK_DEV,
   locals: {
   title: 'HLRDesk'
   }
@@ -31,16 +34,10 @@ app.use(_.get("/", function *() {
 }));
 
 app.use(_.get("/signin", function *(){
-  var service = process.env.HLRDESK_HOST + ':' + process.env.PORT + '/signin';
   ticket=this.request.query.ticket;
-
-  try {
-    var obj= yield auth.cas_login(ticket, service);
-    // do something with obj.username
-    this.redirect('/');
-  }catch(e) {
-    this.body="There seems to have been a problem. Please try again.";
-  }
+  var obj= yield auth.cas_login(ticket, SERVICE);
+  // do something with obj.username
+  this.redirect('/');
 }));
 
-app.listen(process.env.PORT)
+app.listen(ENV.PORT)

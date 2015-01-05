@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "bluebird": "^2.3.11",
-    "byu-cas": "1.0.X",
+    "byu-cas": "^1.0.1",
     "co": "^3.1.0",
     "co-mocha": "^1.0.0",
     "expect.js": "^0.3.1",
@@ -27,7 +27,7 @@
   },
   "scripts": {
     "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
-    "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/",
+    "test": "$(npm bin)/mocha --require co-mocha --harmony tests/",
     "start": "bash -c 'if [ -a ~/.pam_environment ]; then eval \"$(< ~/.pam_environment)\" node --harmony core/app; else node --harmony core/app; fi'",
     "postinstall": "bash -c 'if [ \"$HLRDESK_DEV\" = \"true\" ]; then psql -c \"DROP SCHEMA IF EXISTS public cascade ;CREATE SCHEMA public;\"; psql < core/db/schema.sql; fi'",
     "compile-sass": "./.compile-sass.sh",
