@@ -23,7 +23,8 @@ after_success:
   then npm run deploy staging; fi
 
 addons:
-  ssh_known_hosts:
+  ssh_known_hosts
+  - hlrdev.byu.edu
   - hlrdesk.hlrdev.byu.edu
   - hlrdesk-staging.byu.edu
   - hlrdesk.byu.edu
