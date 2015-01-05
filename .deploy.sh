@@ -4,7 +4,7 @@ case "$1" in
   dev)
     BRANCH=dokku-devel
     REMOTE=hlrdev.byu.edu
-    APP=ianh
+    APP=hlrdesk
     DB=hlrdesk
 
     ssh dokku@$REMOTE postgresql:delete $DB

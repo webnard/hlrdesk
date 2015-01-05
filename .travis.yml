@@ -24,7 +24,6 @@ after_success:
 
 addons:
   ssh_known_hosts:
-  - hlrdesk.byu.edu
   - hlrdesk.hlrdev.byu.edu
-  - ianh.hlrdev.byu.edu
   - hlrdesk-staging.byu.edu
+  - hlrdesk.byu.edu
