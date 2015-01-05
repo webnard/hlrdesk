@@ -26,3 +26,15 @@ PGUSER=postgres
 PGDATABASE=hlrdesk
 PGPORT=5432
 ```
+
+### Deployment
+
+Deployment to our servers can be done using one of the following commands and
+should typically only take place through Travis (see the `.travis.yml` file for
+specification).
+
+```bash
+npm run deploy dev # to update ianh.hlrdev.byu.edu
+npm run deploy staging # to update hlrdesk-staging.byu.edu
+npm run deploy production # to update hlrdesk.byu.edu
+```

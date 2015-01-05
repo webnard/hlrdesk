@@ -29,9 +29,9 @@
     "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
     "test": "$(npm bin)/mocha -t 5000 --require co-mocha --harmony tests/",
     "start": "bash -c 'if [ -a ~/.pam_environment ]; then eval \"$(< ~/.pam_environment)\" node --harmony core/app; else node --harmony core/app; fi'",
-    "postinstall": "psql -c \"DROP SCHEMA IF EXISTS public cascade ;CREATE SCHEMA public;\"; psql < core/db/schema.sql",
+    "postinstall": "bash -c 'if [ \"$HLRDESK_DEV\" = \"true\" ]; then psql -c \"DROP SCHEMA IF EXISTS public cascade ;CREATE SCHEMA public;\"; psql < core/db/schema.sql; fi'",
     "compile-sass": "./.compile-sass.sh",
-    "stage": "./.stage.sh"
+    "deploy": "./.deploy.sh"
   },
   "repository": {
     "type": "git",
