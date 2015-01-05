@@ -4,34 +4,12 @@ var serve = require('koa-static')
 var render = require('koa-ejs')
 var path = require('path')
 
-var fs = require('fs');
-
 var app = koa();
 
 var auth = require('./app_modules/auth')
 
 if(process.env.HLRDESK_DEV) {
-  var sass = require('node-sass');
-  app.use(function *(next) {
-    var matches = this.request.url.match(/^\/css\/(.*)\.css$/);
-    if(matches) {
-      var filename = matches[1];
-      var pubdir = path.join(__dirname, '..', 'public', 'css');
-      var sassdir = path.join(__dirname, 'sass');
-
-      try {
-        var css = sass.renderSync({
-          file: path.join(sassdir, filename + '.scss'),
-        });
-      }catch(e) {
-        console.error(e);
-        yield next;
-        return;
-      }
-      fs.writeFileSync(path.join(pubdir, filename + '.css'), css);
-    }
-    yield next;
-  });
+  app.use(require('./app_modules/koa-sassy').Sassy);
 }
 
 app.use(serve(path.join(__dirname, '..', 'public')));
