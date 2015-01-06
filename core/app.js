@@ -41,3 +41,7 @@ app.use(_.get("/signin", function *(){
 }));
 
 app.listen(ENV.PORT)
+
+console.log("Server running on port", ENV.PORT);
+console.log("Development:", !!ENV.HLRDESK_DEV);
+console.log("Hostname:", ENV.HLRDESK_HOST);
