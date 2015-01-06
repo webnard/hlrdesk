@@ -9,6 +9,7 @@ cache:
   - node_modules
 
 before_install:
+- ls ~/.ssh/
 - psql -c 'CREATE DATABASE travis;' -U postgres
 
 after_success:
