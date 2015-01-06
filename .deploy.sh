@@ -32,8 +32,6 @@ test $(git diff --cached --numstat | wc -l) -gt 0 && echo -e "I'm sorry, $USER; 
 git branch -D $BRANCH
 git checkout -b $BRANCH
 npm run compile-sass
-echo "Sleeping for 8 seconds to ensure that the sass is compiled."
-sleep 8
 git add -f public/css/*
 git commit -m "$1"
 git push dokku@$REMOTE:$APP $BRANCH:master -f
