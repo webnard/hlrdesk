@@ -1,9 +1,9 @@
 /**
- * See http://jasmine.github.io/2.0/introduction.html for documentation.
+ * See http://mochajs.org/ for documentation.
  */
-
 var expect     = require('expect.js'),
-    auth       = require('../core/app_modules/auth');
+    auth       = require('../core/app_modules/auth'),
+    inventory  = require ('../core/app_modules/inventory');
 
 var MOCK_USERNAME = 'prabbit',
     MOCK_PASSWORD = 'prabbitprabbit1';
@@ -28,4 +28,19 @@ describe('auth', function() {
     // do something
   });
 
+});
+
+describe('inventory', function() {
+  describe('#checked_out', function() {
+    it('should return an array', function* () {
+      var vals = yield inventory.checked_out;
+      expect(vals).to.be.an(Array);
+    });
+    it('should return expected properties', function* () {
+      var items = yield inventory.checked_out;
+      var item = items[0];
+      var keys = 'call_number name owner due attendant volume copy extensions'.split(' ');
+      expect(item).to.have.keys(keys);
+    });
+  });
 });
