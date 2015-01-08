@@ -4,8 +4,6 @@ Object.defineProperty(inventory, 'checked_out', {
   get: getCheckedOut
 });
 
-inventory.getCheckedOut = getCheckedOut;
-
 module.exports = inventory;
 
 function getCheckedOut() {
