@@ -1,0 +1,7 @@
+{
+  "name": "koa-sassy",
+  "version": "0.0.0",
+  "dependencies": {
+    "node-sass": "^0.9.6"
+  }
+}

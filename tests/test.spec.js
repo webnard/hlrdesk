@@ -3,7 +3,7 @@
  */
 
 var expect     = require('expect.js'),
-    auth       = require('../core/app_modules/auth');
+    auth       = require('auth');
 
 var MOCK_USERNAME = 'prabbit',
     MOCK_PASSWORD = 'prabbitprabbit1';

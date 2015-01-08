@@ -6,13 +6,13 @@ var path = require('path')
 
 var app = koa();
 
-var auth = require('./app_modules/auth')
+var auth = require('auth')
 
 const ENV = process.env;
 const SERVICE = auth.service(ENV.HLRDESK_HOST, ENV.PORT, '/signin', !ENV.HLRDESK_DEV);
 
 if(ENV.HLRDESK_DEV) {
-  app.use(require('./app_modules/koa-sassy').Sassy);
+  app.use(require('koa-sassy').Sassy);
 }
 
 app.use(serve(path.join(__dirname, '..', 'public')));
