@@ -20,11 +20,15 @@ PORT=80 # this is unprefixed for Dokku's sake
 HLRDESK_HOST=hlrdesk.byu.edu
 
 # Postgres database values
-PGPASS=password
+
+PGPASSWORD=password
 PGHOST=localhost
 PGUSER=postgres
 PGDATABASE=hlrdesk
 PGPORT=5432
+
+# for Postgres versions < 9.4
+PGPASS=password
 ```
 
 ### Deployment
