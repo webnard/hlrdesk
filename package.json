@@ -13,7 +13,8 @@
     "koa-ejs": "^1.1.2",
     "koa-route": "~2.2.0",
     "koa-socket": "^0.3.0",
-    "koa-static": "^1.4.7"
+    "koa-static": "^1.4.7",
+    "moment": "^2.8.4"
   },
   "devDependencies": {
     "co-mocha": "^1.1.0",

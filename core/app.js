@@ -32,6 +32,7 @@ render(app, {
 app.use(_.get("/", function *() {
   yield this.render('layout', {layout: false, body:""});
 }));
+
 app.use(_.get("/message", function *() {
   var layout
   if(this.request.header['x-requested-with']=== 'XMLHttpRequest')
@@ -41,6 +42,23 @@ app.use(_.get("/message", function *() {
   yield this.render('msg', {layout: layout});
 }));
 
+app.use(_.get('/checked-out', function *() {
+  var inv = require('./app_modules/inventory');
+  var items = yield inv.checked_out;
+
+  var layout;
+  if(this.request.header['x-requested-with']=== 'XMLHttpRequest')
+  {
+    layout =false;
+  }
+
+  yield this.render('catalog/checked-out', {
+    items: items,
+    moment: require('moment'),
+    title: "Checked Out",
+    layout: layout
+  });
+}));
 
 app.use(_.get("/signin", function *(){
   ticket=this.request.query.ticket;
