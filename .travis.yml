@@ -17,6 +17,8 @@ after_success:
   npm run deploy dev; fi
 - if [ "$TRAVIS_BRANCH" == "staging" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   npm run deploy staging; fi
+- if [ "$TRAVIS_BRANCH" == "staging" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" ]; then
+  npm run deploy production; fi
 addons:
   ssh_known_hosts:
   - hlrdev.byu.edu

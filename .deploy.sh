@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# generates a random branch name, e.g., deploy-production-7f42c9
+BRANCH=deploy-$1-$(echo $RANDOM | md5sum | cut -c 1-5)
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
 case "$1" in
   dev)
-    BRANCH=dokku-devel
     REMOTE=hlrdev.byu.edu
     APP=hlrdesk
     DB=hlrdesk
@@ -13,14 +16,14 @@ case "$1" in
     ssh dokku@$REMOTE postgresql:link $APP $DB
     ;;
   staging)
-    BRANCH=dokku-staging
     REMOTE=hlrdesk-staging.byu.edu
     APP=hlrdesk-staging
-    DB=hlrdesk
     ;;
   production)
-    echo "Production server not set up yet."
-    exit 2
+    REMOTE=hlrdesk-prod.byu.edu
+    APP=hlrdesk
+
+    # TODO: move data to staging
     ;;
   *)
     echo "Usage: npm run deploy {dev|staging|production}"
@@ -29,11 +32,17 @@ esac
 
 test $(git diff --cached --numstat | wc -l) -gt 0 && echo -e "I'm sorry, $USER; I'm afraid I can't do that.\nFiles are currently staged. I refuse to push to the server unless you stash or commit these changes." && exit 1
 
-git branch -D $BRANCH
-git checkout -b $BRANCH
+git checkout --orphan $BRANCH
+
+function restore {
+  git checkout $CURRENT_BRANCH
+  git branch -D $BRANCH
+}
+
+trap restore EXIT
+
 npm run compile-sass
 git add -f public/css/*
 git commit -m "$1"
 git push dokku@$REMOTE:$APP $BRANCH:master -f
-git checkout -
-git branch -D $BRANCH
+
