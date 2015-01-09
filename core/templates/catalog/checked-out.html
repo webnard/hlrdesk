@@ -6,17 +6,19 @@
       <th scope=col>Name</th>
       <th scope=col>Net ID</th>
       <th scope=col>Due</th>
-      <td></td>
+      <td colspan=2></td>
     </tr>
   </thead>
   <tbody>
     <% items.forEach(function(item, index) { %>
-      <tr>
+      <tr class='<%= item.overdue? "overdue" : "" %>'>
         <td><input type=checkbox></td>
         <td><%= item.call_number %></td>
         <td><%= item.name %></td>
         <td><%= item.owner %></td>
         <td><%= moment(item.due).format("MMM D") %></td>
+        <td><input type=button value='Extend'></td>
+        <td><input type=button value='Check In'></td>
       </tr>
     <% }); %>
   </tbody>

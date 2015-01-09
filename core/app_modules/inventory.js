@@ -1,3 +1,5 @@
+var moment = require('moment');
+
 var inventory = {};
 
 Object.defineProperty(inventory, 'checked_out', {
@@ -19,12 +21,12 @@ function TODO_REMOVE_ME_genFakeItem() {
 
   var callnum = '';
 
-  function randNum(max) {
-    return Math.floor(Math.random()*(max-1));
+  function randNum(min, max) {
+    return Math.floor(Math.random()*(max-min+1)+min);
   }
 
   for(var i = 0; i<8; i++) {
-    callnum += alpha[randNum(alpha.length)];
+    callnum += alpha[randNum(0,alpha.length-1)];
     if(i === 1 || i === 4) {
       callnum += '-';
     }
@@ -35,20 +37,31 @@ function TODO_REMOVE_ME_genFakeItem() {
 
   function randName() {
     var name = [];
-    for(var i = 0; i<randNum(5)+1; i++) {
-      name.push(names[randNum(names.length)]);
+    for(var i = 0; i<randNum(1,5); i++) {
+      name.push(names[randNum(0, names.length-1)]);
     }
     return name.join(' ');
   }
 
+  function randDate() {
+    var a = new Date();
+    a.setMonth(randNum(0,11));
+    a.setDate(randNum(0,30));
+    a.setYear(randNum(2014,2015));
+    a.setHours(randNum(0,23));
+    return a;
+  }
+  var due = randDate();
+
   return {
-    due: new Date(),
-    attendant: netids[randNum(netids.length)],
-    owner: netids[randNum(netids.length)],
-    copy: randNum(4) || null,
-    volume: randNum(3) || null,
-    extensions: randNum(4),
+    due: due,
+    attendant: netids[randNum(0,netids.length-1)],
+    owner: netids[randNum(0,netids.length-1)],
+    copy: randNum(0,3) || null,
+    volume: randNum(0,3) || null,
+    extensions: randNum(0,4),
     name: randName(),
+    overdue: moment(due).isAfter(new Date),
     call_number: callnum
   }
 };
