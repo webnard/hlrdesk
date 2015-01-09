@@ -1,96 +1,51 @@
-#left_panel {
+$byu-blue: #2b3044;
+
+@mixin basic_panel($percent, $bgcolor, $color){
   display: flex;
   flex-direction: column;
-  align-content:stretch;
-  height:600px;
-  width: 20%;
-  border-radius: 5px 0px 0px 5px;
-  background-color: #2b3044;
+  min-height: 400px;
+  align-content: stretch;
+  height:100%;
   text-align: center;
-  color: #FFFFFF;
   font-family: Verdana, Arial, Sans-Serif;
   opacity: 0.99;
   float:left;
-}
-#center_panel {
-  display: flex;
-  flex-direction: column;
-  height:600px;
-  width: 60%;
-  align-content:stretch;
-  background-color: white;
-  text-align: center;
-  color: black;
-  font-family: Verdana, Arial, Sans-Serif;
-  opacity: 0.99;
-  float:left;
+  width: $percent;
+  background-color: $bgcolor;
+  color: $color;
 }
 
-#right_panel {
-  display: flex;
-  flex-direction: column;
-  height:600px;
-  width: 20%;
-  align-content:stretch;
-  border-radius: 0px 5px 5px 0px;
-  background-color: #8c8686;
-  text-align: center;
-  color: #FFFFFF;
-  font-family: Verdana, Arial, Sans-Serif;
-  opacity: 0.98;
-  float:left;
-}
-
-#leaveMessage
+html, body
 {
-  position: absolute;
-  top: 20%;
-  left :20%;
-  transform: translateX(-50%) translateY(-50%);
-  text-align: center;
+  height:100%;
+  padding:0;
+  margin:0;
 }
+section
+{
+  height:100%;
+  width:100%;
+}
+
+#left_panel {
+  @include basic_panel(20%,$byu-blue,#FFFFFF);
+  min-width: 150px;
+  max-width: 250px;
+  position: relative;
+}
+
 
 body
-{	 
-  background-size:cover;
-  display: flex;
+{
+  background-size: cover;
+  display:flex;
   background-image:  url('http://www.omgubuntu.co.uk/wp-content/uploads/2014/03/Forever-Shady-S.jpg') ;
   background-repeat:none;
   background-color: black;
 }
 
-.message{
-  height: 10%;
-  width: calc(100%-10px);
-  border-radius: 5px ;
-  background-color: #bfbdbe;
-  text-align: left;
-  color: black;
-  margin:5px;
-}
-
-.projects{
-  font-weight:bold;
-  width: 100%;
-  height: 40px;
-  display: flex;
-  justify-content: center; 
-  align-items: center;
-  border-radius: 0px ;
-  text-align: center;
-  color: #FFFFFF;
-  margin:0px;
-  align:right;
-  background-color: #8c8686;
-  border : 0px;
-  -moz-border-radius:7px;
-  -webkit-border-radius:7px;
-  border-radius:7px;
-  font-size:1em;
-  outline:none !important;
-}
-
 button{
+  cursor:pointer;
   height: 6%;
   width: calc(100%-10px);
   border-radius: 5px ;
@@ -101,38 +56,12 @@ button{
   align:right;
 }
 
-#add_new{
-  height: 6%;
-  width: 100px;
-  border-radius: 5px ;
-  border: 2px solid #bfbdbe ;
-  background-color: white;
-  text-align: center;
-  color: black;
-  margin:5px;
-  align:right;
-  border : 0px;
-  -moz-border-radius:7px;
-  -webkit-border-radius:7px;
-  border-radius:7px;
-}
-
-.exit{
-  width: 25px;
-  height: 25px;
-  border-radius:100%;
-  background-color: #b40000;
-  align:center;
-  border: 0px;
-  float:right;
-}
-
 .lpanel{
   font-weight:bold;
   width: 100%;
   height: 40px;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   border-radius: 0px ;
   text-align: center;
@@ -140,10 +69,7 @@ button{
   margin:0px;
   align:right;
   background-color: #2b3044;
-  border : 0px;
-  -moz-border-radius:7px;
-  -webkit-border-radius:7px;
-  border-radius:7px;
+  border: 0px;
   font-size:1em;
   outline:none !important;
   &:hover {
@@ -151,24 +77,19 @@ button{
   }
 }
 
+#logo_container{
+  border-bottom: solid white 2px;
+  cursor:pointer;
+}
+
 #logout{
-  position: relative;
-  bottom: 0;
-  right: 0; 
+  border-top: solid white 2px;
+  position:absolute;
+  right:0;
+  bottom:0;
+}
+#logo{
+  padding:5px;
+  width:90%;
 }
 
-#white{
-  width:100%;
-  height:5px;
-  background-color: white;
-}
-
-#msg{
-  font-weight:bold;
-  font-size:1.2em;
-}
-
-#tasks{
-  font-weight:bold;
-  font-size:1.2em;
-}

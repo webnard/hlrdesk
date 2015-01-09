@@ -1,10 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-  <title>
-    <%= title %>
-  </title>
+ <title><%= title %></title>
+<!--Include jQuery-->
+<script type='text/javascript' src='https://code.jquery.com/jquery-2.1.1.min.js'></script>
+
+<script type='text/javascript' src='/js/admin.js'></script>
+<link rel="stylesheet" type="text/css" href="/css/admin.css">
+</head>
 <body>
+<section id="left_panel">
+<div id="logo_container"><img id="logo" alt="Logo" src="/resources/logo.png"/>
+</div>
+<button class="lpanel">Edit Catalog</button>
+<button class="lpanel">Access HUMMEDIA</button>
+<button class="lpanel" data-foo=message data-title=Messages data-url=message data-html=/message >Messaging</button>
+<button class="lpanel">Calendar</button>
+<button class="lpanel" id="logout">Sign Out</button>
+
+
+
+</section>
+<section id="loader">
 <%- body %>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -16,4 +33,13 @@
   ga('send', 'pageview');
 
 </script>
+<script>
+$(".lpanel").click(
+function loadMsg(){
+var stateObj = { foo: $(this).data("foo") };
+history.pushState(stateObj, $(this).data("title"), $(this).data("url"));
+$( "#loader" ).load( $(this).data("html"), function(){});})
+</script>
 </body>
+</html>
+

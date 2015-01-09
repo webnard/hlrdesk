@@ -1,0 +1,96 @@
+@import 'admin';
+#center_panel {
+  @include basic_panel(75%,white,black);
+  min-width: 200px;
+}
+
+#right_panel {
+  @include basic_panel(25%,#8c8686,#FFFFFF);
+  min-width: 115px;
+}
+
+#leaveMessage
+{
+  position: absolute;
+  top: 20%;
+  left :20%;
+  transform: translateX(-50%) translateY(-50%);
+  text-align: center;
+}
+
+.message{
+  height: 10%;
+  width: calc(100%-10px);
+  border-radius: 5px ;
+  background-color: #bfbdbe;
+  text-align: left;
+  color: black;
+  margin:5px;
+  &:hover {
+    background-color: #8c8686;
+  }
+}
+
+.projects{
+  font-weight:bold;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0px ;
+  text-align: center;
+  color: #FFFFFF;
+  margin:0px;
+  align:right;
+  background-color: #8c8686;
+  border: 0px;
+  -moz-border-radius:7px;
+  -webkit-border-radius:7px;
+  border-radius:7px;
+  font-size:1em;
+  outline:none !important;
+  &:hover {
+    background-color: #b40000;
+  }
+}
+
+#add_new{
+  height: 6%;
+  width: 100px;
+  border-radius: 5px ;
+  border: 2px solid #bfbdbe ;
+  background-color: white;
+  text-align: center;
+  color: black;
+  margin:5px;
+  align:right;
+  border : 0px;
+  -moz-border-radius:7px;
+  -webkit-border-radius:7px;
+  border-radius:7px;
+}
+
+.exit{
+  width: 25px;
+  height: 25px;
+  border-radius:100%;
+  background-color: #b40000;
+  align:center;
+  border: 0px;
+  float:right;
+  &:hover {
+    background-color: red;
+  }
+}
+
+#msg{
+  font-weight:bold;
+  font-size:1.2em;
+}
+
+#tasks{
+  font-weight:bold;
+  font-size:1.2em;
+}
+
