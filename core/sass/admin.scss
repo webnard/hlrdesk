@@ -5,7 +5,7 @@ $byu-blue: #2b3044;
   flex-direction: column;
   min-height: 400px;
   align-content: stretch;
-  height:98%;
+  height:100%;
   text-align: center;
   font-family: Verdana, Arial, Sans-Serif;
   opacity: 0.99;
@@ -17,7 +17,9 @@ $byu-blue: #2b3044;
 
 html, body
 {
-  height:98%;
+  height:100%;
+  padding:0;
+  margin:0;
 }
 section
 {
@@ -26,11 +28,10 @@ section
 }
 
 #left_panel {
-  position: relative;
   @include basic_panel(20%,$byu-blue,#FFFFFF);
   min-width: 150px;
   max-width: 250px;
-  border-radius: 5px 0px 0px 5px;
+  position: relative;
 }
 
 
@@ -44,6 +45,7 @@ body
 }
 
 button{
+  cursor:pointer;
   height: 6%;
   width: calc(100%-10px);
   border-radius: 5px ;
@@ -77,6 +79,7 @@ button{
 
 #logo_container{
   border-bottom: solid white 2px;
+  cursor:pointer;
 }
 
 #logout{
@@ -84,7 +87,6 @@ button{
   position:absolute;
   right:0;
   bottom:0;
-  border-radius: 0px 0px 0px 5px;
 }
 #logo{
   padding:5px;

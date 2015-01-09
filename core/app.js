@@ -33,7 +33,6 @@ app.use(_.get("/", function *() {
   yield this.render('layout', {layout: false, body:""});
 }));
 app.use(_.get("/message", function *() {
-  console.log(this.request)
   var layout
   if(this.request.header['x-requested-with']=== 'XMLHttpRequest')
   {
