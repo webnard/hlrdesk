@@ -30,8 +30,18 @@ render(app, {
 });
 
 app.use(_.get("/", function *() {
-  yield this.render('admin_index', {layout: false});
+  yield this.render('layout', {layout: false, body:""});
 }));
+app.use(_.get("/message", function *() {
+  console.log(this.request)
+  var layout
+  if(this.request.header['x-requested-with']=== 'XMLHttpRequest')
+  {
+    layout =false
+  }
+  yield this.render('msg', {layout: layout});
+}));
+
 
 app.use(_.get("/signin", function *(){
   ticket=this.request.query.ticket;
@@ -45,3 +55,4 @@ app.listen(ENV.PORT)
 console.log("Server running on port", ENV.PORT);
 console.log("Development:", !!ENV.HLRDESK_DEV);
 console.log("Hostname:", ENV.HLRDESK_HOST);
+
