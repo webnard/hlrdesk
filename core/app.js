@@ -10,6 +10,7 @@ var auth = require('./app_modules/auth')
 
 const ENV = process.env;
 const SERVICE = auth.service(ENV.HLRDESK_HOST, ENV.PORT, '/signin', !ENV.HLRDESK_DEV);
+var USE_LAYOUT;
 
 if(ENV.HLRDESK_DEV) {
   app.use(require('./app_modules/koa-sassy').Sassy);
@@ -20,7 +21,6 @@ app.use(serve(path.join(__dirname, '..', 'public')));
 render(app, {
   root: path.join(__dirname, 'templates'),
   // include when we have a layout to use
-  layout: 'layout',
   viewExt: 'html',
   cache: !ENV.HLRDESK_DEV,
   debug: ENV.HLRDESK_DEV,
@@ -29,16 +29,23 @@ render(app, {
   }
 });
 
+app.use(function *(next) {
+  if(this.request.header['x-requested-with'] === 'XMLHttpRequest')
+  {
+    USE_LAYOUT = false;
+  }
+  else
+  {
+    USE_LAYOUT = 'layout';
+  }
+  yield next;
+});
+
 app.use(_.get("/", function *() {
   yield this.render('layout', {layout: false, body:""});
 }));
 app.use(_.get("/message", function *() {
-  var layout
-  if(this.request.header['x-requested-with']=== 'XMLHttpRequest')
-  {
-    layout =false
-  }
-  yield this.render('msg', {layout: layout});
+  yield this.render('msg', {layout: USE_LAYOUT});
 }));
 
 
