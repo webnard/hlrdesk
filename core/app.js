@@ -10,6 +10,7 @@ var auth = require('./app_modules/auth')
 
 const ENV = process.env;
 const SERVICE = auth.service(ENV.HLRDESK_HOST, ENV.PORT, '/signin', !ENV.HLRDESK_DEV);
+var USE_LAYOUT = undefined; // cannot use false
 
 if(ENV.HLRDESK_DEV) {
   app.use(require('./app_modules/koa-sassy').Sassy);
@@ -29,16 +30,18 @@ render(app, {
   }
 });
 
+app.use(function *() {
+  if(this.request.header['x-requested-with'] === 'XMLHttpRequest')
+  {
+    USE_LAYOUT =false;
+  }
+});
+
 app.use(_.get("/", function *() {
   yield this.render('layout', {layout: false, body:""});
 }));
 app.use(_.get("/message", function *() {
-  var layout
-  if(this.request.header['x-requested-with']=== 'XMLHttpRequest')
-  {
-    layout =false
-  }
-  yield this.render('msg', {layout: layout});
+  yield this.render('msg', {layout: USE_LAYOUT});
 }));
 
 
