@@ -42,3 +42,6 @@ npm run deploy dev # to update ianh.hlrdev.byu.edu
 npm run deploy staging # to update hlrdesk-staging.byu.edu
 npm run deploy production # to update hlrdesk.byu.edu
 ```
+
+All versions must be from the list of My Little Pony characters found at
+http://mlp.wikia.com/wiki/Characters
