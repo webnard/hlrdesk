@@ -16,6 +16,17 @@ if(ENV.HLRDESK_DEV) {
   app.use(require('./app_modules/koa-sassy').Sassy);
 }
 
+app.keys = ['TODO MAKE ME AN ENV VARIABLE', 'I SHOULD NOT BE HARDCODED', 'MY DOG HAS NO NOSE', 'HOW DOES HE SMELL?', 'AWFUL'];
+
+app.use(function * TODO_DELETE_THIS_FUNCTION(next) {
+  // no, seriously, this should not exist beyond a day or two past
+  // January 15, 2015.
+  this.cookies.set('netId', 'prabbit', { signed: true });
+  this.cookies.set('emailAddress', 'prabbitbyu@sharklasers.com', { signed: true });
+  this.cookies.set('name', 'Peter Rabbit', { signed: true });
+  yield next;
+});
+
 app.use(serve(path.join(__dirname, '..', 'public')));
 
 render(app, {
