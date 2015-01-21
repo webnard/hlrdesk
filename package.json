@@ -1,7 +1,7 @@
 {
   "name": "hlrdesk",
   "version": "0.0.0",
-  "description": "Hahahaha",
+  "description": "HLR Desk",
   "main": "index.js",
   "dependencies": {
     "bluebird": "^2.3.11",
@@ -13,7 +13,10 @@
     "koa-ejs": "^1.1.2",
     "koa-route": "~2.2.0",
     "koa-socket": "^0.3.0",
-    "koa-static": "^1.4.7"
+    "koa-static": "^1.4.7",
+    "pg": "^4.2.0",
+    "postgres-gen": "^0.6.0",
+    "socket.io": "^1.2.1"
   },
   "devDependencies": {
     "co-mocha": "^1.1.0",
@@ -38,7 +41,7 @@
     "url": "https://github.com/BYU-ODH/hlrdesk.git"
   },
   "keywords": [
-    "Swag"
+    "BYU HLR Desk"
   ],
   "author": "Luke",
   "license": "MIT",
@@ -47,3 +50,4 @@
   },
   "homepage": "https://github.com/BYU-ODH/hlrdesk"
 }
+
