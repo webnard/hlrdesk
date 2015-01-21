@@ -1,35 +1,63 @@
 <link rel="stylesheet" type="text/css" href="/css/msg.css">
-<section >
 <section id="center_panel">
 	<p id="msg">Messages</p>
-<button id="add_new" onclick="loadMsg()" >Add New</button>
+<button id="add_new" onclick="newMsg()" >Add New</button>
 
-<div class="message">
-<button class="exit">X</button>
-Message 1
-</div>
 
-<div class="message">
-<button class="exit">X</button>
-Message 2
-</div>
-
-<div class="message">
-<button class="exit">X</button>
-Message 3
-</div>
-
-<div class="message">
-<button class="exit">X</button>
-Message 4
-</div>
-<button style="height:100px">Add Message<br>
-Title: <input type="text" id="title"><br>
-Text: <input type="text" id="message"><br>
-<br>
-</button>
+<div id="black_bar"></div>
 <div>
+<div id="add_message"></div>
+
+<% all_messages.rows.forEach(function(rows){%>
+<div class="message"><img class="message_image" src="http://www.placecage.com/gif/1<%=rows.message_id%>/1<%=rows.message_id %>" alt="Message #<%=rows.message_id %>" width="75" height="75">
+<button class="exit" onclick="delMsg()">X</button>
+<text class="message_title"><%=rows.title %></text>
+<text class="message_body"><%=rows.message_body %></text>
+<br><br> <div class="username_text">Created By: <%=rows.username %></div>
 </div>
+<%});
+%>
+
+</div>
+<script>
+function newMsg() {
+    var msg_form = "<div  class='message'><img class='message_image' src='http://www.placecage.com/gif/100/100' alt='New Message' width='100' height='100'>"
+    +"<button class='exit' onclick='delMsg()'>X</button>"
+    +"<form action=''>"
+    +"<input id='m_title' autocomplete='off' placeholder='Title' required></input><br>"
+    +"<input id='m_body' autocomplete='off' placeholder='Message' required></input><br>"
+    +"<button id='add_new'>Submit</button><br><br>"
+    +"</form></div>";
+    document.getElementById("add_message").innerHTML = msg_form;
+    var socket = io();
+    $('form').submit(function(){
+        socket.emit('write message', $('#m_title').val(), $('#m_body').val());
+        $('#m_title').val('');
+        $('#m_body').val('');
+        $('.message').append($("<div class='message'></div>").text(title, msg));
+    return false;
+      });
+   socket.on('write message', function(title, msg){
+   document.getElementById("add_message").innerHTML = '';
+    //APPEND HERE
+    });
+}
+
+</script>
+
+<script>
+function delMsg() {
+    var del = confirm("Do you really really want to delete this message?");
+    if (del == false){
+        alert("Message not deleted")
+    }
+    else {
+    //delete using the message_id.
+        alert("Message deleted")
+    }
+}
+</script>
+
 </section>
 <section id="right_panel">
 <p id="tasks">Tasks</p>
@@ -42,7 +70,5 @@ Text: <input type="text" id="message"><br>
 <button class="projects">Project 6</button>
 <button class="projects">Project 7</button>
 
-
-</section>
 </section>
 

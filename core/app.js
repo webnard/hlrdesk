@@ -1,5 +1,5 @@
 var _ = require('koa-route')
-var koa = require('koa') //adds koa
+var koa = require('koa')
 var serve = require('koa-static')
 var render = require('koa-ejs')
 var path = require('path')
@@ -7,7 +7,7 @@ var path = require('path')
 var app = koa();
 
 var auth = require('./app_modules/auth')
-
+var db = require('./app_modules/db')
 const ENV = process.env;
 const SERVICE = auth.service(ENV.HLRDESK_HOST, ENV.PORT, '/signin', !ENV.HLRDESK_DEV);
 var USE_LAYOUT;
@@ -32,6 +32,7 @@ app.use(serve(path.join(__dirname, '..', 'public')));
 render(app, {
   root: path.join(__dirname, 'templates'),
   // include when we have a layout to use
+  layout: 'layout',
   viewExt: 'html',
   cache: !ENV.HLRDESK_DEV,
   debug: ENV.HLRDESK_DEV,
@@ -56,9 +57,12 @@ app.use(_.get("/", function *() {
   yield this.render('layout', {layout: false, body:""});
 }));
 app.use(_.get("/message", function *() {
-  yield this.render('msg', {layout: USE_LAYOUT});
+  var layout;
+  if(this.request.header['x-requested-with']=== 'XMLHttpRequest'){layout =false};
+  var client = db();
+  var all_messages = yield client.query("SELECT * FROM messages;"); //console.log(all_messages);
+  yield this.render('msg', {layout: layout, all_messages: all_messages});
 }));
-
 
 app.use(_.get("/signin", function *(){
   ticket=this.request.query.ticket;
@@ -67,9 +71,27 @@ app.use(_.get("/signin", function *(){
   this.redirect('/');
 }));
 
-app.listen(ENV.PORT)
+
 
 console.log("Server running on port", ENV.PORT);
 console.log("Development:", !!ENV.HLRDESK_DEV);
 console.log("Hostname:", ENV.HLRDESK_HOST);
 
+var server = require('http').createServer(app.callback());
+var io = require('socket.io')(server);
+
+io.on('connection', function(socket){
+  socket.on('write message', function(msg, title){
+  io.emit('write message', msg, title);
+});
+});
+
+io.on('connection', function(socket){
+  socket.on('write message', function(title, msg){
+  console.log('Message title: ' +title + ' \n\tMessage Body: ' + msg);//testing feature only
+  var client = db();
+  client.query("INSERT INTO messages(title, username, message_body) VALUES ($1, $2, $3);", [title, 'netId' , msg]);
+});
+});
+
+server.listen(ENV.PORT)

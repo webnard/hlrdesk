@@ -15,7 +15,7 @@ SET client_min_messages = warning;
 
 --
 -- TOC entry 173 (class 3079 OID 11787)
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
@@ -24,7 +24,7 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 --
 -- TOC entry 1983 (class 0 OID 0)
 -- Dependencies: 173
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -38,7 +38,7 @@ SET default_with_oids = false;
 
 --
 -- TOC entry 171 (class 1259 OID 24616)
--- Name: messages; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: messages; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
 --
 
 CREATE TABLE messages (
@@ -74,10 +74,16 @@ ALTER TABLE public.messages_message_id_seq OWNER TO postgres;
 
 ALTER SEQUENCE messages_message_id_seq OWNED BY messages.message_id;
 
+-- Column: message_body
+
+-- ALTER TABLE messages DROP COLUMN message_body;
+
+ALTER TABLE messages ADD COLUMN message_body character varying(500);
+
 
 --
 -- TOC entry 172 (class 1259 OID 24660)
--- Name: users; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
 --
 
 CREATE TABLE users (
@@ -99,20 +105,11 @@ ALTER TABLE ONLY messages ALTER COLUMN message_id SET DEFAULT nextval('messages_
 
 --
 -- TOC entry 1866 (class 2606 OID 24621)
--- Name: messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
 --
 
 ALTER TABLE ONLY messages
     ADD CONSTRAINT messages_pkey PRIMARY KEY (message_id);
-
-
---
--- TOC entry 1868 (class 2606 OID 24623)
--- Name: messages_title_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY messages
-    ADD CONSTRAINT messages_title_key UNIQUE (title);
 
 
 --
