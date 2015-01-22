@@ -94,4 +94,13 @@ io.on('connection', function(socket){
 });
 });
 
+io.on('connection', function(socket){
+  socket.on('delete message', function(message_number){
+  console.log('Deleted Message Number ' + message_number);//testing feature only
+  var client = db();
+  client.query("DELETE FROM messages WHERE message_id = $1;", [message_number]);
+});
+});
+
 server.listen(ENV.PORT)
+

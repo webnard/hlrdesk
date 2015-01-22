@@ -9,8 +9,8 @@
 <div id="add_message"></div>
 
 <% all_messages.rows.forEach(function(rows){%>
-<div class="message"><img class="message_image" src="http://www.placecage.com/gif/1<%=rows.message_id%>/1<%=rows.message_id %>" alt="Message #<%=rows.message_id %>" width="75" height="75">
-<button class="exit" onclick="delMsg()">X</button>
+<div class="message" id='message_<%=rows.message_id%>' ><img class="message_image" src="http://www.placecage.com/gif/1<%=rows.message_id%>/1<%=rows.message_id %>" alt="Message #<%=rows.message_id %>" width="75" height="75">
+<button class="exit" onclick="delMsg(<%=rows.message_id%>)">X</button>
 <text class="message_title"><%=rows.title %></text>
 <text class="message_body"><%=rows.message_body %></text>
 <br><br> <div class="username_text">Created By: <%=rows.username %></div>
@@ -22,7 +22,7 @@
 <script>
 function newMsg() {
     var msg_form = "<div  class='message'><img class='message_image' src='http://www.placecage.com/gif/100/100' alt='New Message' width='100' height='100'>"
-    +"<button class='exit' onclick='delMsg()'>X</button>"
+    +"<button class='exit' onclick='removeDraft()'>X</button>"
     +"<form action=''>"
     +"<input id='m_title' autocomplete='off' placeholder='Title' required></input><br>"
     +"<input id='m_body' autocomplete='off' placeholder='Message' required></input><br>"
@@ -39,22 +39,27 @@ function newMsg() {
       });
    socket.on('write message', function(title, msg){
    document.getElementById("add_message").innerHTML = '';
-    //APPEND HERE
     });
 }
-
 </script>
 
 <script>
-function delMsg() {
+function delMsg(message_number) {
     var del = confirm("Do you really really want to delete this message?");
-    if (del == false){
-        alert("Message not deleted")
+    if (del == true){
+        var socket = io();
+        var del = document.getElementById("message_"+message_number);
+            del.parentNode.removeChild(del);
+            socket.emit('delete message', message_number);
+            alert("Message deleted")
     }
-    else {
-    //delete using the message_id.
-        alert("Message deleted")
-    }
+}
+</script>
+
+<script>
+function removeDraft() {
+    var del = confirm("Do you really really want to delete this draft?");
+    if (del == true){document.getElementById("add_message").innerHTML = '';}
 }
 </script>
 
