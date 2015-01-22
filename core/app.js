@@ -81,16 +81,11 @@ var server = require('http').createServer(app.callback());
 var io = require('socket.io')(server);
 
 io.on('connection', function(socket){
-  socket.on('write message', function(msg, title){
-  io.emit('write message', msg, title);
-});
-});
-
-io.on('connection', function(socket){
   socket.on('write message', function(title, msg){
   console.log('Message title: ' +title + ' \n\tMessage Body: ' + msg);//testing feature only
   var client = db();
   client.query("INSERT INTO messages(title, username, message_body) VALUES ($1, $2, $3);", [title, 'netId' , msg]);
+  io.emit('write message', msg, title);
 });
 });
 
@@ -99,6 +94,7 @@ io.on('connection', function(socket){
   console.log('Deleted Message Number ' + message_number);//testing feature only
   var client = db();
   client.query("DELETE FROM messages WHERE message_id = $1;", [message_number]);
+  io.emit('delete message', message_number);
 });
 });
 

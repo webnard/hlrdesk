@@ -44,15 +44,16 @@ function newMsg() {
 </script>
 
 <script>
-function delMsg(message_number) {
-    var del = confirm("Do you really really want to delete this message?");
-    if (del == true){
-        var socket = io();
-        var del = document.getElementById("message_"+message_number);
-            del.parentNode.removeChild(del);
-            socket.emit('delete message', message_number);
-            alert("Message deleted")
-    }
+var socket = io();
+socket.on('delete message', function(message_number){
+  var del = document.getElementById("message_"+message_number);
+    del.parentNode.removeChild(del);
+});
+function delMsg(message_number){
+  var del_m = confirm("Do you really really want to delete this message?");
+  if (del_m == true){
+      socket.emit('delete message', message_number);
+  };
 }
 </script>
 
