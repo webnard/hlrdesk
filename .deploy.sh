@@ -10,10 +10,8 @@ case "$1" in
     APP=hlrdesk
     DB=hlrdesk
 
-    ssh dokku@$REMOTE postgresql:delete $DB
-    ssh dokku@$REMOTE postgresql:create $DB
+    echo "DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA public;" | ssh dokku@$REMOTE postgresql:restore $DB
     ssh dokku@$REMOTE postgresql:restore $DB < core/db/schema.sql
-    ssh dokku@$REMOTE postgresql:link $APP $DB
     ;;
   staging)
     REMOTE=hlrdesk-staging.byu.edu
