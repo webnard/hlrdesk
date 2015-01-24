@@ -4,3 +4,4 @@ npm-debug.log
 *.css
 *.css.map
 .sass-cache
+.dump.sql
