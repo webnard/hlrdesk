@@ -4,6 +4,8 @@ var serve = require('koa-static')
 var render = require('koa-ejs')
 var path = require('path')
 
+var session = require('koa-session')
+
 var app = koa();
 
 var auth = require('./app_modules/auth')
@@ -17,6 +19,7 @@ if(ENV.HLRDESK_DEV) {
 }
 
 app.keys = ['TODO MAKE ME AN ENV VARIABLE', 'I SHOULD NOT BE HARDCODED', 'MY DOG HAS NO NOSE', 'HOW DOES HE SMELL?', 'AWFUL'];
+app.use(session());
 
 app.use(function * TODO_DELETE_THIS_FUNCTION(next) {
   // no, seriously, this should not exist beyond a day or two past
@@ -28,6 +31,14 @@ app.use(function * TODO_DELETE_THIS_FUNCTION(next) {
 });
 
 app.use(serve(path.join(__dirname, '..', 'public')));
+
+app.use(function*(next){
+  if (!this.session.user && this.request.path!='/signin'){
+    this.redirect('https://cas.byu.edu/cas/login?service='+SERVICE)
+    return
+  }
+  yield next
+})
 
 render(app, {
   root: path.join(__dirname, 'templates'),
@@ -54,7 +65,9 @@ app.use(function *(next) {
 });
 
 app.use(_.get("/", function *() {
-  yield this.render('layout', {layout: false, body:""});
+  if(this.session.user){
+    yield this.render('layout', {layout: false, body:""});
+  }
 }));
 app.use(_.get("/message", function *() {
   var layout;
@@ -67,11 +80,14 @@ app.use(_.get("/message", function *() {
 app.use(_.get("/signin", function *(){
   ticket=this.request.query.ticket;
   var obj= yield auth.cas_login(ticket, SERVICE);
-  // do something with obj.username
+  this.session.user=obj.username;
   this.redirect('/');
 }));
 
-
+app.use(_.get("/logout", function *(){
+  this.session = null;
+  this.redirect('https://cas.byu.edu/cas/logout');
+}));
 
 console.log("Server running on port", ENV.PORT);
 console.log("Development:", !!ENV.HLRDESK_DEV);
