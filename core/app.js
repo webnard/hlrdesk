@@ -58,7 +58,7 @@ app.use(function *(next) {
 });
 
 app.use(_.get("/", function *() {
-    yield this.render('layout', {layout: false, body:""});
+  yield this.render('layout', {layout: false, body:""});
 }));
 
 app.use(_.get("/message", function *() {
