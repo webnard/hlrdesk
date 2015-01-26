@@ -21,15 +21,6 @@ if(ENV.HLRDESK_DEV) {
 app.keys = ['TODO MAKE ME AN ENV VARIABLE', 'I SHOULD NOT BE HARDCODED', 'MY DOG HAS NO NOSE', 'HOW DOES HE SMELL?', 'AWFUL'];
 app.use(session());
 
-app.use(function * TODO_DELETE_THIS_FUNCTION(next) {
-  // no, seriously, this should not exist beyond a day or two past
-  // January 15, 2015.
-  this.cookies.set('netId', 'prabbit', { signed: true });
-  this.cookies.set('emailAddress', 'prabbitbyu@sharklasers.com', { signed: true });
-  this.cookies.set('name', 'Peter Rabbit', { signed: true });
-  yield next;
-});
-
 app.use(serve(path.join(__dirname, '..', 'public')));
 
 app.use(function*(next){
@@ -37,7 +28,9 @@ app.use(function*(next){
     this.redirect('https://cas.byu.edu/cas/login?service='+SERVICE)
     return
   }
-  yield next
+  else{
+    yield next
+  }
 })
 
 render(app, {
@@ -65,10 +58,9 @@ app.use(function *(next) {
 });
 
 app.use(_.get("/", function *() {
-  if(this.session.user){
     yield this.render('layout', {layout: false, body:""});
-  }
 }));
+
 app.use(_.get("/message", function *() {
   var layout;
   if(this.request.header['x-requested-with']=== 'XMLHttpRequest'){layout =false};
