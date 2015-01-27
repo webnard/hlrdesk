@@ -15,11 +15,11 @@
 <body>
 <section id="left_panel">
 <div id="logo_container"><img id="logo" alt="Logo" src="/resources/logo.png"/></div>
-<button class="lpanel">Edit Catalog</button>
-<button class="lpanel">Access HUMMEDIA</button>
-<button class="lpanel" data-foo=message data-title=Messages data-url=message data-html=/message>Messaging</button>
-<button class="lpanel">Calendar</button>
-<button class="lpanel" id="logout" onclick='window.location="/logout";'>Sign Out</button>
+<a class="lpanel">Edit Catalog</a>
+<a class="lpanel" href="https://hummedia.byu.edu/api/v2//account/login?r=https://hummedia.byu.edu">Hummedia</a>
+<a class="lpanel" data-title=Messages href="/message">Messaging</a>
+<a class="lpanel">Calendar</a>
+<a class="lpanel" id="logout" href="/logout">Sign Out</a>
 
 </section>
 <section id="loader">
@@ -32,11 +32,11 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 </script>
 <script>
-$(".lpanel").click(
-function loadMsg(){
-var stateObj = { foo: $(this).data("foo") };
-history.pushState(stateObj, $(this).data("title"), $(this).data("url"));
-$( "#loader" ).load( $(this).data("html"), function(){});})
+$(".lpanel[data-title]").click(function loadMsg(ev){
+  ev.preventDefault();
+  history.pushState(null, $(this).data("title"), $(this).attr("href"));
+  $( "#loader" ).load( $(this).attr("href") );
+});
 </script>
 
 

@@ -45,7 +45,7 @@ body
   background-color: black;
 }
 
-button{
+@mixin panel-button {
   cursor:pointer;
   height: 6%;
   width: calc(100%-10px);
@@ -57,7 +57,13 @@ button{
   align:right;
 }
 
+button{
+  @include panel-button;
+}
+
 .lpanel{
+  @include panel-button;
+  text-decoration: none;
   font-weight:bold;
   width: 100%;
   height: 40px;
