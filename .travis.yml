@@ -25,3 +25,5 @@ addons:
   - hlrdesk.hlrdev.byu.edu
   - hlrdesk-staging.byu.edu
   - hlrdesk.byu.edu
+notifications:
+  slack: hlrdev:GKTfYhesUBgIPeCNYx2qrKPP
