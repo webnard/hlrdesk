@@ -62,13 +62,13 @@ app.use(function *(next) {
 app.use(_.get("/", function *() {
   yield this.render('layout', {layout: false, body:""});
 }));
-
 app.use(_.get("/message", function *() {
   var layout;
   if(this.request.header['x-requested-with']=== 'XMLHttpRequest'){layout =false};
   var client = db();
   var all_messages = yield client.query("SELECT * FROM messages;"); //console.log(all_messages);
-  yield this.render('msg', {layout: layout, all_messages: all_messages});
+  var all_tasks = yield client.query("Select * FROM tasks"); //console.log(all_tasks);
+  yield this.render('msg', {layout: layout, all_messages: all_messages, all_tasks: all_tasks});
 }));
 
 app.use(_.get("/signin", function *(){
@@ -92,20 +92,29 @@ var server = require('http').createServer(app.callback());
 var io = require('socket.io')(server);
 
 io.on('connection', function(socket){
-  socket.on('write message', function(title, msg){
-  console.log('Message title: ' +title + ' \n\tMessage Body: ' + msg);//testing feature only
   var client = db();
+  socket.on('write message', function(title, msg){
   client.query("INSERT INTO messages(title, username, message_body) VALUES ($1, $2, $3);", [title, 'netId' , msg]);
   io.emit('write message', msg, title);
-});
+  //console.log('Message title: ' +title + ' \n\tMessage Body: ' + msg);//testing feature only
 });
 
-io.on('connection', function(socket){
   socket.on('delete message', function(message_number){
-  console.log('Deleted Message Number ' + message_number);//testing feature only
-  var client = db();
   client.query("DELETE FROM messages WHERE message_id = $1;", [message_number]);
   io.emit('delete message', message_number);
+  //console.log(message_number)
+});
+
+  socket.on('write task', function(task){
+  client.query("INSERT INTO tasks(task, username) VALUES ($1, $2);", [task, 'netId']);
+  io.emit('write task', task);
+  //console.log('Task title: ' +task );//testing feature only
+});
+
+  socket.on('delete task', function(t_number){
+  client.query("DELETE FROM tasks WHERE task_id = $1;", [t_number]);
+  io.emit('delete task', t_number);
+  //console.log('Task id: ' +t_number );//testing feature only
 });
 });
 

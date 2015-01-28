@@ -1,13 +1,13 @@
 <link rel="stylesheet" type="text/css" href="/css/msg.css">
+<script type='text/javascript' src='/js/msg.js'></script>
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 <section id="center_panel">
-	<p id="msg">Messages</p>
+<p id="msg">Messages</p>
 <button id="add_new" onclick="newMsg()" >Add New</button>
-
-
 <div id="black_bar"></div>
 <div>
 <div id="add_message"></div>
-
+<div id='all_m'>
 <% all_messages.rows.forEach(function(rows){%>
 <div class="message" id='message_<%=rows.message_id%>' ><img class="message_image" src="http://www.placecage.com/gif/1<%=rows.message_id%>/1<%=rows.message_id %>" alt="Message #<%=rows.message_id %>" width="75" height="75">
 <button class="exit" onclick="delMsg(<%=rows.message_id%>)">X</button>
@@ -17,64 +17,18 @@
 </div>
 <%});
 %>
-
 </div>
-<script>
-function newMsg() {
-    var msg_form = "<div  class='message'><img class='message_image' src='http://www.placecage.com/gif/100/100' alt='New Message' width='100' height='100'>"
-    +"<button class='exit' onclick='removeDraft()'>X</button>"
-    +"<form action=''>"
-    +"<input id='m_title' autocomplete='off' placeholder='Title' required></input><br>"
-    +"<input id='m_body' autocomplete='off' placeholder='Message' required></input><br>"
-    +"<button id='add_new'>Submit</button><br><br>"
-    +"</form></div>";
-    document.getElementById("add_message").innerHTML = msg_form;
-    var socket = io();
-    $('form').submit(function(){
-        socket.emit('write message', $('#m_title').val(), $('#m_body').val());
-        $('#m_title').val('');
-        $('#m_body').val('');
-        $('.message').append($("<div class='message'></div>").text(title, msg));
-    return false;
-      });
-   socket.on('write message', function(title, msg){
-   document.getElementById("add_message").innerHTML = '';
-    });
-}
-</script>
-
-<script>
-var socket = io();
-socket.on('delete message', function(message_number){
-  var del = document.getElementById("message_"+message_number);
-    del.parentNode.removeChild(del);
-});
-function delMsg(message_number){
-  var del_m = confirm("Do you really really want to delete this message?");
-  if (del_m == true){
-      socket.emit('delete message', message_number);
-  };
-}
-</script>
-
-<script>
-function removeDraft() {
-    var del = confirm("Do you really really want to delete this draft?");
-    if (del == true){document.getElementById("add_message").innerHTML = '';}
-}
-</script>
-
+</div>
 </section>
 <section id="right_panel">
 <p id="tasks">Tasks</p>
-<button id="add_new" onClick="new_project()">Add New</button>
-<button class="projects">Project 1</button>
-<button class="projects">Project 2</button>
-<button class="projects">Project 3</button>
-<button class="projects">Project 4</button>
-<button class="projects">Project 5</button>
-<button class="projects">Project 6</button>
-<button class="projects">Project 7</button>
-
+<button id="add_new" onClick="newTask()">Add New</button>
+<div id="add_task"></div>
+<form id="task_sort">
+<% all_tasks.rows.forEach(function(rows){%>
+<div class="projects" data-number='<%=rows.task_id%>' id='<%=rows.task_id%>' ><%=rows.task %></div>
+<%});
+%>
+</form>
 </section>
 

@@ -76,6 +76,7 @@
 }
 
 .exit{
+  font-weight:bold;
   width: 25px;
   height: 25px;
   border-radius:100%;
@@ -143,5 +144,14 @@ input{
 
 #black_bar{
   border-top: 2px solid grey;
+}
+
+#task_sort {
+  cursor:pointer;
+}
+
+.on_drag {
+  height: 2em;
+  line-height: 1.2em;
 }
 
