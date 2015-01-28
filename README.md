@@ -29,13 +29,13 @@ PGPORT=5432
 
 # for Postgres versions < 9.4
 PGPASS=password
-```
+
 # Email G00dness
 
 EMAIL=hlr.dev.useyouremailN00Bulous@gmail.com
 EMAILSERVICE=Gmail (note the cap)
 EMAILPASS=my.password.here
-
+```
 
 ### Deployment
 
