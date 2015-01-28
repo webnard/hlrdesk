@@ -8,6 +8,8 @@ var session = require('koa-session')
 
 var app = koa();
 
+var email = require('./app_modules/email')
+
 var auth = require('./app_modules/auth')
 var db = require('./app_modules/db')
 const ENV = process.env;
@@ -73,6 +75,7 @@ app.use(_.get("/signin", function *(){
   ticket=this.request.query.ticket;
   var obj= yield auth.cas_login(ticket, SERVICE);
   this.session.user=obj.username;
+  this.session.attributes=obj.attributes;
   this.redirect('/');
 }));
 
