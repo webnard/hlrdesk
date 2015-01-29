@@ -17,7 +17,7 @@
 <div id="logo_container"><img id="logo" alt="Logo" src="/resources/logo.png"/></div>
 <a class="lpanel" href=/checked-out data-title="Check In">Check In</a>
 <a class="lpanel" href="https://hummedia.byu.edu/api/v2//account/login?r=https://hummedia.byu.edu">Hummedia</a>
-<a class="lpanel" data-title=Messages href="/message">Messaging</a>
+<a class="lpanel" data-title=Messages href="/message?">Messaging</a>
 <a class="lpanel">Calendar</a>
 <a class="lpanel" id="logout" href="/logout">Sign Out</a>
 
@@ -32,6 +32,7 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
   ga('create', 'UA-57856521-1', 'auto');
+  ga('require', 'linkid', 'linkid.js');
   ga('send', 'pageview');
 
 </script>
