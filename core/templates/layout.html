@@ -15,7 +15,7 @@
 <body>
 <section id="left_panel">
 <div id="logo_container"><img id="logo" alt="Logo" src="/resources/logo.png"/></div>
-<a class="lpanel">Edit Catalog</a>
+<a class="lpanel" href=/checked-out data-title="Check In">Check In</a>
 <a class="lpanel" href="https://hummedia.byu.edu/api/v2//account/login?r=https://hummedia.byu.edu">Hummedia</a>
 <a class="lpanel" data-title=Messages href="/message">Messaging</a>
 <a class="lpanel">Calendar</a>
@@ -30,6 +30,10 @@
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-57856521-1', 'auto');
+  ga('send', 'pageview');
+
 </script>
 <script>
 $(".lpanel[data-title]").click(function loadMsg(ev){

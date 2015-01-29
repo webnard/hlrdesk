@@ -62,13 +62,24 @@ app.use(function *(next) {
 app.use(_.get("/", function *() {
   yield this.render('layout', {layout: false, body:""});
 }));
+
 app.use(_.get("/message", function *() {
-  var layout;
-  if(this.request.header['x-requested-with']=== 'XMLHttpRequest'){layout =false};
   var client = db();
   var all_messages = yield client.query("SELECT * FROM messages;"); //console.log(all_messages);
   var all_tasks = yield client.query("Select * FROM tasks"); //console.log(all_tasks);
-  yield this.render('msg', {layout: layout, all_messages: all_messages, all_tasks: all_tasks});
+  yield this.render('msg', {layout: USE_LAYOUT, all_messages: all_messages, all_tasks: all_tasks});
+}));
+
+app.use(_.get('/checked-out', function *() {
+  var inv = require('./app_modules/inventory');
+  var items = yield inv.checked_out;
+
+  yield this.render('catalog/checked-out', {
+    items: items,
+    moment: require('moment'),
+    title: "Checked Out",
+    layout: USE_LAYOUT
+  });
 }));
 
 app.use(_.get("/signin", function *(){

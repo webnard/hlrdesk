@@ -1,0 +1,39 @@
+<link rel="stylesheet" type="text/css" href="/css/checkIN.css" />
+<script type="text/javascript" src="/js/jquery.tablesorter.min.js"></script> 
+<table class="checkIN tablesorter">
+  <thead>
+    <tr>
+      <td><input type=checkbox></td>
+      <th scope=col>Call Number</th>
+      <th scope=col>Name</th>
+      <th scope=col>Net ID</th>
+      <th scope=col>Due</th>
+      <td colspan=2></td>
+    </tr>
+  </thead>
+  <tbody>
+    <% items.forEach(function(item, index) { %>
+      <tr class='<%= item.overdue? "overdue" : "" %>'>
+        <td><input type=checkbox></td>
+        <td><%= item.call_number %></td>
+        <td><%= item.name %></td>
+        <td><%= item.owner %></td>
+        <td data-date="<%=item.due.getTime()%>"><%= moment(item.due).format("MMM D") %></td>
+        <td><input type=button value='Extend'></td>
+        <td><input type=button value='Check In'></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+<script>$(document).ready(function(){ 
+
+var myTextExtraction = function(node) 
+{ 
+    // extract data from markup and return it 
+    return $(node).data("date")||$(node).text()
+}  
+        $(".checkIN").tablesorter( {textExtraction: myTextExtraction} ); 
+    } 
+); 
+
+</script>

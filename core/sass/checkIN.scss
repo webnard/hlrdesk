@@ -1,0 +1,21 @@
+.checkIN {
+  padding:1em;
+}
+
+.checkIN th {
+    padding:1em;
+    font-family:arial;
+    font-size:1.2em;
+    background-color:#1c305d;
+    color:white;
+    width:20%;
+}
+
+.checkIN tr {
+    background-color:#efefef;
+}
+
+
+tr.overdue {
+    background-color:red;
+}
