@@ -26,6 +26,7 @@ PGHOST=localhost
 PGUSER=postgres
 PGDATABASE=hlrdesk
 PGPORT=5432
+PGPOOLSIZE=10
 
 # for Postgres versions < 9.4
 PGPASS=password

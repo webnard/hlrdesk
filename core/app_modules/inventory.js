@@ -15,7 +15,7 @@ function getCheckedOut() {
     var client = db();
     var query = 'SELECT c.due, c.attendant, c.netid as owner, c.copy, c.extensions, i.volume, i.title as name, i.call '+
                 'FROM checked_out c JOIN inventory i ON c.call = i.call';
-    results = (yield client.query(query)).rows;
+    var results = (yield client.query(query)).rows;
 
     var formatted = results.map(function(a) {
       a.due = moment(a.due).toDate();
