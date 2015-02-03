@@ -31,6 +31,9 @@ PGPOOLSIZE=10
 # for Postgres versions < 9.4
 PGPASS=password
 
+#Google Analytics ID
+GAID=UA-57856521-1
+
 # Email G00dness
 
 EMAIL=hlr.dev.useyouremailN00Bulous@gmail.com
