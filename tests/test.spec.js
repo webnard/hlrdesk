@@ -44,12 +44,10 @@ describe('inventory', function() {
   beforeEach(resetDB);
   describe('#checked_out', function() {
     it('should return an array', function* () {
-      console.log("Starting 'should return array' test");
       var vals = yield inventory.checked_out;
       expect(vals).to.be.an(Array);
     });
     it('should return expected properties', function* () {
-      console.log("Starting 'should return exp. properties' test");
       var items = yield inventory.checked_out;
       var item = items[0];
       var keys = 'call_number overdue name owner due attendant volume copy extensions'.split(' ');
