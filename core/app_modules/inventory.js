@@ -1,4 +1,6 @@
 var moment = require('moment');
+var db = require('./db');
+var co = require('co');
 
 var inventory = {};
 
@@ -9,59 +11,21 @@ Object.defineProperty(inventory, 'checked_out', {
 module.exports = inventory;
 
 function getCheckedOut() {
-  var a = [];
-  for(var i = 0; i<10; i++) {
-    a.push(TODO_REMOVE_ME_genFakeItem());
-  }
-  return Promise.resolve(a);
+  return (co.wrap(function*() {
+    var client = db();
+    var query = 'SELECT c.due, c.attendant, c.netid as owner, c.copy, c.extensions, i.volume, i.title as name, i.call '+
+                'FROM checked_out c JOIN inventory i ON c.call = i.call';
+    var results = (yield client.query(query)).rows;
+
+    var formatted = results.map(function(a) {
+      a.due = moment(a.due).toDate();
+      a.call_number = a.call;
+      a.overdue = moment(a.due).isBefore(new Date);
+      return a;
+    });
+    return yield Promise.resolve(formatted);
+  })()).then(
+    function passthru(a){return Promise.resolve(a)},
+    function error(err) { console.error(err.stack); }
+  );
 }
-
-function TODO_REMOVE_ME_genFakeItem() {
-  var alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-  var callnum = '';
-
-  function randNum(min, max) {
-    return Math.floor(Math.random()*(max-min+1)+min);
-  }
-
-  for(var i = 0; i<8; i++) {
-    callnum += alpha[randNum(0,alpha.length-1)];
-    if(i === 1 || i === 4) {
-      callnum += '-';
-    }
-  }
-
-  var netids = 'jimbowales frankfurter ipecac exegesis2 3peat c2 kelp'.split(' ');
-  var names = 'Windows VGA Goat Hamster Cord Cheese Grinch Extreme Mac Keyboard Mellencamp Nodule Pizza Branch HDMI Adapter Recorder Electronic English Multimeter Martian 1080p'.split(' ');
-
-  function randName() {
-    var name = [];
-    for(var i = 0; i<randNum(1,5); i++) {
-      name.push(names[randNum(0, names.length-1)]);
-    }
-    return name.join(' ');
-  }
-
-  function randDate() {
-    var a = new Date();
-    a.setMonth(randNum(0,11));
-    a.setDate(randNum(0,30));
-    a.setYear(randNum(2014,2015));
-    a.setHours(randNum(0,23));
-    return a;
-  }
-  var due = randDate();
-
-  return {
-    due: due,
-    attendant: netids[randNum(0,netids.length-1)],
-    owner: netids[randNum(0,netids.length-1)],
-    copy: randNum(0,3) || null,
-    volume: randNum(0,3) || null,
-    extensions: randNum(0,4),
-    name: randName(),
-    overdue: moment(due).isAfter(new Date),
-    call_number: callnum
-  }
-};

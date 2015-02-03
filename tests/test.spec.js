@@ -3,10 +3,20 @@
  */
 var expect     = require('expect.js'),
     auth       = require('../core/app_modules/auth'),
-    inventory  = require ('../core/app_modules/inventory');
+    inventory  = require ('../core/app_modules/inventory'),
+    prom_spawn = require('prom-spawn');
+
+const ENV = process.env;
 
 var MOCK_USERNAME = 'prabbit',
     MOCK_PASSWORD = 'prabbitprabbit1';
+
+function resetDB(callback) {
+  // note that ENV.PGDATABASE is set by the .run-tests.sh
+  prom_spawn('psql',ENV.TEMPLATE_DB,'-c','DROP DATABASE IF EXISTS ' + ENV.PGDATABASE)()
+    .then(prom_spawn('createdb',ENV.PGDATABASE,'-T',ENV.TEMPLATE_DB))
+    .then(callback);
+}
 
 describe('auth', function() {
 
@@ -31,6 +41,7 @@ describe('auth', function() {
 });
 
 describe('inventory', function() {
+  beforeEach(resetDB);
   describe('#checked_out', function() {
     it('should return an array', function* () {
       var vals = yield inventory.checked_out;

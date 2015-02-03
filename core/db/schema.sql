@@ -49,10 +49,6 @@ CREATE TABLE messages (
     posted date DEFAULT ('now'::text)::date
 );
 
-
-
-
-
 -- Table: tasks
 
 -- DROP TABLE tasks;
@@ -104,9 +100,8 @@ ALTER SEQUENCE messages_message_id_seq OWNED BY messages.message_id;
 --
 
 CREATE TABLE users (
-    users character varying(80),
-    netid character varying(80),
-    username character varying(80)
+    netid character varying(8),
+    CONSTRAINT users_pkey PRIMARY KEY (netid)
 );
 
 
@@ -127,6 +122,33 @@ ALTER TABLE ONLY messages ALTER COLUMN message_id SET DEFAULT nextval('messages_
 ALTER TABLE ONLY messages
     ADD CONSTRAINT messages_pkey PRIMARY KEY (message_id);
 
+--
+-- Name: inventory; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE inventory (
+    call character varying(32) NOT NULL,
+    quantity integer DEFAULT 1 NOT NULL,
+    volume integer default null,
+    title character varying(255),
+    CONSTRAINT inventory_pkey PRIMARY KEY (call)
+);
+
+--
+-- Name: checked_out; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE checked_out (
+    call character varying(32) NOT NULL,
+    copy integer DEFAULT 1 NOT NULL,
+    netid character varying(8) NOT NULL,
+    attendant character varying(8) NOT NULL,
+    extensions integer default 0 not null,
+    due date NOT NULL,
+    CONSTRAINT checked_out_pkey PRIMARY KEY (call, copy),
+    CONSTRAINT checked_out_netid_fkey FOREIGN KEY (netid) REFERENCES users(netid),
+    CONSTRAINT checked_out_call_fkey FOREIGN KEY (call) REFERENCES inventory(call)
+);
 
 --
 -- TOC entry 1982 (class 0 OID 0)
