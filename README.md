@@ -55,4 +55,3 @@ npm run deploy production # to update hlrdesk.byu.edu
 
 All versions must needs be from the list of My Little Pony characters
 http://mlp.wikia.com/wiki/Characters
-
