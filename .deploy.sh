@@ -10,9 +10,9 @@ case "$1" in
     REMOTE=hlrdev.byu.edu
     APP=hlrdesk
     DB=hlrdesk
-
-    echo "DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA public;" | ssh dokku@$REMOTE postgresql:restore $DB
-    ssh dokku@$REMOTE postgresql:restore $DB < core/db/schema.sql
+    cd core/db
+    cat drop-db.sql schema.sql mock-data.sql | ssh dokku@$REMOTE postgresql:restore $DB
+    cd -
     ;;
   staging)
     REMOTE=hlrdesk-staging.byu.edu
