@@ -5,10 +5,7 @@ TEMPLATE_DB=hlrdesk_test_template_db
 SCHEMA_FILE=core/db/schema.sql
 MOCK_DATA_FILE=core/db/mock-data.sql
 
-if [ test -a ~/.pam_environment ]; then 
-  # load environment variables, and get rid of comments
-  export $(sed 's/#.*//' ~/.pam_environment | tr '\n' ' ')
-fi
+#export $(./.env.sh)
 
 printf "Creating and populating test database $TEST_DB"
 psql -c "DROP DATABASE IF EXISTS $TEMPLATE_DB" >/dev/null
