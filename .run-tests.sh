@@ -5,7 +5,7 @@ TEMPLATE_DB=hlrdesk_test_template_db
 SCHEMA_FILE=core/db/schema.sql
 MOCK_DATA_FILE=core/db/mock-data.sql
 
-#export $(./.env.sh)
+export $(./.env.sh)
 
 printf "Creating and populating test database $TEST_DB"
 psql -c "DROP DATABASE IF EXISTS $TEMPLATE_DB" >/dev/null
