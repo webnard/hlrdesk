@@ -33,7 +33,7 @@
   "scripts": {
     "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
     "test": "./.run-tests.sh",
-    "start": "(export $(./.env.sh) && node --harmony core/app)",
+    "start": "(export $(./.env.sh) && node --harmony core/runserver)",
     "postinstall": "(export $(./.env.sh) && if [ \"$HLRDESK_DEV\" = \"true\" ]; then cat core/db/drop-db.sql core/db/schema.sql core/db/mock-data.sql | psql; fi)",
     "compile-sass": "./.compile-sass.sh",
     "deploy": "./.deploy.sh"
