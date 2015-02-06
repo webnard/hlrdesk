@@ -4,6 +4,7 @@
 var expect     = require('expect.js'),
     auth       = require('../core/app_modules/auth'),
     inventory  = require ('../core/app_modules/inventory'),
+    request   = require('supertest'),
     prom_spawn = require('prom-spawn');
 
 const ENV = process.env;
@@ -17,6 +18,25 @@ function resetDB(callback) {
     .then(prom_spawn('createdb',ENV.PGDATABASE,'-T',ENV.TEMPLATE_DB))
     .then(callback);
 }
+
+describe('/', function() {
+  it('should redirect if we are not signed in', function(done) {
+    var server = require('../core/app');
+    request(server)
+      .get('/')
+      .expect(302, done);
+  });
+});
+
+describe('/logout', function() {
+  it('should redirect to the CAS logout page', function(done) {
+    var server = require('../core/app');
+    request(server)
+      .get('/logout')
+      .expect('Location', 'https://cas.byu.edu/cas/logout')
+      .expect(302, done);
+  });
+});
 
 describe('auth', function() {
 

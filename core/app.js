@@ -26,7 +26,7 @@ app.use(session());
 app.use(serve(path.join(__dirname, '..', 'public')));
 
 app.use(function*(next){
-  if (!this.session.user && this.request.path!='/signin'){
+  if (!this.session.user && this.request.path!='/signin' && this.request.path!='/logout'){
     this.redirect('https://cas.byu.edu/cas/login?service='+SERVICE)
     return
   }
@@ -95,10 +95,6 @@ app.use(_.get("/logout", function *(){
   this.redirect('https://cas.byu.edu/cas/logout');
 }));
 
-console.log("Server running on port", ENV.PORT);
-console.log("Development:", !!ENV.HLRDESK_DEV);
-console.log("Hostname:", ENV.HLRDESK_HOST);
-
 var server = require('http').createServer(app.callback());
 var io = require('socket.io')(server);
 
@@ -129,5 +125,4 @@ io.on('connection', function(socket){
 });
 });
 
-server.listen(ENV.PORT)
-
+module.exports = server;
