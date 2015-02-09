@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 TEST_DB=hlrdesk_test_db
 TEMPLATE_DB=hlrdesk_test_template_db
