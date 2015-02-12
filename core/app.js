@@ -88,7 +88,7 @@ app.use(_.get('/checked-out', function *() {
 app.use(_.get("/calendar", function *() {
   var client = db();
   var allCalendarEvents = yield client.query("SELECT * FROM calendar;");
-  yield this.render('calendar', {layout: false, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user});
+  yield this.render('calendar', {layout: USE_LAYOUT, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user});
 }));
 
 app.use(_.get("/signin", function *(){
