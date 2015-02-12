@@ -1,48 +1,136 @@
-$blue: 	#1947A3;
+$bg: #f6f3ea;
+$blue:  #1c305d;
+$red: red;
+$green: green;
+$highlight: #cac9c9;
+$disabledGray: #b3b1aa;
+
+body
+{
+  width: 100%;
+  height: 100%;
+}
 
 section
 {
-    display: flex;
-    text-align: center;
+  position: relative;
+  text-align: center;
+  width: 800px;
+  height: 600px;
+  min-width: 300px;
+  min-height: 150px;
 }
 
-table
+#weekView, #dayView
 {
-    border-style: hidden;
-    border-collapse: collapse;
-    
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    
-    cursor: default;
+  position: relative;
+  text-align: inherit;
+  width: inherit;
+  height: inherit;
+  min-width: inherit;
+  min-height: inherit;
+}
+
+.hidden
+{
+  display: none;
+}
+
+#popup {
+  position: relative;
+  text-align: left;
+  width: 20%;
+  height: 25%;
+  background-color: rgba(255, 255, 255, 0.9);
+  //box-shadow: 5px 5px 5px #888888;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+#popup:before {
+  content:"";
+  position: absolute;
+  right: 46%;
+  top: 100%;
+  width: 0;
+  height: 0;
+  border-left: 13px solid transparent;
+  border-right: 13px solid transparent;
+  border-top: 13px solid rgba(255, 255, 255, 0.9);
+}
+
+table.calendar
+{
+  border-style: hidden;
+  border-collapse: collapse;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+
+  background-color: $bg;
+  width: inherit;
+  height: inherit;
 }
 
 td
 {
-    border: 1px solid black;
-    padding: 10px;
-    width: 100px;
-    height: 15px;
+  border: 1px solid black;
 }
 
-#grid
+table td:not(.selected):not(.disabled):not(.booked):hover
 {
-    display: block;
-    background-color: white;
-    color: black;
+  background-color: $highlight;
+  cursor: pointer;
 }
 
-td:hover
+.selected
 {
-    background-color: $blue;
-    cursor: pointer;
+  background-color: $blue;
+  cursor: pointer;
+}
+
+.disabled
+{
+  background-color: $disabledGray;
+  cursor: default;
+}
+
+.booked
+{
+  background-color: $green;
+  cursor: default;
 }
 
 th
 {
-    font-weight: bold;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.day
+{
+  width: 16%;
+}
+
+.room
+{
+  width: 16%;
+}
+
+.time
+{
+  width: 4%;
+}
+
+#deleteButton
+{
+  background-color: red;
+}
+
+#saveButton
+{
+  background-color: green;
 }

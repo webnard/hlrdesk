@@ -66,6 +66,14 @@ WITH (
   OIDS=FALSE
 );
 
+CREATE TABLE calendar (
+		"user" character varying(8) NOT NULL,
+		title character varying(20) NOT NULL,
+		"date" character varying(20) NOT NULL,
+		"startTime" character varying(20) NOT NULL,
+		"endTime" character varying(20) NOT NULL,
+		room character varying(20) NOT NULL
+);
 
 --
 -- TOC entry 170 (class 1259 OID 24614)

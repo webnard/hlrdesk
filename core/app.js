@@ -3,6 +3,9 @@ var koa = require('koa')
 var serve = require('koa-static')
 var render = require('koa-ejs')
 var path = require('path')
+var cookie = require('cookie');
+
+var socket = require('koa-socket');
 
 var session = require('koa-session')
 
@@ -65,8 +68,8 @@ app.use(_.get("/", function *() {
 
 app.use(_.get("/message", function *() {
   var client = db();
-  var all_messages = yield client.query("SELECT * FROM messages;"); //console.log(all_messages);
-  var all_tasks = yield client.query("Select * FROM tasks"); //console.log(all_tasks);
+  var all_messages = yield client.query("SELECT * FROM messages;");
+  var all_tasks = yield client.query("Select * FROM tasks");
   yield this.render('msg', {layout: USE_LAYOUT, all_messages: all_messages, all_tasks: all_tasks});
 }));
 
@@ -82,6 +85,12 @@ app.use(_.get('/checked-out', function *() {
   });
 }));
 
+app.use(_.get("/calendar", function *() {
+  var client = db();
+  var allCalendarEvents = yield client.query("SELECT * FROM calendar;");
+  yield this.render('calendar', {layout: false, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user});
+}));
+
 app.use(_.get("/signin", function *(){
   ticket=this.request.query.ticket;
   var obj= yield auth.cas_login(ticket, SERVICE);
@@ -95,34 +104,40 @@ app.use(_.get("/logout", function *(){
   this.redirect('https://cas.byu.edu/cas/logout');
 }));
 
-var server = require('http').createServer(app.callback());
-var io = require('socket.io')(server);
+socket.start(app);
 
-io.on('connection', function(socket){
+socket.use(function*(){
+  this.data._cookie = this.socket.handshake.headers.cookie;
+})
+
+socket.on('connection', function(io){
   var client = db();
+
   socket.on('write message', function(title, msg){
-  client.query("INSERT INTO messages(title, username, message_body) VALUES ($1, $2, $3);", [title, 'netId' , msg]);
-  io.emit('write message', msg, title);
-  //console.log('Message title: ' +title + ' \n\tMessage Body: ' + msg);//testing feature only
-});
+    client.query("INSERT INTO messages(title, username, message_body) VALUES ($1, $2, $3);", [title, 'netId' , msg]);
+    io.emit('write message', msg, title);
+  });
 
   socket.on('delete message', function(message_number){
-  client.query("DELETE FROM messages WHERE message_id = $1;", [message_number]);
-  io.emit('delete message', message_number);
-  //console.log(message_number)
-});
+    client.query("DELETE FROM messages WHERE message_id = $1;", [message_number]);
+    io.emit('delete message', message_number);
+  });
 
   socket.on('write task', function(task){
-  client.query("INSERT INTO tasks(task, username) VALUES ($1, $2);", [task, 'netId']);
-  io.emit('write task', task);
-  //console.log('Task title: ' +task );//testing feature only
-});
+    client.query("INSERT INTO tasks(task, username) VALUES ($1, $2);", [task, 'netId']);
+    io.emit('write task', task);
+  });
+
+  socket.on('calendar event', function(event) {
+    var cookieObject = JSON.parse(new Buffer(cookie.parse(event._cookie)['koa:sess'], 'base64').toString('utf8'));
+    client.query('INSERT INTO calendar("user", title, date, "startTime", "endTime", room)VALUES ($1, $2, $3, $4, $5, $6);', [cookieObject.user, event.title, event.date, Number(event.startTime), Number(event.startTime) + 1, event.room]);
+    io.emit("calendar event", event);
+  });
 
   socket.on('delete task', function(t_number){
-  client.query("DELETE FROM tasks WHERE task_id = $1;", [t_number]);
-  io.emit('delete task', t_number);
-  //console.log('Task id: ' +t_number );//testing feature only
+    client.query("DELETE FROM tasks WHERE task_id = $1;", [t_number]);
+    io.emit('delete task', t_number);
+  });
+  
 });
-});
-
-module.exports = server;
+module.exports = app.server;
