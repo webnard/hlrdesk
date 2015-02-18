@@ -4,6 +4,43 @@ var co = require('co');
 
 var inventory = {};
 
+inventory.exists = co.wrap(function*(call) {
+  var client = db();
+  var count = 'SELECT call FROM inventory WHERE call = $1 LIMIT 1';
+  var result = yield client.query(count, [call]);
+  return yield Promise.resolve(result.rows.length > 0);
+});
+
+inventory.check_in = co.wrap(function*(call, patron, employee) {
+
+  if(!(yield inventory.exists(call))) {
+    var msg = 'The item ' + call + ' does not exist and cannot be checked in';
+    throw new InvalidItemError(msg);
+  }
+
+  // TODO: ensure that only employees can check items in
+  var client = db();
+  var count_query = 'SELECT call FROM checked_out ' +
+    'WHERE ctid IN (SELECT ctid FROM ' +
+    'checked_out WHERE call = $1 AND ' +
+    'netid = $2 AND $3 in (SELECT netid FROM users WHERE netid = $3) ' +
+    'ORDER BY due ASC LIMIT 1) LIMIT 1;';
+  var result = yield client.query(count_query, [call, patron, employee]);
+
+  if(result.rows.length <= 0) {
+    var msg = 'The call number ' + call + ' is not checked out by ' + patron;
+    throw new NotCheckedOutError(msg);
+  }
+
+  var query = 'DELETE FROM checked_out WHERE ctid IN (SELECT ctid FROM ' +
+    'checked_out WHERE call = $1 AND ' +
+    'netid = $2 AND $3 in (SELECT netid FROM users WHERE netid = $3) ' +
+    'ORDER BY due ASC LIMIT 1);';
+  var result = yield client.query(query, [call, patron, employee]);
+
+  return yield Promise.resolve(true);
+});
+
 Object.defineProperty(inventory, 'checked_out', {
   get: getCheckedOut
 });
@@ -29,3 +66,22 @@ function getCheckedOut() {
     function error(err) { console.error(err.stack); }
   );
 }
+
+// ERRORS
+
+inventory.InvalidItemError = InvalidItemError;
+inventory.NotCheckedOutError = NotCheckedOutError;
+
+function InvalidItemError(message) {
+  this.message = message;
+  this.stack = Error().stack;
+};
+InvalidItemError.prototype = Object.create(Error.prototype);
+InvalidItemError.prototype.name = 'InvalidItem';
+
+function NotCheckedOutError(message) {
+  this.message = message;
+  this.stack = Error().stack;
+};
+NotCheckedOutError.prototype = Object.create(Error.prototype);
+NotCheckedOutError.prototype.name = 'NotCheckedOutError';

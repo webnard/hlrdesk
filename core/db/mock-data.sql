@@ -16,17 +16,18 @@ insert into inventory(call, quantity, title) values
   ('CRUFTSURGE', 1, 'Automatic for the People'),
   ('M347FEST', 1, 'Out of Time'),
   ('ZAMB0N123', 5, 'Accelerate'),
-  ('KR1P70N173', 5, 'Around the Sun'),
+  ('HELLO', 5, 'Around the Sun'),
   ('JENNY8675309', 2, 'From the Mixed-Up Files of Mrs. Basil E. Frankweiler'),
   ('DE305D5475B4431BADB2EB6B9E546013', 493, 'Paperclip'),
   ('492M123NX841JMF84', 1, 'Vilhelm Hammershøi Art Book'),
   ('3M8413NXB492', 1, 'Map of 武夷山市'),
   ('UUDDLRLRBAS3L3CTST4RT99999199999', 10, 'Une journée bien remplie ou Neuf meurtres insolites dans une même journée par un seul homme dont ce n''est pas le métier'),
-  ('CAS74WY', 1, 'Animal');
+  ('CAS74WY', 1, 'Animal'),
+  ('I-AM-NOT-CHECKED-OUT', 2, 'Murmur');
 
 insert into checked_out(call, copy, netid, attendant, due, extensions) VALUES
-  ('KR1P70N173', 1, 'psota', 'tock', 'tomorrow'::date + '3 days'::interval,1),
-  ('KR1P70N173', 2, 'milo', 'tock', 'yesterday'::date,0),
+  ('HELLO', 1, 'psota', 'tock', 'tomorrow'::date + '3 days'::interval,1),
+  ('HELLO', 2, 'milo', 'tock', 'yesterday'::date,0),
   ('CRUFTSURGE', 1, 'njuster', 'lecanii', 'today'::date,2),
   ('DE305D5475B4431BADB2EB6B9E546013', 1, 'thoreau', 'pomi', 'today'::date + '3 months'::interval,0),
   ('DE305D5475B4431BADB2EB6B9E546013', 2, 'thoreau', 'pomi', 'today'::date + '3 months'::interval,0),
