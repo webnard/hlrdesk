@@ -2,6 +2,7 @@ var moment = require('moment');
 var db = require('./db');
 var co = require('co');
 var auth = require('./auth');
+var assert = require('assert');
 
 var inventory = {};
 
@@ -14,10 +15,7 @@ inventory.exists = co.wrap(function*(call) {
 
 inventory.check_in = co.wrap(function*(call, patron, employee) {
 
-  if(!(yield inventory.exists(call))) {
-    var msg = 'The item ' + call + ' does not exist and cannot be checked in';
-    throw new InvalidItemError(msg);
-  }
+  assert(yield inventory.exists(call), 'The item ' + call + ' does not exist');
 
   // TODO: ensure that only employees can check items in
   var client = db();
@@ -28,10 +26,7 @@ inventory.check_in = co.wrap(function*(call, patron, employee) {
     'ORDER BY due ASC LIMIT 1) LIMIT 1;';
   var result = yield client.query(count_query, [call, patron, employee]);
 
-  if(result.rows.length <= 0) {
-    var msg = 'The call number ' + call + ' is not checked out by ' + patron;
-    throw new NotCheckedOutError(msg);
-  }
+  assert(result.rows.length > 0, call + ' not checked out by ' + patron);
 
   var query = 'DELETE FROM checked_out WHERE ctid IN (SELECT ctid FROM ' +
     'checked_out WHERE call = $1 AND ' +
@@ -45,19 +40,12 @@ inventory.check_in = co.wrap(function*(call, patron, employee) {
 });
 
 inventory.check_out = co.wrap(function*(call, patron, employee, due) {
-  if( due < (new Date()) ) {
-    throw new Error("Due date " + due + " is earlier than now.");
-  }
-  if( !(yield auth.check_admin(employee)) ) {
-    throw new Error(employee + " is not an admin and cannot check out items");
-  }
-  if( !(yield auth.check_id(patron)) ) {
-    throw new Error(patron + " is not a user and cannot check anything out");
-  }
-  if( !(yield inventory.exists(call)) ) {
-    var msg = call + " does not exist and cannot be checked out";
-    throw new inventory.InvalidItemError(msg);
-  }
+
+  assert(due > (new Date()), "Due date " + due + " is earlier than now.");
+  assert(yield auth.check_admin(employee), employee + " is not an admin.");
+  assert(yield auth.check_id(patron), patron + " is not a valid user.");
+  assert(yield inventory.exists(call), call + " doesn't exist; cannot rent");
+
   var client = db();
   var copy = (yield client.query('SELECT COUNT(*)+1 c FROM checked_out WHERE call = $1',
     [call])).rows[0].c;
@@ -94,22 +82,3 @@ function getCheckedOut() {
     function error(err) { console.error(err.stack); }
   );
 }
-
-// ERRORS
-
-inventory.InvalidItemError = InvalidItemError;
-inventory.NotCheckedOutError = NotCheckedOutError;
-
-function InvalidItemError(message) {
-  this.message = message;
-  this.stack = Error().stack;
-};
-InvalidItemError.prototype = Object.create(Error.prototype);
-InvalidItemError.prototype.name = 'InvalidItem';
-
-function NotCheckedOutError(message) {
-  this.message = message;
-  this.stack = Error().stack;
-};
-NotCheckedOutError.prototype = Object.create(Error.prototype);
-NotCheckedOutError.prototype.name = 'NotCheckedOutError';

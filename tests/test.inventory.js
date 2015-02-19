@@ -31,13 +31,12 @@ describe('inventory', function() {
     const TOMORROW = moment().add(1, 'day').toDate();
     const YESTERDAY = moment().subtract(1, 'day').toDate();
 
-    it('should throw an InvalidItemError if the item does not exist', function* (done) {
+    it('should throw an error if the item does not exist', function* (done) {
       var call = 'I-DO-NOT-EXIST';
       var patron = 'milo';
       try {
         yield inventory.check_out(call, patron, 'tock', TOMORROW);
       }catch(e) {
-        expect(e).to.be.an(inventory.InvalidItemError);
         done();
       }
     });
@@ -47,7 +46,6 @@ describe('inventory', function() {
       try {
         yield inventory.check_out(call, patron, 'tock', TOMORROW);
       }catch(e) {
-        expect(true).to.be.ok();
         done();
       }
     });
@@ -58,7 +56,6 @@ describe('inventory', function() {
       try {
         yield inventory.check_out(call, patron, employee, TOMORROW);
       }catch(e) {
-        expect(true).to.be.ok();
         done();
       }
     });
@@ -68,7 +65,6 @@ describe('inventory', function() {
       try {
         yield inventory.check_out(call, patron, 'tock', YESTERDAY);
       }catch(e) {
-        expect(true).to.be.ok();
         done();
       }
     });
@@ -146,43 +142,39 @@ describe('inventory', function() {
         length = new_length;
       }
     });
-    it('should throw an InvalidItemError if item does not exist', function* (done) {
+    it('should throw an error if item does not exist', function* (done) {
       var call = 'I-DO-NOT-EXIST';
       var patron = 'milo';
       try {
         yield inventory.check_in(call, 'milo', 'tock');
       } catch(e) {
-        expect(e).to.be.an(inventory.InvalidItemError);
         done();
       };
     });
-    it('should throw a NotCheckedOutError if item is not checked out', function* (done) {
+    it('should throw an error if item is not checked out', function* (done) {
       var call = 'I-AM-NOT-CHECKED-OUT';
       var patron = 'milo';
       try {
         yield inventory.check_in(call, 'milo', 'tock');
       } catch(e) {
-        expect(e).to.be.an(inventory.NotCheckedOutError);
         done();
       };
     });
-    it('should throw a NotCheckedOutError if patron does not exist', function* (done) {
+    it('should throw an error if patron does not exist', function* (done) {
       var call = 'HELLO';
       var patron = 'noexist';
       try {
         yield inventory.check_in(call, patron, 'tock');
       } catch(e) {
-        expect(e).to.be.an(inventory.NotCheckedOutError);
         done();
       };
     });
-    it('should throw a NotCheckedOutError if the item is checked out, but not by the given patron', function* (done) {
+    it('should throw an error if the item is checked out, but not by the given patron', function* (done) {
       var call = 'HELLO';
       var patron = 'thoreau';
       try {
         yield inventory.check_in(call, patron, 'tock');
       } catch(e) {
-        expect(e).to.be.an(inventory.NotCheckedOutError);
         done();
       };
     });
