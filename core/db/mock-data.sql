@@ -9,6 +9,7 @@ insert into users(netid) values
   ('milo'),
   ('tock'), -- make admin
   ('psota'),
+  ('notadm'),
   ('luke1298');
 
 update users set admin='TRUE' where netid = 'pomi';

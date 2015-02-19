@@ -25,6 +25,78 @@ describe('inventory', function() {
       expect(item).to.have.keys(keys);
     });
   });
+
+  describe('#check_out(call, patron, employee, due)', function() {
+    var moment = require('moment');
+    const TOMORROW = moment().add(1, 'day').toDate();
+    const YESTERDAY = moment().subtract(1, 'day').toDate();
+
+    it('should throw an InvalidItemError if the item does not exist', function* (done) {
+      var call = 'I-DO-NOT-EXIST';
+      var patron = 'milo';
+      try {
+        yield inventory.check_out(call, patron, 'tock', TOMORROW);
+      }catch(e) {
+        expect(result).to.be.an(inventory.InvalidItemError);
+        done();
+      }
+    });
+    it('should throw an error if the patron does not exist', function* (done) {
+      var call = 'HELLO';
+      var patron = 'I-SHOULD-NOT-EXIST';
+      try {
+        yield inventory.check_out(call, patron, 'tock', TOMORROW);
+      }catch(e) {
+        expect(result).to.be.an(Error);
+        done();
+      }
+    });
+    it('should throw an error if the employee is not an admin', function* (done) {
+      var call = 'HELLO';
+      var patron = 'milo';
+      var employee = 'notadm';
+      try {
+        yield inventory.check_out(call, patron, employee, TOMORROW);
+      }catch(e) {
+        expect(result).to.be.an(Error);
+        done();
+      }
+    });
+    it('should throw an error if the due date is before the current time', function* (done) {
+      var call = 'HELLO';
+      var patron = 'milo';
+      try {
+        yield inventory.check_out(call, patron, 'tock', YESTERDAY);
+      }catch(e) {
+        expect(result).to.be.an(Error);
+        done();
+      }
+    });
+    it('should increase the number of checked-out items by one', function* () {
+      var call = 'M347FEST';
+      var patron = 'milo';
+      var employee = 'tock';
+      var checked_out_length = (yield inventory.checked_out).length;
+      yield inventory.check_out(call, patron, employee, TOMORROW);
+      var checked_out_length2 = (yield inventory.checked_out).length;
+      expect(checked_out_length2).to.be(checked_out_length + 1);
+    });
+    it('should add the checked out item to the database', function* () {
+      // remove everything first of all, because it's easier to parse then
+      var client = require('../core/app_modules/db')(),
+          call = 'M347FEST',
+          patron = 'milo',
+          employee = 'tock';
+
+      yield client.query('TRUNCATE checked_out');
+      yield inventory.check_out(call, patron, employee, TOMORROW);
+      var checked_out = (yield inventory.checked_out)[0];
+      expect(checked_out.call_number).to.be(call);
+      expect(checked_out.owner).to.be(patron);
+      expect(checked_out.attendant).to.be(employee);
+    });
+  });
+
   describe('#check_in(call, patron, attendant)', function() {
     it('should return true if the call number and patron are correct', function* () {
       var call = 'HELLO';

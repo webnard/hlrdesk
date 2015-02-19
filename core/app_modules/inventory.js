@@ -38,7 +38,13 @@ inventory.check_in = co.wrap(function*(call, patron, employee) {
     'ORDER BY due ASC LIMIT 1);';
   var result = yield client.query(query, [call, patron, employee]);
 
+  // TODO: record this transaction in the database
+
   return yield Promise.resolve(true);
+});
+
+inventory.check_out = co.wrap(function*(call, patron, employee) {
+
 });
 
 Object.defineProperty(inventory, 'checked_out', {
