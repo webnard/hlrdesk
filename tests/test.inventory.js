@@ -37,7 +37,7 @@ describe('inventory', function() {
       try {
         yield inventory.check_out(call, patron, 'tock', TOMORROW);
       }catch(e) {
-        expect(result).to.be.an(inventory.InvalidItemError);
+        expect(e).to.be.an(inventory.InvalidItemError);
         done();
       }
     });
@@ -47,7 +47,7 @@ describe('inventory', function() {
       try {
         yield inventory.check_out(call, patron, 'tock', TOMORROW);
       }catch(e) {
-        expect(result).to.be.an(Error);
+        expect(true).to.be.ok();
         done();
       }
     });
@@ -58,7 +58,7 @@ describe('inventory', function() {
       try {
         yield inventory.check_out(call, patron, employee, TOMORROW);
       }catch(e) {
-        expect(result).to.be.an(Error);
+        expect(true).to.be.ok();
         done();
       }
     });
@@ -68,9 +68,16 @@ describe('inventory', function() {
       try {
         yield inventory.check_out(call, patron, 'tock', YESTERDAY);
       }catch(e) {
-        expect(result).to.be.an(Error);
+        expect(true).to.be.ok();
         done();
       }
+    });
+    it('should resolve as true', function* () {
+      var call = 'M347FEST';
+      var patron = 'milo';
+      var employee = 'tock';
+      var val = yield inventory.check_out(call, patron, employee, TOMORROW);
+      expect(val).to.be.ok();
     });
     it('should increase the number of checked-out items by one', function* () {
       var call = 'M347FEST';
@@ -81,7 +88,7 @@ describe('inventory', function() {
       var checked_out_length2 = (yield inventory.checked_out).length;
       expect(checked_out_length2).to.be(checked_out_length + 1);
     });
-    it('should add the checked out item to the database', function* () {
+    it('should add the checked-out item to the database', function* () {
       // remove everything first of all, because it's easier to parse then
       var client = require('../core/app_modules/db')(),
           call = 'M347FEST',
@@ -140,7 +147,8 @@ describe('inventory', function() {
       }
     });
     it('should throw an InvalidItemError if item does not exist', function* (done) {
-      var call = 'I-DO-NOT-EXIST'; var patron = 'milo';
+      var call = 'I-DO-NOT-EXIST';
+      var patron = 'milo';
       try {
         yield inventory.check_in(call, 'milo', 'tock');
       } catch(e) {

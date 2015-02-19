@@ -1,6 +1,7 @@
 var moment = require('moment');
 var db = require('./db');
 var co = require('co');
+var auth = require('./auth');
 
 var inventory = {};
 
@@ -43,8 +44,29 @@ inventory.check_in = co.wrap(function*(call, patron, employee) {
   return yield Promise.resolve(true);
 });
 
-inventory.check_out = co.wrap(function*(call, patron, employee) {
+inventory.check_out = co.wrap(function*(call, patron, employee, due) {
+  if( due < (new Date()) ) {
+    throw new Error("Due date " + due + " is earlier than now.");
+  }
+  if( !(yield auth.check_admin(employee)) ) {
+    throw new Error(employee + " is not an admin and cannot check out items");
+  }
+  if( !(yield auth.check_id(patron)) ) {
+    throw new Error(patron + " is not a user and cannot check anything out");
+  }
+  if( !(yield inventory.exists(call)) ) {
+    var msg = call + " does not exist and cannot be checked out";
+    throw new inventory.InvalidItemError(msg);
+  }
+  var client = db();
+  var copy = (yield client.query('SELECT COUNT(*)+1 c FROM checked_out WHERE call = $1',
+    [call])).rows[0].c;
 
+  var q = 'INSERT INTO checked_out(call, copy, netid, attendant, due)' +
+    'VALUES($1, $2, $3, $4, $5)';
+  yield client.query(q , [call, copy, patron, employee, due]);
+
+  return yield Promise.resolve(true);
 });
 
 Object.defineProperty(inventory, 'checked_out', {

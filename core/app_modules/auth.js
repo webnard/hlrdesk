@@ -36,6 +36,10 @@ module.exports = {
     return 'https://' + host + endpoint;
   },
 
+  check_admin: check_admin,
+
+  check_id: check_id,
+
   mkadmin: co.wrap(function*(user, netid) {
     var client = db();
     var is_user = yield check_id(netid);
