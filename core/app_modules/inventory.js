@@ -58,13 +58,7 @@ inventory.check_out = co.wrap(function*(call, patron, employee, due) {
 });
 
 Object.defineProperty(inventory, 'checked_out', {
-  get: getCheckedOut
-});
-
-module.exports = inventory;
-
-function getCheckedOut() {
-  return (co.wrap(function*() {
+  get: co.wrap(function*() {
     var client = db();
     var query = 'SELECT c.due, c.attendant, c.netid as owner, c.copy, c.extensions, i.volume, i.title as name, i.call '+
                 'FROM checked_out c JOIN inventory i ON c.call = i.call';
@@ -77,8 +71,34 @@ function getCheckedOut() {
       return a;
     });
     return yield Promise.resolve(formatted);
+<<<<<<< HEAD
   })()).then(
     function passthru(a){return Promise.resolve(a)},
     function error(err) { console.error(err.stack); }
   );
 }
+=======
+  })
+});
+
+module.exports = inventory;
+
+// ERRORS
+
+inventory.InvalidItemError = InvalidItemError;
+inventory.NotCheckedOutError = NotCheckedOutError;
+
+function InvalidItemError(message) {
+  this.message = message;
+  this.stack = Error().stack;
+};
+InvalidItemError.prototype = Object.create(Error.prototype);
+InvalidItemError.prototype.name = 'InvalidItem';
+
+function NotCheckedOutError(message) {
+  this.message = message;
+  this.stack = Error().stack;
+};
+NotCheckedOutError.prototype = Object.create(Error.prototype);
+NotCheckedOutError.prototype.name = 'NotCheckedOutError';
+>>>>>>> e89778e1cb31091396ef09a80a33830d3f0b5602
