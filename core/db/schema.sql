@@ -111,7 +111,7 @@ CREATE TABLE users (
     netid character varying(8),
     CONSTRAINT users_pkey PRIMARY KEY (netid)
 );
-
+ALTER TABLE users ADD "admin" boolean DEFAULT false;
 
 
 --
@@ -131,7 +131,7 @@ ALTER TABLE ONLY messages
     ADD CONSTRAINT messages_pkey PRIMARY KEY (message_id);
 
 --
--- Name: inventory; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: inventory; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE inventory (
@@ -143,7 +143,7 @@ CREATE TABLE inventory (
 );
 
 --
--- Name: checked_out; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: checked_out; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE checked_out (

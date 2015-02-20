@@ -1,8 +1,61 @@
 var moment = require('moment');
 var db = require('./db');
 var co = require('co');
+var auth = require('./auth');
+var assert = require('assert');
 
 var inventory = {};
+
+inventory.exists = co.wrap(function*(call) {
+  var client = db();
+  var count = 'SELECT call FROM inventory WHERE call = $1 LIMIT 1';
+  var result = yield client.query(count, [call]);
+  return yield Promise.resolve(result.rows.length > 0);
+});
+
+inventory.check_in = co.wrap(function*(call, patron, employee) {
+
+  assert(yield inventory.exists(call), 'The item ' + call + ' does not exist');
+
+  // TODO: ensure that only employees can check items in
+  var client = db();
+  var count_query = 'SELECT call FROM checked_out ' +
+    'WHERE ctid IN (SELECT ctid FROM ' +
+    'checked_out WHERE call = $1 AND ' +
+    'netid = $2 AND $3 in (SELECT netid FROM users WHERE netid = $3) ' +
+    'ORDER BY due ASC LIMIT 1) LIMIT 1;';
+  var result = yield client.query(count_query, [call, patron, employee]);
+
+  assert(result.rows.length > 0, call + ' not checked out by ' + patron);
+
+  var query = 'DELETE FROM checked_out WHERE ctid IN (SELECT ctid FROM ' +
+    'checked_out WHERE call = $1 AND ' +
+    'netid = $2 AND $3 in (SELECT netid FROM users WHERE netid = $3) ' +
+    'ORDER BY due ASC LIMIT 1);';
+  var result = yield client.query(query, [call, patron, employee]);
+
+  // TODO: record this transaction in the database
+
+  return yield Promise.resolve(true);
+});
+
+inventory.check_out = co.wrap(function*(call, patron, employee, due) {
+
+  assert(due > (new Date()), "Due date " + due + " is earlier than now.");
+  assert(yield auth.check_admin(employee), employee + " is not an admin.");
+  assert(yield auth.check_id(patron), patron + " is not a valid user.");
+  assert(yield inventory.exists(call), call + " doesn't exist; cannot rent");
+
+  var client = db();
+  var copy = (yield client.query('SELECT COUNT(*)+1 c FROM checked_out WHERE call = $1',
+    [call])).rows[0].c;
+
+  var q = 'INSERT INTO checked_out(call, copy, netid, attendant, due)' +
+    'VALUES($1, $2, $3, $4, $5)';
+  yield client.query(q , [call, copy, patron, employee, due]);
+
+  return yield Promise.resolve(true);
+});
 
 Object.defineProperty(inventory, 'checked_out', {
   get: getCheckedOut

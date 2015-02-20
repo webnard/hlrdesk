@@ -96,12 +96,19 @@ app.use(_.get("/signin", function *(){
   var obj= yield auth.cas_login(ticket, SERVICE);
   this.session.user=obj.username;
   this.session.attributes=obj.attributes;
+  var client = db();
+  client.query("INSERT INTO users(netid) VALUES ($1);", [obj.username] )
   this.redirect('/');
 }));
 
 app.use(_.get("/logout", function *(){
   this.session = null;
   this.redirect('https://cas.byu.edu/cas/logout');
+}));
+
+app.use(_.get("/mkadmin",function *(){
+  to_mk=this.request.query.user;
+  auth.mkadmin(this.session.user, to_mk);
 }));
 
 socket.start(app);
@@ -138,6 +145,6 @@ socket.on('connection', function(io){
     client.query("DELETE FROM tasks WHERE task_id = $1;", [t_number]);
     io.emit('delete task', t_number);
   });
-  
+
 });
 module.exports = app.server;
