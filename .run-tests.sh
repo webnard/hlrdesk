@@ -22,4 +22,4 @@ psql -c "DROP DATABASE IF EXISTS $TEST_DB" >/dev/null
 printf "."
 createdb $TEST_DB -T $TEMPLATE_DB >/dev/null
 printf " Done!\n"
-PGPOOLSIZE=0 PGDATABASE=$TEST_DB TEMPLATE_DB=$TEMPLATE_DB $(npm bin)/mocha --require co-mocha --harmony tests/ "$@"
+PGPOOLSIZE=0 PGDATABASE=$TEST_DB TEMPLATE_DB=$TEMPLATE_DB node --harmony $(npm bin)/istanbul cover _mocha -- --require co-mocha --harmony tests/ "$@"
