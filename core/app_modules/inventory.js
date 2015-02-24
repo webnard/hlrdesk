@@ -71,34 +71,7 @@ Object.defineProperty(inventory, 'checked_out', {
       return a;
     });
     return yield Promise.resolve(formatted);
-<<<<<<< HEAD
-  })()).then(
-    function passthru(a){return Promise.resolve(a)},
-    function error(err) { console.error(err.stack); }
-  );
-}
-=======
   })
 });
 
 module.exports = inventory;
-
-// ERRORS
-
-inventory.InvalidItemError = InvalidItemError;
-inventory.NotCheckedOutError = NotCheckedOutError;
-
-function InvalidItemError(message) {
-  this.message = message;
-  this.stack = Error().stack;
-};
-InvalidItemError.prototype = Object.create(Error.prototype);
-InvalidItemError.prototype.name = 'InvalidItem';
-
-function NotCheckedOutError(message) {
-  this.message = message;
-  this.stack = Error().stack;
-};
-NotCheckedOutError.prototype = Object.create(Error.prototype);
-NotCheckedOutError.prototype.name = 'NotCheckedOutError';
->>>>>>> e89778e1cb31091396ef09a80a33830d3f0b5602
