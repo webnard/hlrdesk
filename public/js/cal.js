@@ -1,4 +1,4 @@
-var events = allEvents.rows;
+﻿var events = allEvents.rows;
 
 var socket = io();
 
@@ -11,12 +11,13 @@ var weekDiff = 0;
 var now = new Date();
 var cellDate = now;
 var displayedDate = now.toDateString();
-var days = ["", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+var days = ["", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 var currentView = "week";
 
+document.getElementById("displayRoomSelect").addEventListener("change", function(event) {updateGrid()});
 document.getElementById("dateSelect").addEventListener("change", function(event) {updateCell()});
 document.getElementById("timeSelect").addEventListener("change", function(event) {updateCell()});
-document.getElementById("roomSelect").addEventListener("change", function(event) {updateCell()});
+document.getElementById("roomSelect").addEventListener("change", function(event) {updateCell(); document.getElementById("displayRoomSelect").selectedIndex = document.getElementById("roomSelect").selectedIndex; updateGrid()});
 document.getElementById("durationSelect").addEventListener("change", function(event) {updateCell()});
 document.getElementById("forwardBtn").addEventListener("click", function() {changeWeek(1)});
 document.getElementById("backBtn").addEventListener("click", function() {changeWeek(-1)});
@@ -28,16 +29,23 @@ document.getElementById("saveButton").addEventListener("click", function() {subm
 function updateGrid() {
 
 	var cells = document.querySelectorAll(((currentView === "week") ? "#weekView":"#dayView")+" td");
+  if (document.getElementsByClassName("selected")[0]) {
+    var selectedCell = document.getElementsByClassName("selected")[0];
+  }
 	if (currentView === "week") {
 		for (var i = 0; i < cells.length; i++) {
 			cells[i].className = "";
 			for (var j = 0; j < events.length; j++) {
-				if (document.getElementById(events[j].date) && new Date(events[j].date).getDay() == cells[i].dataset.day && events[j].startTime == cells[i].dataset.time/* && cells[i].dataset.room == */) {
-					markCellAsBooked(cells[i], events[j]);
+				if (document.getElementById(new Date(events[j].time).toDateString()) && new Date(events[j].time).getDay() == cells[i].dataset.day && new Date(events[j].time).getHours() === cells[i].dataset.time && events[j].room === document.getElementById("displayRoomSelect").value) {
+          if (userName == events[j].user) {
+            markCellAsBookedByUser(cells[i], events[j]);
+          } else {
+            markCellAsRequested(cells[i], events[j]);
+          }
 					break;
 				}
 			}
-			if (cells[i].className == "") {
+			if (cells[i].className === "") {
 				if (weekDiff < 0 || (weekDiff === 0 && (cells[i].dataset.day < now.getDay() || (cells[i].dataset.day == now.getDay() && cells[i].dataset.time < now.getHours())))) {
 					markCellAsDisabled(cells[i]);
 				} else {
@@ -45,12 +53,13 @@ function updateGrid() {
 				}
 			}
 		}
-	} else if (currentView = "day") {
+    document.getElementById("roomSelect").selectedIndex = document.getElementById("displayRoomSelect").selectedIndex;
+	} else if (currentView === "day") {
 		for (var i = 0; i < cells.length; i++) {
 			cells[i].className = "";
 			for (var j = 0; j < events.length; j++) {
 				if (displayedDate == new Date(events[j].date).toDateString() && cells[i].dataset.time == events[j].startTime && cells[i].dataset.room == events[j].room) {
-					markCellAsBooked(cells[i], events[j]);
+					markCellAsRequested(cells[i], events[j]);
 					break;
 				}
 			}
@@ -63,12 +72,21 @@ function updateGrid() {
 			}
 		}
 	}
+  if (selectedCell) {
+    clickCell(selectedCell);
+    selectedCell = null;
+  }
 }
 updateGrid();
 if (now.getHours() >= 21 && now.getDay() == 6) {changeWeek(1)}
 
-function markCellAsBooked(cell, event) {
-	cell.className = "booked";
+function markCellAsBookedByUser(cell, event) {
+  cell.className = "bookedByUser";
+	cell.addEventListener("click", deleteCell);
+	cell.innerHTML = event.title+" - "+event.user+"<br>X";
+}
+function markCellAsRequested(cell, event) {
+	cell.className = "requested";
 	cell.removeEventListener("click", clickCell);
 	cell.innerHTML = event.title+" - "+event.user;
 }
@@ -78,6 +96,7 @@ function markCellAsDisabled(cell) {
 	cell.innerHTML = "";
 }
 function markCellAsEnabled(cell) {
+  cell.removeEventListener("click", deleteCell);
 	cell.className = "";
 	cell.addEventListener("click", clickCell);
 	cell.innerHTML = "";
@@ -85,8 +104,15 @@ function markCellAsEnabled(cell) {
 
 function clickCell(event) { //places the popup box
 	var cell = event.srcElement ? event.srcElement : event;
-	while (cell.className == "disabled") {
-		cell = document.getElementById((currentView === "week" ? days[cell.dataset.day] : cell.dataset.room)+" "+(Number(cell.dataset.time)+1));
+	while (cell.className != "") {
+    if (document.getElementById((currentView === "week" ? days[cell.dataset.day] : cell.dataset.room)+" "+(Number(cell.dataset.time)+1))) {
+      cell = document.getElementById((currentView === "week" ? days[cell.dataset.day] : cell.dataset.room)+" "+(Number(cell.dataset.time)+1));
+    } else {
+      cell = null;
+      document.getElementById("popup").className = "hidden";
+      alert("Sorry, the requested time slot is not available. Please select a different time or room.")
+      break;
+    }
 	}
 
 	while (document.getElementsByClassName("selected").length > 0) {
@@ -97,8 +123,7 @@ function clickCell(event) { //places the popup box
 	}
 
   document.getElementById("popup").className = "popup";
-  //document.getElementById("popup").style.top = (cell.offsetTop-document.getElementById("popup").offsetHeight+30).toString()+"px";
-	document.getElementById("popup").style.top = ((cell.offsetTop-document.getElementById("popup").offsetHeight+(document.getElementById("weekView").offsetHeight/14)-13)+document.getElementById("weekView").offsetTop).toString()+"px";
+	document.getElementById("popup").style.top = currentView == "week"  ? ((cell.offsetTop-document.getElementById("popup").offsetHeight+(document.getElementById("weekView").offsetHeight/14)-13)+document.getElementById("weekView").offsetTop).toString()+"px" : ((cell.offsetTop-document.getElementById("popup").offsetHeight+(document.getElementById("dayView").offsetHeight/14)-13)+document.getElementById("dayView").offsetTop).toString()+"px";
   document.getElementById("popup").style.left = (cell.offsetLeft.toString()-((document.getElementById("popup").offsetWidth-cell.offsetWidth)/2))+"px";
 
   for (var i = 0; i < document.getElementById("dateSelect").length; i++) { //selects right date
@@ -159,7 +184,7 @@ function changeWeek(direction) {
 
 function changeDay(direction) {
 	displayedDate = new Date(new Date(displayedDate).getTime() + 86400000*direction).toDateString();
-	if (new Date(displayedDate).getDay() == 0) {displayedDate = new Date(new Date(displayedDate).getTime() + 86400000*direction).toDateString()} //needs optimization
+	if (new Date(displayedDate).getDay() === 0) {displayedDate = new Date(new Date(displayedDate).getTime() + 86400000*direction).toDateString()} //needs optimization
 	document.getElementById("date").innerHTML = displayedDate;
 	updateGrid();
 	document.getElementById("previousDay").disabled = (displayedDate === now.toDateString()) ? true : false;
@@ -177,31 +202,50 @@ function changeView() {
 		document.getElementById("dayView").classList.toggle("hidden");
 		currentView = "week";
 	}
+  while (document.getElementsByClassName("selected")[0]) {
+    document.getElementsByClassName("selected")[0].className = "";
+  };
 	updateGrid();
 }
 
-function populateGrid() {
-	for (var i = 0; i < events.length; i++) {
-		if (document.getElementById(events[i].date)) {
-			bookedCell = document.getElementById(days[new Date(events[i].date).getDay()]+" "+events[i].startTime)
-			bookedCell.className = "booked";
-			bookedCell.removeEventListener("click", clickCell);
-			bookedCell.innerHTML = events[i].title+" - "+events[i].user;
-		}
-	}
-}
-
 socket.on("calendar event", function(event){
-	events.push(document.getElementsByClassName("selected")[0], event);
+  event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
+	events.push(event);
+  document.getElementById("popup").className = "hidden";
+  while (document.getElementsByClassName("selected").length > 0) {
+		document.getElementsByClassName("selected")[0].classList.remove("selected");
+	}
+	updateGrid();
+});
+
+socket.on("delete calendar event", function(event) {
+  event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
+	for (var i = 0; i < events.length; i++) {
+    if (events[i].time === event.time && events[i].room == event.room) {
+       events.splice(i,1);
+    }
+  }
+  document.getElementById("popup").className = "hidden";
+  while (document.getElementsByClassName("selected").length > 0) {
+		document.getElementsByClassName("selected")[0].classList.remove("selected");
+	}
 	updateGrid()
 });
 
+function deleteCell(event) {
+  if(confirm("Are you sure you want to delete this room reservation?")){
+    cell = event.srcElement;
+    eventDate = new Date((currentView === "week") ? new Date(new Date().setDate(now.getDate()+7*weekDiff+(cell.dataset.day-now.getDay()))) : cellDate = new Date(displayedDate)).toDateString();
+    eventTime = new Date(new Date(eventDate).setHours(cell.dataset.time-7)).toISOString();
+    socket.emit('delete calendar event', {"room":document.getElementById("displayRoomSelect").value, "time":eventTime, "user":userName});
+  }
+}
+
 function submit() {
 	eventTitle = document.getElementById("nameInput").value;
-	selectedDate = document.getElementById("dateSelect").value;
-	selectedTime = document.getElementById("timeSelect").value;
-	selectedRoom = document.getElementById("roomSelect").value;
+	eventTime = new Date(document.getElementById("dateSelect").value+" "+Number(document.getElementById("timeSelect").value-7)+":00:00").toISOString();
+  selectedRoom = document.getElementById("roomSelect").value;
 	selectedDuration = document.getElementById("durationSelect").value;
-
-  socket.emit('calendar event', {"user":userName, "title":eventTitle, "date":selectedDate, "startTime":selectedTime, "endTime":(Number(selectedTime)+Number(selectedDuration)), "room":selectedRoom});
+  
+  socket.emit('calendar event', {"time":eventTime, "room":selectedRoom, "duration":selectedDuration, "title":eventTitle, "user":userName});
 }

@@ -80,7 +80,7 @@ td
   border: 1px solid black;
 }
 
-table td:not(.selected):not(.disabled):not(.booked):hover
+table td:not(.selected):not(.disabled):not(.requested):hover
 {
   background-color: $highlight;
   cursor: pointer;
@@ -98,9 +98,15 @@ table td:not(.selected):not(.disabled):not(.booked):hover
   cursor: default;
 }
 
-.booked
+.requested
 {
   background-color: $green;
+  cursor: default;
+}
+  
+.bookedByUser
+{
+  background-color: #0000FF;
   cursor: default;
 }
 

@@ -67,12 +67,12 @@ WITH (
 );
 
 CREATE TABLE calendar (
-		"user" character varying(8) NOT NULL,
-		title character varying(20) NOT NULL,
-		"date" character varying(20) NOT NULL,
-		"startTime" character varying(20) NOT NULL,
-		"endTime" character varying(20) NOT NULL,
-		room character varying(20) NOT NULL
+    "user" character varying(8) NOT NULL,
+    "time" timestamp NOT NULL,
+    room character varying(20) NOT NULL,
+    duration integer NOT NULL,
+    title character varying(20) NOT NULL,
+    CONSTRAINT calendar_pkey PRIMARY KEY ("time", room)
 );
 
 --

@@ -117,34 +117,44 @@ socket.use(function*(){
   this.data._cookie = this.socket.handshake.headers.cookie;
 })
 
-socket.on('connection', function(io){
+socket.on('write message', function(title, msg){
   var client = db();
-
-  socket.on('write message', function(title, msg){
-    client.query("INSERT INTO messages(title, username, message_body) VALUES ($1, $2, $3);", [title, 'netId' , msg]);
-    io.emit('write message', msg, title);
-  });
-
-  socket.on('delete message', function(message_number){
-    client.query("DELETE FROM messages WHERE message_id = $1;", [message_number]);
-    io.emit('delete message', message_number);
-  });
-
-  socket.on('write task', function(task){
-    client.query("INSERT INTO tasks(task, username) VALUES ($1, $2);", [task, 'netId']);
-    io.emit('write task', task);
-  });
-
-  socket.on('calendar event', function(event) {
-    var cookieObject = JSON.parse(new Buffer(cookie.parse(event._cookie)['koa:sess'], 'base64').toString('utf8'));
-    client.query('INSERT INTO calendar("user", title, date, "startTime", "endTime", room)VALUES ($1, $2, $3, $4, $5, $6);', [cookieObject.user, event.title, event.date, Number(event.startTime), Number(event.startTime) + 1, event.room]);
-    io.emit("calendar event", event);
-  });
-
-  socket.on('delete task', function(t_number){
-    client.query("DELETE FROM tasks WHERE task_id = $1;", [t_number]);
-    io.emit('delete task', t_number);
-  });
-
+  client.query("INSERT INTO messages(title, username, message_body) VALUES ($1, $2, $3);", [title, 'netId' , msg]);
+  app.io.emit('write message', msg, title);
 });
+
+socket.on('delete message', function(message_number){
+  var client = db();
+  client.query("DELETE FROM messages WHERE message_id = $1;", [message_number]);
+  app.io.emit('delete message', message_number);
+});
+
+socket.on('write task', function(task){
+  var client = db();
+  client.query("INSERT INTO tasks(task, username) VALUES ($1, $2);", [task, 'netId']);
+  app.io.emit('write task', task);
+});
+
+socket.on('calendar event', function(event) {
+  var client = db();
+  var cookieObject = JSON.parse(new Buffer(cookie.parse(event._cookie)['koa:sess'], 'base64').toString('utf8'));
+  client.query('INSERT INTO calendar("user", "time", room, duration, title)VALUES ($1, $2, $3, $4, $5);', [cookieObject.user, event.time, event.room, event.duration, event.title]);
+  app.io.emit("calendar event", event);
+});
+
+socket.on('delete calendar event', function(event) {
+  var client = db();
+  var cookieObject = JSON.parse(new Buffer(cookie.parse(event._cookie)['koa:sess'], 'base64').toString('utf8'));
+  if (cookieObject.user === event.user) {
+    client.query('DELETE FROM calendar WHERE room=$1 AND "time"=$2;', [event.room, event.time]);
+    app.io.emit("delete calendar event", event);
+  }
+});
+
+socket.on('delete task', function(t_number){
+  var client = db();
+  client.query("DELETE FROM tasks WHERE task_id = $1;", [t_number]);
+  app.io.emit('delete task', t_number);
+});
+  
 module.exports = app.server;
