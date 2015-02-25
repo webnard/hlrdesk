@@ -103,7 +103,9 @@ app.use(_.get("/signin", function *(){
 
 app.use(_.get("/logout", function *(){
   this.session = null;
-  this.redirect('https://cas.byu.edu/cas/logout');
+  var s = this.request.query.service || null;
+  var url = 'https://cas.byu.edu/cas/logout' + (s ? '?service=' + s : '');
+  this.redirect(url);
 }));
 
 app.use(_.get("/mkadmin",function *(){
