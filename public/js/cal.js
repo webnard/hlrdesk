@@ -28,50 +28,50 @@ document.getElementById("saveButton").addEventListener("click", function() {subm
 
 function updateGrid() {
 
-	var cells = document.querySelectorAll(((currentView === "week") ? "#weekView":"#dayView")+" td");
+  var cells = document.querySelectorAll(((currentView === "week") ? "#weekView":"#dayView")+" td");
   if (document.getElementsByClassName("selected")[0]) {
     var selectedCell = document.getElementsByClassName("selected")[0];
   }
-	if (currentView === "week") {
-		for (var i = 0; i < cells.length; i++) {
-			cells[i].className = "";
-			for (var j = 0; j < events.length; j++) {
-				if (document.getElementById(new Date(events[j].time).toDateString()) && new Date(events[j].time).getDay() == cells[i].dataset.day && new Date(events[j].time).getHours() === cells[i].dataset.time && events[j].room === document.getElementById("displayRoomSelect").value) {
+  if (currentView === "week") {
+    for (var i = 0; i < cells.length; i++) {
+      cells[i].className = "";
+      for (var j = 0; j < events.length; j++) {
+        if (document.getElementById(new Date(events[j].time).toDateString()) && new Date(events[j].time).getDay().toString() === cells[i].dataset.day && new Date(events[j].time).getHours().toString() === cells[i].dataset.time && events[j].room === document.getElementById("displayRoomSelect").value) {
           if (userName == events[j].user) {
             markCellAsBookedByUser(cells[i], events[j]);
           } else {
             markCellAsRequested(cells[i], events[j]);
           }
-					break;
-				}
-			}
-			if (cells[i].className === "") {
-				if (weekDiff < 0 || (weekDiff === 0 && (cells[i].dataset.day < now.getDay() || (cells[i].dataset.day == now.getDay() && cells[i].dataset.time < now.getHours())))) {
-					markCellAsDisabled(cells[i]);
-				} else {
-					markCellAsEnabled(cells[i]);
-				}
-			}
-		}
+          break;
+        }
+      }
+      if (cells[i].className === "") {
+        if (weekDiff < 0 || (weekDiff === 0 && (cells[i].dataset.day < now.getDay() || (cells[i].dataset.day == now.getDay() && cells[i].dataset.time < now.getHours())))) {
+          markCellAsDisabled(cells[i]);
+        } else {
+          markCellAsEnabled(cells[i]);
+        }
+      }
+    }
     document.getElementById("roomSelect").selectedIndex = document.getElementById("displayRoomSelect").selectedIndex;
-	} else if (currentView === "day") {
-		for (var i = 0; i < cells.length; i++) {
-			cells[i].className = "";
-			for (var j = 0; j < events.length; j++) {
-				if (displayedDate == new Date(events[j].date).toDateString() && cells[i].dataset.time == events[j].startTime && cells[i].dataset.room == events[j].room) {
-					markCellAsRequested(cells[i], events[j]);
-					break;
-				}
-			}
-			if (cells[i].className == "") {
-				if (now.toDateString() == displayedDate &&  cells[i].dataset.time < now.getHours()) {
-					markCellAsDisabled(cells[i]);
-				} else {
-					markCellAsEnabled(cells[i]);
-				}
-			}
-		}
-	}
+  } else if (currentView === "day") {
+    for (var i = 0; i < cells.length; i++) {
+      cells[i].className = "";
+      for (var j = 0; j < events.length; j++) {
+        if (displayedDate == new Date(events[j].date).toDateString() && cells[i].dataset.time == events[j].startTime && cells[i].dataset.room == events[j].room) {
+          markCellAsRequested(cells[i], events[j]);
+          break;
+        }
+      }
+      if (cells[i].className == "") {
+        if (now.toDateString() == displayedDate &&  cells[i].dataset.time < now.getHours()) {
+          markCellAsDisabled(cells[i]);
+        } else {
+          markCellAsEnabled(cells[i]);
+        }
+      }
+    }
+  }
   if (selectedCell) {
     clickCell(selectedCell);
     selectedCell = null;
@@ -82,29 +82,29 @@ if (now.getHours() >= 21 && now.getDay() == 6) {changeWeek(1)}
 
 function markCellAsBookedByUser(cell, event) {
   cell.className = "bookedByUser";
-	cell.addEventListener("click", deleteCell);
-	cell.innerHTML = event.title+" - "+event.user+"<br>X";
+  cell.addEventListener("click", deleteCell);
+  cell.innerHTML = event.title+" - "+event.user+"<br>X";
 }
 function markCellAsRequested(cell, event) {
-	cell.className = "requested";
-	cell.removeEventListener("click", clickCell);
-	cell.innerHTML = event.title+" - "+event.user;
+  cell.className = "requested";
+  cell.removeEventListener("click", clickCell);
+  cell.innerHTML = event.title+" - "+event.user;
 }
 function markCellAsDisabled(cell) {
-	cell.className = "disabled";
-	cell.removeEventListener("click", clickCell);
-	cell.innerHTML = "";
+  cell.className = "disabled";
+  cell.removeEventListener("click", clickCell);
+  cell.innerHTML = "";
 }
 function markCellAsEnabled(cell) {
   cell.removeEventListener("click", deleteCell);
-	cell.className = "";
-	cell.addEventListener("click", clickCell);
-	cell.innerHTML = "";
+  cell.className = "";
+  cell.addEventListener("click", clickCell);
+  cell.innerHTML = "";
 }
 
 function clickCell(event) { //places the popup box
-	var cell = event.srcElement ? event.srcElement : event;
-	while (cell.className != "") {
+  var cell = event.srcElement ? event.srcElement : event;
+  while (cell.className != "") {
     if (document.getElementById((currentView === "week" ? days[cell.dataset.day] : cell.dataset.room)+" "+(Number(cell.dataset.time)+1))) {
       cell = document.getElementById((currentView === "week" ? days[cell.dataset.day] : cell.dataset.room)+" "+(Number(cell.dataset.time)+1));
     } else {
@@ -113,23 +113,23 @@ function clickCell(event) { //places the popup box
       alert("Sorry, the requested time slot is not available. Please select a different time or room.")
       break;
     }
-	}
+  }
 
-	while (document.getElementsByClassName("selected").length > 0) {
-		document.getElementsByClassName("selected")[0].classList.remove("selected");
-	}
-	for (var i = 1; i <= Number(document.getElementById("durationSelect").value); i++) {
-		document.getElementById((currentView === "week" ? days[cell.dataset.day] : cell.dataset.room)+" "+(Number(cell.dataset.time)+(i-1))).className = "selected";
-	}
+  while (document.getElementsByClassName("selected").length > 0) {
+    document.getElementsByClassName("selected")[0].classList.remove("selected");
+  }
+  for (var i = 1; i <= Number(document.getElementById("durationSelect").value); i++) {
+    document.getElementById((currentView === "week" ? days[cell.dataset.day] : cell.dataset.room)+" "+(Number(cell.dataset.time)+(i-1))).className = "selected";
+  }
 
   document.getElementById("popup").className = "popup";
-	document.getElementById("popup").style.top = currentView == "week"  ? ((cell.offsetTop-document.getElementById("popup").offsetHeight+(document.getElementById("weekView").offsetHeight/14)-13)+document.getElementById("weekView").offsetTop).toString()+"px" : ((cell.offsetTop-document.getElementById("popup").offsetHeight+(document.getElementById("dayView").offsetHeight/14)-13)+document.getElementById("dayView").offsetTop).toString()+"px";
+  document.getElementById("popup").style.top = currentView == "week"  ? ((cell.offsetTop-document.getElementById("popup").offsetHeight+(document.getElementById("weekView").offsetHeight/14)-13)+document.getElementById("weekView").offsetTop).toString()+"px" : ((cell.offsetTop-document.getElementById("popup").offsetHeight+(document.getElementById("dayView").offsetHeight/14)-13)+document.getElementById("dayView").offsetTop).toString()+"px";
   document.getElementById("popup").style.left = (cell.offsetLeft.toString()-((document.getElementById("popup").offsetWidth-cell.offsetWidth)/2))+"px";
 
   for (var i = 0; i < document.getElementById("dateSelect").length; i++) { //selects right date
-	 if (new Date(document.getElementById("dateSelect").options[i].value).toDateString() == new Date((currentView === "week") ? new Date(new Date().setDate(now.getDate()+7*weekDiff+(cell.dataset.day-now.getDay()))) : cellDate = new Date(displayedDate)).toDateString()) {
-			document.getElementById("dateSelect").selectedIndex = i;
-	 }
+   if (new Date(document.getElementById("dateSelect").options[i].value).toDateString() == new Date((currentView === "week") ? new Date(new Date().setDate(now.getDate()+7*weekDiff+(cell.dataset.day-now.getDay()))) : cellDate = new Date(displayedDate)).toDateString()) {
+      document.getElementById("dateSelect").selectedIndex = i;
+   }
   }
 
   for (var i = 8; i <= 20; i++) {  //selects right time
@@ -141,32 +141,32 @@ function clickCell(event) { //places the popup box
   }
   document.getElementById("timeSelect").selectedIndex = cell.dataset.time-8;
 
-	if (currentView === "day") { //selects right room
-		for (var i = 0; i < document.getElementById("roomSelect").options.length; i++) {
-			if (document.getElementById("roomSelect").options[i].value == cell.dataset.room) {
-				document.getElementById("roomSelect").selectedIndex = i;
-			}
-		}
-	}
+  if (currentView === "day") { //selects right room
+    for (var i = 0; i < document.getElementById("roomSelect").options.length; i++) {
+      if (document.getElementById("roomSelect").options[i].value == cell.dataset.room) {
+        document.getElementById("roomSelect").selectedIndex = i;
+      }
+    }
+  }
 }
 
 function updateCell() {
-	while (document.getElementsByClassName("selected").length > 0) {
-		document.getElementsByClassName("selected")[0].classList.remove("selected");
-	}
-	if (currentView == "week") {
-		if (new Date(document.getElementById("dateSelect").value) >  new Date(document.getElementsByClassName("day")[5].id)) {
-		  do {changeWeek(1)} while (new Date(document.getElementById("dateSelect").value) >  new Date(document.getElementsByClassName("day")[5].id));
-		} else if (new Date(document.getElementById("dateSelect").value) <  new Date(document.getElementsByClassName("day")[0].id)) {
-		  do {changeWeek(-1)} while (new Date(document.getElementById("dateSelect").value) <  new Date(document.getElementsByClassName("day")[0].id));
-		}
-		clickCell(document.getElementById(days[new Date(document.getElementById("dateSelect").value).getDay()]+" "+(document.getElementById("timeSelect").selectedIndex+8)));
-	} else if(currentView == "day") {
-		if (new Date(document.getElementById("dateSelect").value).toDateString() != displayedDate) {
-			changeDay((new Date(document.getElementById("dateSelect").value).getTime() - new Date(displayedDate).getTime())/86400000);
-		}
-		clickCell(document.getElementById(document.getElementById("roomSelect").value+" "+(document.getElementById("timeSelect").selectedIndex+8)));
-	}
+  while (document.getElementsByClassName("selected").length > 0) {
+    document.getElementsByClassName("selected")[0].classList.remove("selected");
+  }
+  if (currentView == "week") {
+    if (new Date(document.getElementById("dateSelect").value) >  new Date(document.getElementsByClassName("day")[5].id)) {
+      do {changeWeek(1)} while (new Date(document.getElementById("dateSelect").value) >  new Date(document.getElementsByClassName("day")[5].id));
+    } else if (new Date(document.getElementById("dateSelect").value) <  new Date(document.getElementsByClassName("day")[0].id)) {
+      do {changeWeek(-1)} while (new Date(document.getElementById("dateSelect").value) <  new Date(document.getElementsByClassName("day")[0].id));
+    }
+    clickCell(document.getElementById(days[new Date(document.getElementById("dateSelect").value).getDay()]+" "+(document.getElementById("timeSelect").selectedIndex+8)));
+  } else if(currentView == "day") {
+    if (new Date(document.getElementById("dateSelect").value).toDateString() != displayedDate) {
+      changeDay((new Date(document.getElementById("dateSelect").value).getTime() - new Date(displayedDate).getTime())/86400000);
+    }
+    clickCell(document.getElementById(document.getElementById("roomSelect").value+" "+(document.getElementById("timeSelect").selectedIndex+8)));
+  }
 }
 
 function changeWeek(direction) {
@@ -183,53 +183,53 @@ function changeWeek(direction) {
 }
 
 function changeDay(direction) {
-	displayedDate = new Date(new Date(displayedDate).getTime() + 86400000*direction).toDateString();
-	if (new Date(displayedDate).getDay() === 0) {displayedDate = new Date(new Date(displayedDate).getTime() + 86400000*direction).toDateString()} //needs optimization
-	document.getElementById("date").innerHTML = displayedDate;
-	updateGrid();
-	document.getElementById("previousDay").disabled = (displayedDate === now.toDateString()) ? true : false;
-	selectedDay = displayedDate;
+  displayedDate = new Date(new Date(displayedDate).getTime() + 86400000*direction).toDateString();
+  if (new Date(displayedDate).getDay() === 0) {displayedDate = new Date(new Date(displayedDate).getTime() + 86400000*direction).toDateString()} //needs optimization
+  document.getElementById("date").innerHTML = displayedDate;
+  updateGrid();
+  document.getElementById("previousDay").disabled = (displayedDate === now.toDateString()) ? true : false;
+  selectedDay = displayedDate;
 }
 
 function changeView() {
-	document.getElementById("popup").className = "hidden";
-	if (currentView === "week") {
-		document.getElementById("weekView").classList.toggle("hidden");
-		document.getElementById("dayView").classList.toggle("hidden");
-		currentView = "day";
-	} else if (currentView === "day") {
-		document.getElementById("weekView").classList.toggle("hidden");
-		document.getElementById("dayView").classList.toggle("hidden");
-		currentView = "week";
-	}
+  document.getElementById("popup").className = "hidden";
+  if (currentView === "week") {
+    document.getElementById("weekView").classList.toggle("hidden");
+    document.getElementById("dayView").classList.toggle("hidden");
+    currentView = "day";
+  } else if (currentView === "day") {
+    document.getElementById("weekView").classList.toggle("hidden");
+    document.getElementById("dayView").classList.toggle("hidden");
+    currentView = "week";
+  }
   while (document.getElementsByClassName("selected")[0]) {
     document.getElementsByClassName("selected")[0].className = "";
   };
-	updateGrid();
+  updateGrid();
 }
 
 socket.on("calendar event", function(event){
   event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
-	events.push(event);
+  events.push(event);
   document.getElementById("popup").className = "hidden";
   while (document.getElementsByClassName("selected").length > 0) {
-		document.getElementsByClassName("selected")[0].classList.remove("selected");
-	}
-	updateGrid();
+    document.getElementsByClassName("selected")[0].classList.remove("selected");
+  }
+  updateGrid();
 });
 
 socket.on("delete calendar event", function(event) {
   event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
-	for (var i = 0; i < events.length; i++) {
+  for (var i = 0; i < events.length; i++) {
     if (events[i].time === event.time && events[i].room == event.room) {
        events.splice(i,1);
     }
   }
   document.getElementById("popup").className = "hidden";
   while (document.getElementsByClassName("selected").length > 0) {
-		document.getElementsByClassName("selected")[0].classList.remove("selected");
-	}
-	updateGrid()
+    document.getElementsByClassName("selected")[0].classList.remove("selected");
+  }
+  updateGrid()
 });
 
 function deleteCell(event) {
@@ -242,10 +242,10 @@ function deleteCell(event) {
 }
 
 function submit() {
-	eventTitle = document.getElementById("nameInput").value;
-	eventTime = new Date(document.getElementById("dateSelect").value+" "+Number(document.getElementById("timeSelect").value-7)+":00:00").toISOString();
+  eventTitle = document.getElementById("nameInput").value;
+  eventTime = new Date(document.getElementById("dateSelect").value+" "+Number(document.getElementById("timeSelect").value-7)+":00:00").toISOString();
   selectedRoom = document.getElementById("roomSelect").value;
-	selectedDuration = document.getElementById("durationSelect").value;
+  selectedDuration = document.getElementById("durationSelect").value;
   
   socket.emit('calendar event', {"time":eventTime, "room":selectedRoom, "duration":selectedDuration, "title":eventTitle, "user":userName});
 }
