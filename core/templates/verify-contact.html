@@ -1,0 +1,17 @@
+<form id=verify-contact>
+  <header>
+    <h1>Please verify your contact information</h1>
+    <small>We will use this information to alert you when your
+    items are due</small>
+  </header>
+
+  <label for=name>Name:</label><input id=name type=text value="<%= name %>" >
+  <label for=phone>Phone Number:</label><input id=phone type=tel value="<%= phone %>">
+  <label for=email>Email:</label><input id=email type=email value="<%= email %>">
+  <input type=submit>
+
+</form>
+
+<!-- TODO: get these two includes in the non-admin layout, then remove from here -->
+<link href=/css/verify-contact.css rel=stylesheet>
+<script src="/socket.io/socket.io.js"></script>

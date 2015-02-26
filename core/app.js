@@ -128,6 +128,16 @@ app.use(_.get("/mkadmin",function *(){
   auth.mkadmin(this.session.user, to_mk);
 }));
 
+app.use(_.get("/tablet", function *(next) {
+  yield this.render('verify-contact', {
+    layout: false, // TODO: use non-admin layout
+    name: this.session.attributes.fullName,
+    phone: '', // TODO: get from somewhere
+    email: this.session.attributes.emailAddress
+  });
+  yield next;
+}));
+
 socket.start(app);
 
 socket.use(function*(){

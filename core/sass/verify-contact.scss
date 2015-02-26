@@ -1,0 +1,14 @@
+#verify-contact {
+  width: 90%;
+  display: block;
+  margin: auto;
+  label, input:not([type=submit]) {
+    width: 50%;
+    display: inline-block;
+    vertical-align: center;
+    margin-bottom: 1em;
+  }
+  input[type=submit] {
+    float: right;
+  }
+}

@@ -109,10 +109,12 @@ ALTER SEQUENCE messages_message_id_seq OWNED BY messages.message_id;
 
 CREATE TABLE users (
     netid character varying(8),
+    admin boolean DEFAULT false,
+    email character varying(355),
+    name character varying(255),
+    phone character varying(15),
     CONSTRAINT users_pkey PRIMARY KEY (netid)
 );
-ALTER TABLE users ADD "admin" boolean DEFAULT false;
-
 
 --
 -- TOC entry 1863 (class 2604 OID 24619)
