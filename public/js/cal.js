@@ -58,8 +58,12 @@ function updateGrid() {
     for (var i = 0; i < cells.length; i++) {
       cells[i].className = "";
       for (var j = 0; j < events.length; j++) {
-        if (displayedDate == new Date(events[j].date).toDateString() && cells[i].dataset.time == events[j].startTime && cells[i].dataset.room == events[j].room) {
-          markCellAsRequested(cells[i], events[j]);
+        if (displayedDate === new Date(events[j].time).toDateString() && cells[i].dataset.time === new Date(events[j].time).getHours().toString() && events[j].room === cells[i].dataset.room) {
+          if (userName == events[j].user) {
+            markCellAsBookedByUser(cells[i], events[j]);
+          } else {
+            markCellAsRequested(cells[i], events[j]);
+          }
           break;
         }
       }
@@ -82,6 +86,7 @@ if (now.getHours() >= 21 && now.getDay() == 6) {changeWeek(1)}
 
 function markCellAsBookedByUser(cell, event) {
   cell.className = "bookedByUser";
+  cell.removeEventListener("click", clickCell);
   cell.addEventListener("click", deleteCell);
   cell.innerHTML = event.title+" - "+event.user+"<br>X";
 }
@@ -92,6 +97,7 @@ function markCellAsRequested(cell, event) {
 }
 function markCellAsDisabled(cell) {
   cell.className = "disabled";
+  cell.removeEventListener("deleteCell", deleteCell);
   cell.removeEventListener("click", clickCell);
   cell.innerHTML = "";
 }
@@ -209,7 +215,6 @@ function changeView() {
 }
 
 socket.on("calendar event", function(event){
-  event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
   events.push(event);
   document.getElementById("popup").className = "hidden";
   while (document.getElementsByClassName("selected").length > 0) {
@@ -219,9 +224,8 @@ socket.on("calendar event", function(event){
 });
 
 socket.on("delete calendar event", function(event) {
-  event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
   for (var i = 0; i < events.length; i++) {
-    if (events[i].time === event.time && events[i].room == event.room) {
+    if (new Date(events[i].time).toLocaleString() === event.time && events[i].room === event.room) {
        events.splice(i,1);
     }
   }
@@ -236,14 +240,14 @@ function deleteCell(event) {
   if(confirm("Are you sure you want to delete this room reservation?")){
     cell = event.srcElement;
     eventDate = new Date((currentView === "week") ? new Date(new Date().setDate(now.getDate()+7*weekDiff+(cell.dataset.day-now.getDay()))) : cellDate = new Date(displayedDate)).toDateString();
-    eventTime = new Date(new Date(eventDate).setHours(cell.dataset.time-7)).toISOString();
-    socket.emit('delete calendar event', {"room":document.getElementById("displayRoomSelect").value, "time":eventTime, "user":userName});
+    eventTime = new Date(new Date(eventDate).setHours(cell.dataset.time)).toLocaleString();
+    socket.emit('delete calendar event', {"room":(currentView === "week" ? document.getElementById("displayRoomSelect").value : cell.dataset.room), "time":eventTime, "user":userName});
   }
 }
 
 function submit() {
   eventTitle = document.getElementById("nameInput").value;
-  eventTime = new Date(document.getElementById("dateSelect").value+" "+Number(document.getElementById("timeSelect").value-7)+":00:00").toISOString();
+  eventTime = new Date(document.getElementById("dateSelect").value+" "+Number(document.getElementById("timeSelect").value)+":00:00").toLocaleString();
   selectedRoom = document.getElementById("roomSelect").value;
   selectedDuration = document.getElementById("durationSelect").value;
   

@@ -156,5 +156,4 @@ socket.on('delete task', function(t_number){
   client.query("DELETE FROM tasks WHERE task_id = $1;", [t_number]);
   app.io.emit('delete task', t_number);
 });
-  
 module.exports = app.server;
