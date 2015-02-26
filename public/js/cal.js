@@ -147,13 +147,13 @@ function clickCell(event) { //places the popup box
   }
   document.getElementById("timeSelect").selectedIndex = cell.dataset.time-8;
 
-	if (currentView === "day") { //selects right room
-		for (var i = 0; i < document.getElementById("roomSelect").options.length; i++) {
-			if (document.getElementById("roomSelect").options[i].value == cell.dataset.room) {
-				document.getElementById("roomSelect").selectedIndex = i;
-			}
-		}
-	}
+  if (currentView === "day") { //selects right room
+    for (var i = 0; i < document.getElementById("roomSelect").options.length; i++) {
+      if (document.getElementById("roomSelect").options[i].value == cell.dataset.room) {
+        document.getElementById("roomSelect").selectedIndex = i;
+      }
+    }
+  }
 }
 
 function updateCell() {
