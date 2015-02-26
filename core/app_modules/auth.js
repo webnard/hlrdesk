@@ -4,9 +4,9 @@ var db = require('./db')
 var co = require ('co')
 
 check_id = co.wrap(function*(netid){
-  var client = db();
-  var is_user = yield client.query("SELECT CASE WHEN EXISTS (SELECT * FROM users WHERE netid = $1) THEN 'TRUE' ELSE 'FALSE' end;", [netid])
-  return yield Promise.resolve(is_user.rows[0].case == "TRUE");
+  // TODO: remove this method when we're sure nothing else is using it
+  console.warn('auth.check_id() has been deprecated; use user.exists() instead');
+  return yield require('./user').exists.apply(this, arguments);
 })
 
 check_admin = co.wrap(function*(user){
