@@ -1,4 +1,5 @@
-var expect     = require('expect.js');
+var expect  = require('expect.js'),
+    request = require('supertest');
 
 describe('auth', function() {
   var auth = require('../core/app_modules/auth');
@@ -17,8 +18,24 @@ describe('auth', function() {
     });
   });
 
-  describe('#cas_login()', function() {
-    // do something
-  });
+});
 
+describe('browser login', function(done) {
+  it('should redirect me to my desired location after logging in', function() {
+    var agent = request(require('../core/app'));
+    var url = '/calendar';
+    agent
+      .get(url)
+      .end(function(err, res) {
+        expect(res.headers).to.have.key('set-cookie');
+        agent
+          .get('/logmein?as=prabbit')
+          .end(function() {
+            agent
+              .get('/')
+              .expect(302)
+              .expect('Location', url, done);
+          });
+      });
+  });
 });

@@ -25,6 +25,13 @@ module.exports = {
     return (port == 443 && host.match(/\.byu\.edu$/) !== null);
   },
 
+  login: function(ctx, obj) {
+    var client = db();
+    ctx.session.user=obj.username;
+    ctx.session.attributes=obj.attributes;
+    client.query("INSERT INTO users(netid) VALUES ($1);", [obj.username] )
+  },
+
   // retrieves a service for use when logging in through CAS
   service: function(host, port, endpoint, no_proxy) {
     if(!no_proxy && !this.has_cas_access(host, port)) {

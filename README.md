@@ -43,6 +43,13 @@ EMAILSERVICE=Gmail (note the cap)
 EMAILPASS=my.password.here
 ```
 
+### Testing
+
+Test files can be found under `tests/`, with mock session data in
+`tests/sessions/` and mock database data in `core/db/mock-data.sql`
+
+Run `npm test` to run the tests.
+
 ### Deployment
 
 Deployment to our servers can be done using one of the following commands and
