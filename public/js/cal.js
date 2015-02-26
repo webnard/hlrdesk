@@ -86,7 +86,7 @@ if (now.getHours() >= 21 && now.getDay() == 6) {changeWeek(1)}
 
 function markCellAsBookedByUser(cell, event) {
   cell.className = "bookedByUser";
-  cell.removeEventListener("click", clickCell);
+  cell.removeEventListener("click", deleteCell);
   cell.addEventListener("click", deleteCell);
   cell.innerHTML = event.title+" - "+event.user+"<br>X";
 }
@@ -215,6 +215,7 @@ function changeView() {
 }
 
 socket.on("calendar event", function(event){
+  event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
   events.push(event);
   document.getElementById("popup").className = "hidden";
   while (document.getElementsByClassName("selected").length > 0) {
@@ -224,6 +225,7 @@ socket.on("calendar event", function(event){
 });
 
 socket.on("delete calendar event", function(event) {
+  event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
   for (var i = 0; i < events.length; i++) {
     if (new Date(events[i].time).toLocaleString() === event.time && events[i].room === event.room) {
        events.splice(i,1);
