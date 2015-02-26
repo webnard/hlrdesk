@@ -86,7 +86,7 @@ if (now.getHours() >= 21 && now.getDay() == 6) {changeWeek(1)}
 
 function markCellAsBookedByUser(cell, event) {
   cell.className = "bookedByUser";
-  cell.removeEventListener("click", deleteCell);
+  cell.removeEventListener("click", clickCell);
   cell.addEventListener("click", deleteCell);
   cell.innerHTML = event.title+" - "+event.user+"<br>X";
 }
