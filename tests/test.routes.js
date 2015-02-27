@@ -1,8 +1,10 @@
 /**
  * See http://mochajs.org/ for documentation.
  */
-var expect  = require('expect.js'),
+var chai = require('chai'),
+    expect = chai.expect,
     request = require('supertest');
+chai.use(require('chai-as-promised'));
 
 describe('/', function() {
   it('should redirect if we are not signed in', function(done) {

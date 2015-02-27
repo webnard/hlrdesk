@@ -1,4 +1,7 @@
-var expect = require('expect.js');
+var chai = require('chai'),
+    expect = chai.expect;
+
+chai.use(require('chai-as-promised'));
 
 describe('inventory', function() {
   beforeEach(require('./resetdb'));
@@ -6,23 +9,23 @@ describe('inventory', function() {
 
   describe('#exists(call)', function() {
     it('should return true if item exists', function* () {
-      expect(yield inventory.exists('HELLO')).to.be(true);
+      expect(yield inventory.exists('HELLO')).to.be.true;
     });
     it("should return false if item doesn't exists", function* () {
-      expect(yield inventory.exists('NOEXIST')).to.be(false);
+      expect(yield inventory.exists('NOEXIST')).to.be.false;
     });
   });
 
   describe('#checked_out', function() {
     it('should return an array', function* () {
       var vals = yield inventory.checked_out;
-      expect(vals).to.be.an(Array);
+      expect(vals).to.be.an.instanceof(Array);
     });
     it('should return expected properties', function* () {
       var items = yield inventory.checked_out;
       var item = items[0];
       var keys = 'call_number overdue name owner due attendant volume copy extensions'.split(' ');
-      expect(item).to.have.keys(keys);
+      expect(item).to.contain.keys(keys);
     });
   });
 
@@ -73,7 +76,7 @@ describe('inventory', function() {
       var patron = 'milo';
       var employee = 'tock';
       var val = yield inventory.check_out(call, patron, employee, TOMORROW);
-      expect(val).to.be.ok();
+      expect(val).to.be.ok;
     });
     it('should increase the number of checked-out items by one', function* () {
       var call = 'M347FEST';
@@ -82,7 +85,7 @@ describe('inventory', function() {
       var checked_out_length = (yield inventory.checked_out).length;
       yield inventory.check_out(call, patron, employee, TOMORROW);
       var checked_out_length2 = (yield inventory.checked_out).length;
-      expect(checked_out_length2).to.be(checked_out_length + 1);
+      expect(checked_out_length2).to.equal(checked_out_length + 1);
     });
     it('should add the checked-out item to the database', function* () {
       // remove everything first of all, because it's easier to parse then
@@ -94,9 +97,9 @@ describe('inventory', function() {
       yield client.query('TRUNCATE checked_out');
       yield inventory.check_out(call, patron, employee, TOMORROW);
       var checked_out = (yield inventory.checked_out)[0];
-      expect(checked_out.call_number).to.be(call);
-      expect(checked_out.owner).to.be(patron);
-      expect(checked_out.attendant).to.be(employee);
+      expect(checked_out.call_number).to.equal(call);
+      expect(checked_out.owner).to.equal(patron);
+      expect(checked_out.attendant).to.equal(employee);
     });
   });
 
@@ -105,12 +108,12 @@ describe('inventory', function() {
       var call = 'HELLO';
       var patron = 'milo';
       var result = yield inventory.check_in(call, patron, 'tock');
-      expect(result).to.be(true);
+      expect(result).to.be.true;
     });
     it('should return true if a different employee checks the item in', function* () {
       var call = 'HELLO';
       var patron = 'milo';
-      expect(yield inventory.check_in(call, patron, 'lecanii')).to.be(true);
+      expect(yield inventory.check_in(call, patron, 'lecanii')).to.be.true;
     });
     it('should remove the item from the checked_out list', function* () {
       var items = yield inventory.checked_out;
