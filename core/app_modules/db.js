@@ -1,10 +1,6 @@
 //var pg = require('pg');
 var pg = require('postgres-gen');
 var defaults = {};
-var timestampOID = 1114;
-pg.types.setTypeParser(timestampOID, function(stringValue) {
-  return stringValue;
-})
 defaults.user = process.env.PGUSER;
 defaults.password = process.env.PGPASS;
 defaults.host = process.env.PGHOST;
