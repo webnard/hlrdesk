@@ -12,6 +12,9 @@ example is for a `~/.pam_environment` file on an Ubuntu machine. `npm start`
 will attempt to evaluate this file (see `package.json` for details) if it
 exists.
 
+If you are running Dokku, specify the TZ environment variable to make
+sure your time zone is accurate.
+
 ```bash
 HLRDESK_DEV=true
 
