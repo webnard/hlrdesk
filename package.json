@@ -16,7 +16,7 @@
     "moment": "^2.8.4",
     "nodemailer": "1.3.0",
     "pg": "^4.2.0",
-    "postgres-gen": "^0.6.0",
+    "postgres-gen": "git://github.com/webnard/node-postgres-gen.git#expose-types",
     "socket.io": "^1.2.1"
   },
   "devDependencies": {
