@@ -9,7 +9,7 @@ MOCK_DATA_FILE=core/db/mock-data.sql
 export $(./.env.sh)
 
 printf "Creating and populating test database $TEST_DB"
-psql -c "DROP DATABASE IF EXISTS $TEMPLATE_DB" >/dev/null
+dropdb $TEMPLATE_DB --if-exists >/dev/null 2>&1
 printf "."
 createdb $TEMPLATE_DB >/dev/null
 printf "."
@@ -17,8 +17,7 @@ psql $TEMPLATE_DB < $SCHEMA_FILE >/dev/null
 printf "."
 psql $TEMPLATE_DB < $MOCK_DATA_FILE >/dev/null
 printf "."
-
-psql -c "DROP DATABASE IF EXISTS $TEST_DB" >/dev/null
+dropdb $TEST_DB --if-exists >/dev/null 2>&1
 printf "."
 createdb $TEST_DB -T $TEMPLATE_DB >/dev/null
 printf " Done!\n"
