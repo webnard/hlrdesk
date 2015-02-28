@@ -8,7 +8,7 @@ var selectedRoom;
 var eventTitle;
 
 var weekDiff = 0;
-var now = new Date();
+var now = new Date(now);
 var cellDate = now;
 var displayedDate = now.toDateString();
 var days = ["", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
