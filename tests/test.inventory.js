@@ -34,42 +34,30 @@ describe('inventory', function() {
     const TOMORROW = moment().add(1, 'day').toDate();
     const YESTERDAY = moment().subtract(1, 'day').toDate();
 
-    it('should throw an error if the item does not exist', function* (done) {
+    it('should throw an error if the item does not exist', function* () {
       var call = 'I-DO-NOT-EXIST';
       var patron = 'milo';
-      try {
-        yield inventory.check_out(call, patron, 'tock', TOMORROW);
-      }catch(e) {
-        done();
-      }
+      var promise = inventory.check_out(call, patron, 'tock', TOMORROW);
+      return expect(promise).to.eventually.be.rejected;
     });
-    it('should throw an error if the patron does not exist', function* (done) {
+    it('should throw an error if the patron does not exist', function* () {
       var call = 'HELLO';
       var patron = 'I-SHOULD-NOT-EXIST';
-      try {
-        yield inventory.check_out(call, patron, 'tock', TOMORROW);
-      }catch(e) {
-        done();
-      }
+      var promise = inventory.check_out(call, patron, 'tock', TOMORROW);
+      return expect(promise).to.eventually.be.rejected;
     });
-    it('should throw an error if the employee is not an admin', function* (done) {
+    it('should throw an error if the employee is not an admin', function* () {
       var call = 'HELLO';
       var patron = 'milo';
       var employee = 'notadm';
-      try {
-        yield inventory.check_out(call, patron, employee, TOMORROW);
-      }catch(e) {
-        done();
-      }
+      var promise = inventory.check_out(call, patron, employee, TOMORROW);
+      return expect(promise).to.eventually.be.rejected;
     });
-    it('should throw an error if the due date is before the current time', function* (done) {
+    it('should throw an error if the due date is before the current time', function* () {
       var call = 'HELLO';
       var patron = 'milo';
-      try {
-        yield inventory.check_out(call, patron, 'tock', YESTERDAY);
-      }catch(e) {
-        done();
-      }
+      var promise = inventory.check_out(call, patron, 'tock', YESTERDAY);
+      return expect(promise).to.eventually.be.rejected;
     });
     it('should resolve as true', function* () {
       var call = 'M347FEST';
@@ -145,41 +133,29 @@ describe('inventory', function() {
         length = new_length;
       }
     });
-    it('should throw an error if item does not exist', function* (done) {
+    it('should throw an error if item does not exist', function* () {
       var call = 'I-DO-NOT-EXIST';
       var patron = 'milo';
-      try {
-        yield inventory.check_in(call, 'milo', 'tock');
-      } catch(e) {
-        done();
-      };
+      var promise = inventory.check_in(call, 'milo', 'tock');
+      return expect(promise).to.eventually.be.rejected;
     });
-    it('should throw an error if item is not checked out', function* (done) {
+    it('should throw an error if item is not checked out', function* () {
       var call = 'I-AM-NOT-CHECKED-OUT';
       var patron = 'milo';
-      try {
-        yield inventory.check_in(call, 'milo', 'tock');
-      } catch(e) {
-        done();
-      };
+      var promise = inventory.check_in(call, 'milo', 'tock');
+      return expect(promise).to.eventually.be.rejected;
     });
-    it('should throw an error if patron does not exist', function* (done) {
+    it('should throw an error if patron does not exist', function* () {
       var call = 'HELLO';
       var patron = 'noexist';
-      try {
-        yield inventory.check_in(call, patron, 'tock');
-      } catch(e) {
-        done();
-      };
+      var promise = inventory.check_in(call, patron, 'tock');
+      return expect(promise).to.eventually.be.rejected;
     });
-    it('should throw an error if the item is checked out, but not by the given patron', function* (done) {
+    it('should throw an error if the item is checked out, but not by the given patron', function* () {
       var call = 'HELLO';
       var patron = 'thoreau';
-      try {
-        yield inventory.check_in(call, patron, 'tock');
-      } catch(e) {
-        done();
-      };
+      var promise = inventory.check_in(call, patron, 'tock');
+      return expect(promise).to.eventually.be.rejected;
     });
   });
 });
