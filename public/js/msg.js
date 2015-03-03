@@ -75,7 +75,9 @@ function newTask() {
         socket.emit('write task', $('#new_task').val());
         document.getElementById("add_task").innerHTML = '';
         $('#new_task').val('');
-        return false;
+        document.getElementById("task_sort").innerHTML = '';
+        
+        return true;
       });
 };
 //Delete Task
