@@ -15,8 +15,10 @@ var email = require('./app_modules/email')
 
 var auth = require('./app_modules/auth')
 var db = require('./app_modules/db')
+
 const ENV = process.env;
 const SERVICE = auth.service(ENV.HLRDESK_HOST, ENV.PORT, '/signin', !ENV.HLRDESK_DEV);
+
 var USE_LAYOUT;
 
 if(ENV.HLRDESK_DEV) {
@@ -28,13 +30,21 @@ app.use(session());
 
 app.use(serve(path.join(__dirname, '..', 'public')));
 
+if(ENV.NODE_TEST === 'true') {
+  // e.g., /logmein?as=prabbit
+  // see tests/sessions/* for available users
+  require('./app_modules/mock-login')(app);
+}
+
 app.use(function*(next){
-  if (!this.session.user && this.request.path!='/signin' && this.request.path!='/logout'){
-    this.redirect('https://cas.byu.edu/cas/login?service='+SERVICE)
-    return
+  const WHITELIST = ['/signin', '/logmein', '/logout'];
+  if (!this.session.user && WHITELIST.indexOf(this.request.path) === -1){
+    this.session.login_redirect = this.request.path + this.request.search;
+    this.redirect('https://cas.byu.edu/cas/login?service=' + SERVICE);
+    return;
   }
   else{
-    yield next
+    yield next;
   }
 })
 
@@ -62,8 +72,16 @@ app.use(function *(next) {
   yield next;
 });
 
-app.use(_.get("/", function *() {
+app.use(_.get("/", function *(next) {
+  var rdir = this.session.login_redirect;
+  if(rdir) {
+    this.redirect(rdir);
+    delete this.session.login_redirect;
+    yield next;
+    return;
+  }
   yield this.render('layout', {layout: false, body:""});
+  yield next;
 }));
 
 app.use(_.get("/message", function *() {
@@ -91,19 +109,18 @@ app.use(_.get("/calendar", function *() {
   yield this.render('calendar', {layout: USE_LAYOUT, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user});
 }));
 
-app.use(_.get("/signin", function *(){
+app.use(_.get("/signin", function *(next){
   ticket=this.request.query.ticket;
-  var obj= yield auth.cas_login(ticket, SERVICE);
-  this.session.user=obj.username;
-  this.session.attributes=obj.attributes;
-  var client = db();
-  client.query("INSERT INTO users(netid) VALUES ($1);", [obj.username] )
-  this.redirect('/');
+  var obj = yield auth.cas_login(ticket, SERVICE);
+  auth.login(this, obj);
+  yield next;
 }));
 
 app.use(_.get("/logout", function *(){
   this.session = null;
-  this.redirect('https://cas.byu.edu/cas/logout');
+  var s = this.request.query.service || null;
+  var url = 'https://cas.byu.edu/cas/logout' + (s ? '?service=' + s : '');
+  this.redirect(url);
 }));
 
 app.use(_.get("/mkadmin",function *(){

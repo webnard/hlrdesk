@@ -21,5 +21,18 @@ describe('/logout', function() {
       .expect('Location', 'https://cas.byu.edu/cas/logout')
       .expect(302, done);
   });
+
+  it('should redirect me to my desired location after logging out', function(done) {
+    var server = require('../core/app');
+    var url = "http://example.com";
+
+    request(server)
+      .get('/logout?service='+url)
+      .end(function() {
+        request(this.res.headers.location)
+          .get('')
+          .expect('Location', url, done);
+      });
+  });
 });
 
