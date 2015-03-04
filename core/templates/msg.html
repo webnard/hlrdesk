@@ -26,7 +26,7 @@
 <div id="add_task"></div>
 <form id="task_sort">
 <% all_tasks.rows.forEach(function(rows){%>
-<div class="projects" data-number='<%=rows.task_id%>' id='<%=rows.task_id%>' ><%=rows.task %></div>
+<div class="projects" data-number='<%=rows.task_id%>' data-priority='<%=rows.priority%>' id='<%=rows.task_id%>' ><%=rows.task %></div>
 <%});
 %>
 </form>

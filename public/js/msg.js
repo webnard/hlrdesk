@@ -1,6 +1,6 @@
 var socket = io();
 //Lets you sort the list
-$(function() {
+$(function(event, ui) {
   $("#task_sort" ).sortable({
     placeholder: "on_drag"
   });
@@ -10,10 +10,16 @@ $(function() {
 $(function(){
   var removeIntent = false;
   $('#task_sort').sortable({
-    over: function () {
+    over: function (event, ui) {
+    console.log("Task over "+ui.item.attr("id"));
       removeIntent = false;
     },
-    out: function () {
+    out: function (event, ui) {
+    console.log("Task out " + ui.item.attr("id"));
+    console.dir("Task priority " + ui.item.attr("dataset-priority"));
+    var newTaskOrder = $(this).sortable( "toArray" );
+    console.log(newTaskOrder);
+    socket.emit('reorder tasks', newTaskOrder);
       removeIntent = true;
     },
     beforeStop: function (event, ui){
@@ -63,10 +69,15 @@ function delMsg(message_number){
     socket.emit('delete message', message_number);
   };
 }
+function updateTasks() {
+  console.log("Update Tasks function");
+}
+
 //newTask
 socket.on('write task', function(task){
   $('#task_sort').append($("<div class='projects'></div>").text(task));
 });
+
 function newTask() {
   var task_form = "<div><form id='t_form' action=''><input id='new_task' autocomplete='off' placeholder='New Task' required></input>"
     +"<button id='add_new'>Submit</button></form></div>";
@@ -81,13 +92,17 @@ function newTask() {
       });
 };
 //Delete Task
-socket.on('delete task', function(t_number){
-  var del = document.getElementById(t_number);
-  del.parentNode.removeChild(del);
+socket.on('delete task', function(task){
+        console.log("Task thing = " + task);        
 });
+
 function delTask(t_number){
-  var del_t = confirm("Do you really really want to delete this task?");
-  if (del_t == true){
     socket.emit('delete task', t_number);
-  };
 }
+
+//Reorder Tasks
+socket.on('reorder tasks', function(newTaskOrder){
+  console.log(newTaskOrder);
+  updateTasks();
+  //$('#task_sort').append($("<div class='projects'></div>").text(task));
+});

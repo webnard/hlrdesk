@@ -59,7 +59,7 @@ CREATE TABLE tasks
   task character varying(80) NOT NULL,
   username character varying(50) NOT NULL,
   posted date DEFAULT ('now'::text)::date,
-  --Add a numeric sort
+  priority int,
   CONSTRAINT tasks_pkey PRIMARY KEY (task_id)
 )
 WITH (
