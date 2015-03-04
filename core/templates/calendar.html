@@ -94,9 +94,10 @@
   </section>
 </body>
 <script>
-  var now = <%- date.getTime() %>;
-  var allEvents = <%- JSON.stringify(allCalendarEvents) %>;
-  var userName = "<%- user %>";
+  window.now = <%- date.getTime() %>;
+  window.isAdmin = <%= isAdmin %>;
+  window.allEvents = <%- JSON.stringify(allCalendarEvents) %>;
+  window.userName = "<%- user %>";
 </script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="\js\cal.js"></script>
