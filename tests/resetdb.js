@@ -3,7 +3,7 @@ const ENV = process.env;
 
 function resetDB(callback) {
   // note that ENV.PGDATABASE is set by the .run-tests.sh
-  prom_spawn('psql',ENV.TEMPLATE_DB,'-c','DROP DATABASE IF EXISTS ' + ENV.PGDATABASE)()
+  prom_spawn('dropdb',ENV.PGDATABASE,'--if-exists')()
     .then(prom_spawn('createdb',ENV.PGDATABASE,'-T',ENV.TEMPLATE_DB))
     .then(callback);
 }

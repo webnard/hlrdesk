@@ -9,17 +9,16 @@ MOCK_DATA_FILE=core/db/mock-data.sql
 export $(./.env.sh)
 
 printf "Creating and populating test database $TEST_DB"
-psql -c "DROP DATABASE IF EXISTS $TEMPLATE_DB" >/dev/null
+dropdb $TEMPLATE_DB --if-exists > /dev/null
 printf "."
-createdb $TEMPLATE_DB >/dev/null
+createdb $TEMPLATE_DB > /dev/null
 printf "."
-psql $TEMPLATE_DB < $SCHEMA_FILE >/dev/null
+psql $TEMPLATE_DB < $SCHEMA_FILE > /dev/null
 printf "."
-psql $TEMPLATE_DB < $MOCK_DATA_FILE >/dev/null
+psql $TEMPLATE_DB < $MOCK_DATA_FILE > /dev/null
 printf "."
-
-psql -c "DROP DATABASE IF EXISTS $TEST_DB" >/dev/null
+dropdb $TEST_DB --if-exists > /dev/null
 printf "."
-createdb $TEST_DB -T $TEMPLATE_DB >/dev/null
+createdb $TEST_DB -T $TEMPLATE_DB > /dev/null
 printf " Done!\n"
 NODE_TEST=true PGPOOLSIZE=0 PGDATABASE=$TEST_DB TEMPLATE_DB=$TEMPLATE_DB node --harmony $(npm bin)/istanbul cover _mocha -- --require co-mocha --harmony tests/ "$@"
