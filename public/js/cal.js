@@ -1,4 +1,6 @@
-﻿var events = allEvents.rows;
+﻿(function(){
+
+var events = window.allEvents.rows;
 
 var socket = io();
 
@@ -8,9 +10,9 @@ var selectedRoom;
 var eventTitle;
 
 var weekDiff = 0;
-var now = new Date();
-var cellDate = now;
-var displayedDate = now.toDateString();
+window.now = new Date(window.now);
+var cellDate = window.now;
+var displayedDate = window.now.toDateString();
 var days = ["", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 var currentView = "week";
 
@@ -37,7 +39,7 @@ function updateGrid() {
       cells[i].className = "";
       for (var j = 0; j < events.length; j++) {
         if (document.getElementById(new Date(events[j].time).toDateString()) && new Date(events[j].time).getDay().toString() === cells[i].dataset.day && new Date(events[j].time).getHours().toString() === cells[i].dataset.time && events[j].room === document.getElementById("displayRoomSelect").value) {
-          if (userName == events[j].user) {
+          if (window.userName == events[j].user || isAdmin) {
             markCellAsBookedByUser(cells[i], events[j]);
           } else {
             markCellAsRequested(cells[i], events[j]);
@@ -46,7 +48,7 @@ function updateGrid() {
         }
       }
       if (cells[i].className === "") {
-        if (weekDiff < 0 || (weekDiff === 0 && (cells[i].dataset.day < now.getDay() || (cells[i].dataset.day == now.getDay() && cells[i].dataset.time < now.getHours())))) {
+        if (weekDiff < 0 || (weekDiff === 0 && (cells[i].dataset.day < window.now.getDay() || (cells[i].dataset.day == window.window.now.getDay() && cells[i].dataset.time < window.now.getHours())))) {
           markCellAsDisabled(cells[i]);
         } else {
           markCellAsEnabled(cells[i]);
@@ -59,7 +61,7 @@ function updateGrid() {
       cells[i].className = "";
       for (var j = 0; j < events.length; j++) {
         if (displayedDate === new Date(events[j].time).toDateString() && cells[i].dataset.time === new Date(events[j].time).getHours().toString() && events[j].room === cells[i].dataset.room) {
-          if (userName == events[j].user) {
+          if (window.userName == events[j].user) {
             markCellAsBookedByUser(cells[i], events[j]);
           } else {
             markCellAsRequested(cells[i], events[j]);
@@ -68,7 +70,7 @@ function updateGrid() {
         }
       }
       if (cells[i].className == "") {
-        if (now.toDateString() == displayedDate &&  cells[i].dataset.time < now.getHours()) {
+        if (window.now.toDateString() == displayedDate &&  cells[i].dataset.time < window.now.getHours()) {
           markCellAsDisabled(cells[i]);
         } else {
           markCellAsEnabled(cells[i]);
@@ -82,7 +84,7 @@ function updateGrid() {
   }
 }
 updateGrid();
-if (now.getHours() >= 21 && now.getDay() == 6) {changeWeek(1)}
+if (window.now.getHours() >= 21 && window.now.getDay() == 6) {changeWeek(1)}
 
 function markCellAsBookedByUser(cell, event) {
   cell.className = "bookedByUser";
@@ -133,13 +135,13 @@ function clickCell(event) { //places the popup box
   document.getElementById("popup").style.left = (cell.offsetLeft.toString()-((document.getElementById("popup").offsetWidth-cell.offsetWidth)/2))+"px";
 
   for (var i = 0; i < document.getElementById("dateSelect").length; i++) { //selects right date
-   if (new Date(document.getElementById("dateSelect").options[i].value).toDateString() == new Date((currentView === "week") ? new Date(new Date().setDate(now.getDate()+7*weekDiff+(cell.dataset.day-now.getDay()))) : cellDate = new Date(displayedDate)).toDateString()) {
+   if (new Date(document.getElementById("dateSelect").options[i].value).toDateString() == new Date((currentView === "week") ? new Date(new Date().setDate(window.now.getDate()+7*weekDiff+(cell.dataset.day-window.now.getDay()))) : cellDate = new Date(displayedDate)).toDateString()) {
       document.getElementById("dateSelect").selectedIndex = i;
    }
   }
 
   for (var i = 8; i <= 20; i++) {  //selects right time
-    if (now.getHours() > i && document.getElementById("dateSelect").value === now.toDateString()) {
+    if (window.now.getHours() > i && document.getElementById("dateSelect").value === window.now.toDateString()) {
       document.getElementById("timeSelect").options[i-8].disabled = true;
     } else {
       document.getElementById("timeSelect").options[i-8].disabled = false;
@@ -193,7 +195,7 @@ function changeDay(direction) {
   if (new Date(displayedDate).getDay() === 0) {displayedDate = new Date(new Date(displayedDate).getTime() + 86400000*direction).toDateString()} //needs optimization
   document.getElementById("date").innerHTML = displayedDate;
   updateGrid();
-  document.getElementById("previousDay").disabled = (displayedDate === now.toDateString()) ? true : false;
+  document.getElementById("previousDay").disabled = (displayedDate === window.now.toDateString()) ? true : false;
   selectedDay = displayedDate;
 }
 
@@ -215,6 +217,7 @@ function changeView() {
 }
 
 socket.on("calendar event", function(event){
+  event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
   events.push(event);
   document.getElementById("popup").className = "hidden";
   while (document.getElementsByClassName("selected").length > 0) {
@@ -224,6 +227,7 @@ socket.on("calendar event", function(event){
 });
 
 socket.on("delete calendar event", function(event) {
+  event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
   for (var i = 0; i < events.length; i++) {
     if (new Date(events[i].time).toLocaleString() === event.time && events[i].room === event.room) {
        events.splice(i,1);
@@ -239,9 +243,9 @@ socket.on("delete calendar event", function(event) {
 function deleteCell(event) {
   if(confirm("Are you sure you want to delete this room reservation?")){
     cell = event.srcElement;
-    eventDate = new Date((currentView === "week") ? new Date(new Date().setDate(now.getDate()+7*weekDiff+(cell.dataset.day-now.getDay()))) : cellDate = new Date(displayedDate)).toDateString();
+    eventDate = new Date((currentView === "week") ? new Date(new Date().setDate(window.now.getDate()+7*weekDiff+(cell.dataset.day-window.now.getDay()))) : cellDate = new Date(displayedDate)).toDateString();
     eventTime = new Date(new Date(eventDate).setHours(cell.dataset.time)).toLocaleString();
-    socket.emit('delete calendar event', {"room":(currentView === "week" ? document.getElementById("displayRoomSelect").value : cell.dataset.room), "time":eventTime, "user":userName});
+    socket.emit('delete calendar event', {"room":(currentView === "week" ? document.getElementById("displayRoomSelect").value : cell.dataset.room), "time":eventTime, "user":window.userName});
   }
 }
 
@@ -251,5 +255,6 @@ function submit() {
   selectedRoom = document.getElementById("roomSelect").value;
   selectedDuration = document.getElementById("durationSelect").value;
   
-  socket.emit('calendar event', {"time":eventTime, "room":selectedRoom, "duration":selectedDuration, "title":eventTitle, "user":userName});
+  socket.emit('calendar event', {"time":eventTime, "room":selectedRoom, "duration":selectedDuration, "title":eventTitle, "user":window.userName});
 }
+})();

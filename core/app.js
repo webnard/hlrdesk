@@ -15,10 +15,8 @@ var email = require('./app_modules/email')
 
 var auth = require('./app_modules/auth')
 var db = require('./app_modules/db')
-
 const ENV = process.env;
 const SERVICE = auth.service(ENV.HLRDESK_HOST, ENV.PORT, '/signin', !ENV.HLRDESK_DEV);
-
 var USE_LAYOUT;
 
 if(ENV.HLRDESK_DEV) {
@@ -106,7 +104,8 @@ app.use(_.get('/checked-out', function *() {
 app.use(_.get("/calendar", function *() {
   var client = db();
   var allCalendarEvents = yield client.query("SELECT * FROM calendar;");
-  yield this.render('calendar', {layout: USE_LAYOUT, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user});
+  var isAdmin = yield auth.check_admin(this.session.user);
+  yield this.render('calendar', {layout: USE_LAYOUT, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user, isAdmin:isAdmin});
 }));
 
 app.use(_.get("/signin", function *(next){
@@ -162,7 +161,7 @@ socket.on('calendar event', function(event) {
 socket.on('delete calendar event', function(event) {
   var client = db();
   var cookieObject = JSON.parse(new Buffer(cookie.parse(event._cookie)['koa:sess'], 'base64').toString('utf8'));
-  if (cookieObject.user === event.user) {
+  if (cookieObject.user === event.user/* TODO : || isAdmin */) {
     client.query('DELETE FROM calendar WHERE room=$1 AND "time"=$2;', [event.room, event.time]);
     app.io.emit("delete calendar event", event);
   }
