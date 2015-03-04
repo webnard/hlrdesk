@@ -85,7 +85,7 @@ app.use(_.get("/", function *(next) {
 app.use(_.get("/message", function *() {
   var client = db();
   var all_messages = yield client.query("SELECT * FROM messages;");
-  var all_tasks = yield client.query("Select * FROM tasks");
+  var all_tasks = yield client.query("Select * FROM tasks ORDER BY priority ASC");
   yield this.render('msg', {layout: USE_LAYOUT, all_messages: all_messages, all_tasks: all_tasks});
 }));
 
@@ -147,7 +147,7 @@ socket.on('delete message', function(message_number){
 
 socket.on('write task', function(task){
   var client = db();
-  client.query("INSERT INTO tasks(task, username) VALUES ($1, $2);", [task, 'netId']);
+  client.query("INSERT INTO tasks(task, username, priority) VALUES ($1, $2, -1);", [task, 'netId']);
   app.io.emit('write task', task);
 });
 
@@ -169,7 +169,18 @@ socket.on('delete calendar event', function(event) {
 
 socket.on('delete task', function(t_number){
   var client = db();
+  console.log("\nTask number = " + t_number);
   client.query("DELETE FROM tasks WHERE task_id = $1;", [t_number]);
   app.io.emit('delete task', t_number);
 });
+
+socket.on('reorder tasks', function(newTaskOrder){
+  var client = db();;
+  newTaskOrder.forEach(function (arrayVal, arrayLocation)
+  {
+    client.query("update tasks set priority = $1 where task_id = $2", [arrayLocation,arrayVal]);
+  })
+  app.io.emit('reorder task', newTaskOrder);
+});
+
 module.exports = app.server;
