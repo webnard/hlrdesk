@@ -112,6 +112,7 @@ app.use(_.get("/signin", function *(next){
   ticket=this.request.query.ticket;
   var obj = yield auth.cas_login(ticket, SERVICE);
   auth.login(this, obj);
+  this.redirect('/');
   yield next;
 }));
 
