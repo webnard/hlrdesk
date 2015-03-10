@@ -165,10 +165,10 @@ socket.on('delete calendar event', function(event) {
 socket.on('write task', function(task){
   var client = db();
   client.transaction(function*(t) {
-  var query = "INSERT INTO tasks(task, username, priority) VALUES ($1, $2, -1) RETURNING task_id";
-  var result = yield t.queryOne(query, [task.text, 'netId']);
-  task.task_id = result.task_id;
-  app.io.emit('write task', task);
+    var query = "INSERT INTO tasks(task, username, priority) VALUES ($1, $2, -1) RETURNING task_id";
+    var result = yield t.queryOne(query, [task.text, 'netId']);
+    task.task_id = result.task_id;
+    app.io.emit('write task', task);
   }).catch(console.error);
 });
 
