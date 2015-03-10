@@ -70,6 +70,7 @@ app.use(_.get("/message", function *() {
   var client = db();
   var all_messages = yield client.query("SELECT * FROM messages;");
   var all_tasks = yield client.query("Select * FROM tasks ORDER BY priority ASC");
+  //console.log(all_tasks.rows[0]);
   yield this.render('msg', {layout: USE_LAYOUT, all_messages: all_messages, all_tasks: all_tasks});
 }));
 
@@ -129,12 +130,6 @@ socket.on('delete message', function(message_number){
   app.io.emit('delete message', message_number);
 });
 
-socket.on('write task', function(task){
-  var client = db();
-  client.query("INSERT INTO tasks(task, username, priority) VALUES ($1, $2, -1);", [task, 'netId']);
-  app.io.emit('write task', task);
-});
-
 socket.on('calendar event', function(event) {
   var client = db();
   var cookieObject = JSON.parse(new Buffer(cookie.parse(event._cookie)['koa:sess'], 'base64').toString('utf8'));
@@ -151,10 +146,20 @@ socket.on('delete calendar event', function(event) {
   }
 });
 
+socket.on('write task', function(task){
+  var client = db();
+  console.log("Writing task " + task.text +" ID "+ task.task_id);
+  client.query("INSERT INTO tasks(task, username, priority) VALUES ($1, $2, -1);", [task.text, 'netId']);
+  var max = client.query("SELECT t_id from tasks WHERE t_id = (select max(t_id) from tasks);");
+  //console.log("Max = "+ max.rows[0] );
+  //this is where I am having the problem, I need the task id of the last added item so I can pass it to the clients
+  app.io.emit('write task', task);
+});
+
 socket.on('delete task', function(t_number){
   var client = db();
-  console.log("\nTask number = " + t_number);
-  client.query("DELETE FROM tasks WHERE task_id = $1;", [t_number]);
+  console.log("\nTask text = " + t_number.text);
+  client.query("DELETE FROM tasks WHERE task = $1;", [t_number.text]);
   app.io.emit('delete task', t_number);
 });
 

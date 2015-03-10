@@ -1,4 +1,5 @@
 var socket = io();
+//var newTaskOrder;
 //Lets you sort the list
 $(function(event, ui) {
   $("#task_sort" ).sortable({
@@ -11,12 +12,14 @@ $(function(){
   var removeIntent = false;
   $('#task_sort').sortable({
     over: function (event, ui) {
-    console.log("Task over "+ui.item.attr("id"));
+    var som = ui.item.attr("id")
+    console.log("Task over "+som);
+    var variable = document.getElementById(som).innerHTML;
+    console.log("VARIABLE + " +variable);
       removeIntent = false;
     },
     out: function (event, ui) {
     console.log("Task out " + ui.item.attr("id"));
-    console.dir("Task priority " + ui.item.attr("dataset-priority"));
     var newTaskOrder = $(this).sortable( "toArray" );
     console.log(newTaskOrder);
     socket.emit('reorder tasks', newTaskOrder);
@@ -25,8 +28,11 @@ $(function(){
     beforeStop: function (event, ui){
       if(removeIntent == true){
         var t_id = ui.item.attr("id");
-        ui.item.remove();
-        delTask(t_id);
+        var variable = document.getElementById(t_id).innerHTML;
+        var del_task = {"t_id":t_id, "text":variable};
+        //ask for delete confirmation, use modal window
+        //ui.item.remove();
+        delTask(del_task);
       }
     }
   });
@@ -41,7 +47,7 @@ function newMsg(){
   var msg_form = "<div  class='message'><img class='message_image' src='http://www.placecage.com/gif/100/100' alt='New Message' width='100' height='100'>"
     +"<button class='exit' onclick='removeDraft()'>X</button>"
     +"<form id='m_form'action=''>"
-    +"<input id='m_title' autocomplete='off' placeholder='Title' required></input><br>"
+    +"<input id='m_title' autocomplete='off' autofocus placeholder='Title' required></input><br>"
     +"<input id='m_body' autocomplete='off' placeholder='Message' required></input><br>"
     +"<button id='add_new'>Submit</button><br><br>"
     +"</form></div>";
@@ -69,21 +75,15 @@ function delMsg(message_number){
     socket.emit('delete message', message_number);
   };
 }
-function updateTasks() {
-  console.log("Update Tasks function");
-}
 
-//newTask
-socket.on('write task', function(task){
-  $('#task_sort').append($("<div class='projects'></div>").text(task));
-});
 
 function newTask() {
-  var task_form = "<div><form id='t_form' action=''><input id='new_task' autocomplete='off' placeholder='New Task' required></input>"
+  var task_form = "<div><form id='t_form' action=''><input id='new_task' autocomplete='off' autofocus placeholder='New Task' required></input>"
     +"<button id='add_new'>Submit</button></form></div>";
   document.getElementById("add_task").innerHTML = task_form;
   $('#t_form').submit(function(){
-        socket.emit('write task', $('#new_task').val());
+  var write_task = {"text":$('#new_task').val(), "task_id":-1 };
+        socket.emit('write task', write_task);
         document.getElementById("add_task").innerHTML = '';
         $('#new_task').val('');
         document.getElementById("task_sort").innerHTML = '';
@@ -91,18 +91,38 @@ function newTask() {
         return true;
       });
 };
-//Delete Task
-socket.on('delete task', function(task){
-        console.log("Task thing = " + task);        
+//newTask
+socket.on('write task', function(task){
+  console.log("Write Task function "+task);
+  updateTasks();
+  //$('#task_sort').append($("<div class='projects'></div>").text(task));
 });
 
-function delTask(t_number){
-    socket.emit('delete task', t_number);
+function updateTasks() {
+  console.log("Update Tasks function");
+  
+}
+
+//Delete Task
+socket.on('delete task', function(task){
+  console.log("Delet Task .on = " + task.t_id); 
+  //var del = $(".projects:contains($task)").filter();
+  
+  var del = document.getElementById(task.t_id);
+  console.log("Del = "+ task.t_id);
+  del.parentNode.removeChild(del);    
+});
+
+function delTask(del_task){
+ console.log("DelTask function");
+ console.log(del_task.t_id);
+ console.log(del_task.text);
+  socket.emit('delete task', del_task);
 }
 
 //Reorder Tasks
 socket.on('reorder tasks', function(newTaskOrder){
-  console.log(newTaskOrder);
-  updateTasks();
+  console.log("Reorder Tasks " + newTaskOrder);
+  //updateTasks();
   //$('#task_sort').append($("<div class='projects'></div>").text(task));
 });
