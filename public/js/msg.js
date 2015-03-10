@@ -1,4 +1,5 @@
 var socket = io();
+//var newTaskOrder;
 //Lets you sort the list
 $(function(event, ui) {
   $("#task_sort" ).sortable({
@@ -11,98 +12,109 @@ $(function(){
   var removeIntent = false;
   $('#task_sort').sortable({
     over: function (event, ui) {
-    console.log("Task over "+ui.item.attr("id"));
+      var find = ui.item.attr("id")
+      var newTaskOrder = $(this).sortable( "toArray" );
+      var variable = document.getElementById(find).innerHTML;
+      socket.emit('reorder tasks', newTaskOrder);
       removeIntent = false;
     },
     out: function (event, ui) {
-    console.log("Task out " + ui.item.attr("id"));
-    console.dir("Task priority " + ui.item.attr("dataset-priority"));
-    var newTaskOrder = $(this).sortable( "toArray" );
-    console.log(newTaskOrder);
-    socket.emit('reorder tasks', newTaskOrder);
+      var newTaskOrder = $(this).sortable( "toArray" );
+      socket.emit('reorder tasks', newTaskOrder);
       removeIntent = true;
     },
     beforeStop: function (event, ui){
       if(removeIntent == true){
         var t_id = ui.item.attr("id");
-        ui.item.remove();
-        delTask(t_id);
+        var variable = document.getElementById(t_id).innerHTML;
+        var del_task = {"t_id":t_id, "text":variable};
+        //ask for delete confirmation, use modal window
+        delTask(del_task);
       }
     }
   });
 });
+
 //removeDraft
 function removeDraft(){
   var del = confirm("Do you really really want to delete this draft?");
     if (del == true){document.getElementById("add_message").innerHTML = '';}
 }
+
 //newMsg
 function newMsg(){
   var msg_form = "<div  class='message'><img class='message_image' src='http://www.placecage.com/gif/100/100' alt='New Message' width='100' height='100'>"
     +"<button class='exit' onclick='removeDraft()'>X</button>"
     +"<form id='m_form'action=''>"
-    +"<input id='m_title' autocomplete='off' placeholder='Title' required></input><br>"
+    +"<input id='m_title' autocomplete='off' autofocus placeholder='Title' required></input><br>"
     +"<input id='m_body' autocomplete='off' placeholder='Message' required></input><br>"
     +"<button id='add_new'>Submit</button><br><br>"
     +"</form></div>";
   document.getElementById("add_message").innerHTML = msg_form;
   $('#m_form').submit(function(){
-        socket.emit('write message', $('#m_title').val(), $('#m_body').val());
-        $('#m_title').val('');
-        $('#m_body').val('');
-        $('.message').append($("<div class='message'></div>").text(title, msg));//appends for user
-        document.getElementById("add_message").innerHTML = '';
-        return false;
-      });
+    var msg = { "title":$('#m_title').val(), "body":$('#m_body').val() }
+    socket.emit('write message', msg);
+    document.getElementById("add_message").innerHTML = '';
+    return false;
+  });
 };
-socket.on('write message', function(title, msg){
-  $('#all_m').append($("<div class='message'></div>").text(title, msg));
+socket.on('write message', function(msg){
+  console.log("Title = " + msg.title + " Body = " + msg.body);
+  //var new_msg = "<div class='message' id='-1'
+  //add all of the properties here + 
+
+  //$('#all_m').append($("<div class='message'></div>").text(msg.title));
+  //$('#all_m').append($("<div class='message'>msg.title</div>").text(msg.title, msg.body));
 });
+
 //Delete Message
 socket.on('delete message', function(message_number){
   var del = document.getElementById("message_"+message_number);
   del.parentNode.removeChild(del);
 });
+
 function delMsg(message_number){
   var del_m = confirm("Do you really really want to delete this message?");
-  if (del_m == true){
-    socket.emit('delete message', message_number);
-  };
+  if (del_m == true){socket.emit('delete message', message_number);};
 }
-function updateTasks() {
-  console.log("Update Tasks function");
-}
+
+
+function newTask() {
+  var task_form = "<div><form id='t_form' action=''><input id='new_task' autocomplete='off' autofocus placeholder='New Task' required></input>"
+    +"<button id='add_new'>Submit</button></form></div>";
+  document.getElementById("add_task").innerHTML = task_form;
+  $('#t_form').submit(function(evt){
+    evt.preventDefault();
+    var write_task = {"text":$('#new_task').val(), "task_id":-1 };
+    socket.emit('write task', write_task);
+    document.getElementById("add_task").innerHTML = '';
+  });
+};
 
 //newTask
 socket.on('write task', function(task){
-  $('#task_sort').append($("<div class='projects'></div>").text(task));
+  $('#task_sort').append($("<div class='projects' id='"+task.task_id+"'></div>").text(task.text));
 });
 
-function newTask() {
-  var task_form = "<div><form id='t_form' action=''><input id='new_task' autocomplete='off' placeholder='New Task' required></input>"
-    +"<button id='add_new'>Submit</button></form></div>";
-  document.getElementById("add_task").innerHTML = task_form;
-  $('#t_form').submit(function(){
-        socket.emit('write task', $('#new_task').val());
-        document.getElementById("add_task").innerHTML = '';
-        $('#new_task').val('');
-        document.getElementById("task_sort").innerHTML = '';
-        
-        return true;
-      });
-};
 //Delete Task
 socket.on('delete task', function(task){
-        console.log("Task thing = " + task);        
+  var del = document.getElementById(task.t_id);
+  del.parentNode.removeChild(del);    
 });
 
-function delTask(t_number){
-    socket.emit('delete task', t_number);
+function delTask(del_task){
+  socket.emit('delete task', del_task);
 }
 
 //Reorder Tasks
 socket.on('reorder tasks', function(newTaskOrder){
-  console.log(newTaskOrder);
-  updateTasks();
-  //$('#task_sort').append($("<div class='projects'></div>").text(task));
+  newTaskOrder.forEach(function (a,b){
+  {
+    if (a == '' ){newTaskOrder.splice(a,1) }
+    else
+    {
+      var thing = document.getElementById(a);
+      document.getElementById('task_sort').appendChild(thing);
+    }
+  }});
 });

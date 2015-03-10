@@ -1,6 +1,7 @@
 <link rel="stylesheet" type="text/css" href="/css/msg.css">
 <script type='text/javascript' src='/js/msg.js'></script>
 <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
 <section id="center_panel">
 <p id="msg">Messages</p>
 <button id="add_new" onclick="newMsg()" >Add New</button>
@@ -20,13 +21,14 @@
 </div>
 </div>
 </section>
+
 <section id="right_panel">
 <p id="tasks">Tasks</p>
 <button id="add_new" onClick="newTask()">Add New</button>
 <div id="add_task"></div>
 <form id="task_sort">
 <% all_tasks.rows.forEach(function(rows){%>
-<div class="projects" data-number='<%=rows.task_id%>' data-priority='<%=rows.priority%>' id='<%=rows.task_id%>' ><%=rows.task %></div>
+<div class="projects" data-priority='<%=rows.priority%>' id='<%=rows.task_id%>' ><%=rows.task %></div>
 <%});
 %>
 </form>
