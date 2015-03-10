@@ -148,12 +148,13 @@ socket.on('delete calendar event', function(event) {
 
 socket.on('write task', function(task){
   var client = db();
-  console.log("Writing task " + task.text +" ID "+ task.task_id);
-  client.query("INSERT INTO tasks(task, username, priority) VALUES ($1, $2, -1);", [task.text, 'netId']);
-  var max = client.query("SELECT t_id from tasks WHERE t_id = (select max(t_id) from tasks);");
-  //console.log("Max = "+ max.rows[0] );
-  //this is where I am having the problem, I need the task id of the last added item so I can pass it to the clients
-  app.io.emit('write task', task);
+
+  client.transaction(function*(t) {
+    var query = "INSERT INTO tasks(task, username, priority) VALUES ($1, $2, -1) RETURNING task_id";
+    var result = yield t.queryOne(query, [task.text, 'netId']);
+    app.io.emit('write task', result.task_id);
+  }).catch(console.error);
+
 });
 
 socket.on('delete task', function(t_number){
