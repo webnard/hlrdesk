@@ -134,22 +134,16 @@ socket.use(function*(){
   this.data._cookie = this.socket.handshake.headers.cookie;
 })
 
-socket.on('write message', function(title, msg){
+socket.on('write message', function(msg){
   var client = db();
-  client.query("INSERT INTO messages(title, username, message_body) VALUES ($1, $2, $3);", [title, 'netId' , msg]);
-  app.io.emit('write message', msg, title);
+  client.query("INSERT INTO messages(title, username, message_body) VALUES ($1, $2, $3);", [msg.title, 'netId' , msg.body]);
+  app.io.emit('write message', msg);
 });
 
 socket.on('delete message', function(message_number){
   var client = db();
   client.query("DELETE FROM messages WHERE message_id = $1;", [message_number]);
   app.io.emit('delete message', message_number);
-});
-
-socket.on('write task', function(task){
-  var client = db();
-  client.query("INSERT INTO tasks(task, username, priority) VALUES ($1, $2, -1);", [task, 'netId']);
-  app.io.emit('write task', task);
 });
 
 socket.on('calendar event', function(event) {
@@ -162,26 +156,36 @@ socket.on('calendar event', function(event) {
 socket.on('delete calendar event', function(event) {
   var client = db();
   var cookieObject = JSON.parse(new Buffer(cookie.parse(event._cookie)['koa:sess'], 'base64').toString('utf8'));
-  if (cookieObject.user === event.user/* TODO : || isAdmin */) {
+  if (cookieObject.user === event.user) {
     client.query('DELETE FROM calendar WHERE room=$1 AND "time"=$2;', [event.room, event.time]);
     app.io.emit("delete calendar event", event);
   }
 });
 
+socket.on('write task', function(task){
+  var client = db();
+  client.transaction(function*(t) {
+  var query = "INSERT INTO tasks(task, username, priority) VALUES ($1, $2, -1) RETURNING task_id";
+  var result = yield t.queryOne(query, [task.text, 'netId']);
+  task.task_id = result.task_id;
+  app.io.emit('write task', task);
+  }).catch(console.error);
+});
+
 socket.on('delete task', function(t_number){
   var client = db();
-  console.log("\nTask number = " + t_number);
-  client.query("DELETE FROM tasks WHERE task_id = $1;", [t_number]);
+  client.query("DELETE FROM tasks WHERE task = $1;", [t_number.text]);
   app.io.emit('delete task', t_number);
 });
 
 socket.on('reorder tasks', function(newTaskOrder){
-  var client = db();;
+  var client = db();
   newTaskOrder.forEach(function (arrayVal, arrayLocation)
   {
     client.query("update tasks set priority = $1 where task_id = $2", [arrayLocation,arrayVal]);
   })
-  app.io.emit('reorder task', newTaskOrder);
+  app.io.emit('reorder tasks', newTaskOrder);
 });
+
 
 module.exports = app.server;
