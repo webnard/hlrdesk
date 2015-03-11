@@ -21,6 +21,7 @@
     "thunkify": "^2.1.2"
   },
   "devDependencies": {
+    "casperjs": "^1.1.0-beta3",
     "chai": "^2.1.0",
     "chai-as-promised": "^4.2.0",
     "co-mocha": "^1.1.0",
@@ -38,7 +39,8 @@
   "scripts": {
     "pretest": "$(npm bin)/jscs core --esnext --config=./.jscs.json",
     "test": "./.run-tests.sh",
-    "start": "(export $(./.env.sh) && node --harmony core/runserver)",
+    "server": "node --harmony core/runserver",
+    "start": "(export $(./.env.sh) && npm run server)",
     "postinstall": "(export $(./.env.sh) && if [ \"$HLRDESK_DEV\" = \"true\" ]; then cat core/db/drop-db.sql core/db/schema.sql core/db/mock-data.sql | psql; fi)",
     "compile-sass": "./.compile-sass.sh",
     "deploy": "./.deploy.sh"

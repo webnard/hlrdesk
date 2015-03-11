@@ -10,6 +10,7 @@ module.exports = function(app) {
       var fpath = path.join(__dirname,'..','..','tests','sessions',fname); 
       var data = yield readFile(fpath);
       auth.login(this, JSON.parse(data));
+      this.status = 200;
     }
     yield next;
   });

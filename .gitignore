@@ -6,3 +6,5 @@ npm-debug.log
 *.css.map
 .sass-cache
 .dump.sql
+nohup.out
+tests/screenshots/
