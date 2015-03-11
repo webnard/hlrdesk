@@ -10,6 +10,7 @@ insert into users(netid) values
   ('tock'), -- make admin
   ('psota'),
   ('notadm'),
+  ('prabbit'),
   ('luke1298'),
   ('dahlal');
 
@@ -18,6 +19,7 @@ update users set admin='TRUE' where netid = 'lecanii';
 update users set admin='TRUE' where netid = 'tock';
 update users set admin='TRUE' where netid = 'luke1298';
 update users set admin='TRUE' where netid = 'dahlal';
+update users set admin='TRUE' where netid = 'prabbit';
 
 -- INVENTORY
 insert into inventory(call, quantity, title) values
