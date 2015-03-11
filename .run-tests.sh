@@ -70,5 +70,4 @@ printf "\n"
 echo "Running CasperJS tests."
 echo "Screenshots saved to tests/screenshots/"
 
-$(npm bin)/casperjs test tests/casperjs/*.js || CASPER_STATUS=1 exit
-
+$(npm bin)/casperjs --engine=slimerjs test tests/casperjs/*.js || CASPER_STATUS=1 exit
