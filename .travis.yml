@@ -8,6 +8,8 @@ cache:
   directories:
   - node_modules
 before_install:
+- pip install --user gsutil
+- export PATH=$PATH:$HOME/.local/bin
 - psql -c 'CREATE DATABASE travis;' -U postgres
 - psql < core/db/schema.sql
 - psql < core/db/mock-data.sql
