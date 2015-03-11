@@ -8,6 +8,7 @@ cache:
   directories:
   - node_modules
 before_install:
+- apt-get install netstat
 - psql -c 'CREATE DATABASE travis;' -U postgres
 - psql < core/db/schema.sql
 - psql < core/db/mock-data.sql
