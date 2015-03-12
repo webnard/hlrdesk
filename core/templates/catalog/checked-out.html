@@ -1,5 +1,12 @@
 <link rel="stylesheet" type="text/css" href="/css/checkIN.css" />
+<script type='text/javascript' src='/js/checkout.js'></script>
 <script type="text/javascript" src="/js/jquery.tablesorter.min.js"></script> 
+<form id="live-search" action="" class="styled" method="">
+    <fieldset>
+        <input type="text" class="text-input" id="filter" value="" />
+        <span id="filter-count"></span>
+    </fieldset>
+</form>
 <table id=checked-out-items class="checkIN tablesorter">
   <thead>
     <tr>
@@ -25,15 +32,3 @@
     <% }); %>
   </tbody>
 </table>
-<script>$(document).ready(function(){ 
-
-var myTextExtraction = function(node) 
-{ 
-    // extract data from markup and return it 
-    return $(node).data("date")||$(node).text()
-}  
-        $(".checkIN").tablesorter( {textExtraction: myTextExtraction} ); 
-    } 
-); 
-
-</script>
