@@ -159,28 +159,23 @@ socket.on('write task', function(task){
 });
 
 socket.on('calendar event', function(event) {
+  var cal = require('./app_modules/cal');
   var redisClient = redis();
-  var client = db();
   redisClient.smembers(cookie.parse(event._cookie).token, function(err, reply){
     var username = reply.toString('utf8');
-    auth.isAdmin(username).then(function(a) {
-      var user = a ? event.user : reply;
-      client.query('INSERT INTO calendar("user", "time", room, duration, title)VALUES ($1, $2, $3, $4, $5);', [user, event.time, event.room, event.duration, event.title]);
+    cal.addCalendarEvent(username, event).then(function() {
       app.io.emit("calendar event", event);
     });
   });
 });
 
 socket.on('delete calendar event', function(event) {
+  var cal = require('./app_modules/cal');
   var redisClient = redis();
-  var client = db();
   redisClient.smembers(cookie.parse(event._cookie).token, function(err, reply){
     var username = reply.toString('utf8');
-    auth.isAdmin(username).then(function(a) {
-      if(a || event.user == username) {
-        client.query('DELETE FROM calendar WHERE room=$1 AND "time"=$2;', [event.room, event.time]);
-        app.io.emit("delete calendar event", event);
-      }
+    cal.deleteCalendarEvent(username, event).then(function() {
+      app.io.emit("delete calendar event", event);
     });
   });
 });
