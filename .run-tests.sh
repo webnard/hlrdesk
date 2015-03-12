@@ -5,6 +5,9 @@ TEST_DB=hlrdesk_test_db
 TEMPLATE_DB=hlrdesk_test_template_db
 SCHEMA_FILE=core/db/schema.sql
 MOCK_DATA_FILE=core/db/mock-data.sql
+CASPER_BIN=$(npm root)/casperjs/bin/casperjs
+ISTANBUL_BIN=$(npm root)/istanbul/lib/cli.js
+MOCHA_BIN=$(npm root)/mocha/bin/_mocha
 
 export $(./.env.sh)
 
@@ -28,7 +31,7 @@ export PGDATABASE=$TEST_DB
 export TEMPLATE_DB=$TEMPLATE_DB
 export PHANTOMJS_EXECUTABLE=$(npm root)/casperjs/node_modules/phantomjs/bin/phantomjs
 
-node --harmony $(npm bin)/istanbul cover _mocha -- --require co-mocha --harmony tests/ "$@"
+node --harmony $ISTANBUL_BIN cover $MOCHA_BIN -- --require co-mocha --harmony tests/ "$@"
 
 # NOTE: potential race condition
 USED_PORTS=`netstat -lnt | awk '{print $4}' | tail -n+3 | awk -F ":" '{print $NF}' | sort -nr | uniq`
@@ -70,4 +73,4 @@ printf "\n"
 echo "Running CasperJS tests."
 echo "Screenshots saved to tests/screenshots/"
 
-$(npm bin)/casperjs --engine=slimerjs test tests/casperjs/*.js || CASPER_STATUS=1 exit
+$CASPER_BIN --engine=slimerjs test tests/casperjs/*.js || CASPER_STATUS=1 exit
