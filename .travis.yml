@@ -4,6 +4,8 @@ git:
   depth: 18 # arbitrarily set, but lower than the default of 50
 node_js:
 - '0.12'
+services:
+  - redis-server
 cache:
   directories:
   - node_modules
@@ -43,7 +45,7 @@ after_success: >
 
 notifications:
   slack: hlrdev:GKTfYhesUBgIPeCNYx2qrKPP
-
+  
 # TODO: Travis won't let us conditionally use this in after_success
 #addons:
 #  ssh_known_hosts:

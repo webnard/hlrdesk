@@ -60,6 +60,7 @@
       </table>
     </div>
     <div id="popup" style="position: absolute;" class="hidden">
+      <%if (isAdmin) { %> User: <input id=userInput maxlength=8 size=8></input><br> <% }; %>
       Room: <select id="roomSelect">
         <option>Recording Studio</option>
         <option>1141A</option>
