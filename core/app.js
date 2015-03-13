@@ -15,8 +15,10 @@ var email = require('./app_modules/email')
 
 var auth = require('./app_modules/auth')
 var db = require('./app_modules/db')
+var redis = require("./app_modules/redis")
 const ENV = process.env;
 const SERVICE = auth.service(ENV.HLRDESK_HOST, ENV.PORT, '/signin', !ENV.HLRDESK_DEV);
+
 var USE_LAYOUT;
 
 if(ENV.HLRDESK_DEV) {
@@ -104,7 +106,7 @@ app.use(_.get('/checked-out', function *() {
 app.use(_.get("/calendar", function *() {
   var client = db();
   var allCalendarEvents = yield client.query("SELECT * FROM calendar;");
-  var isAdmin = yield auth.check_admin(this.session.user);
+  var isAdmin = yield auth.isAdmin(this.session.user);
   yield this.render('calendar', {layout: USE_LAYOUT, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user, isAdmin:isAdmin});
 }));
 
@@ -132,7 +134,7 @@ socket.start(app);
 
 socket.use(function*(){
   this.data._cookie = this.socket.handshake.headers.cookie;
-})
+});
 
 socket.on('write message', function(msg){
   var client = db();
@@ -146,22 +148,6 @@ socket.on('delete message', function(message_number){
   app.io.emit('delete message', message_number);
 });
 
-socket.on('calendar event', function(event) {
-  var client = db();
-  var cookieObject = JSON.parse(new Buffer(cookie.parse(event._cookie)['koa:sess'], 'base64').toString('utf8'));
-  client.query('INSERT INTO calendar("user", "time", room, duration, title)VALUES ($1, $2, $3, $4, $5);', [cookieObject.user, event.time, event.room, event.duration, event.title]);
-  app.io.emit("calendar event", event);
-});
-
-socket.on('delete calendar event', function(event) {
-  var client = db();
-  var cookieObject = JSON.parse(new Buffer(cookie.parse(event._cookie)['koa:sess'], 'base64').toString('utf8'));
-  if (cookieObject.user === event.user) {
-    client.query('DELETE FROM calendar WHERE room=$1 AND "time"=$2;', [event.room, event.time]);
-    app.io.emit("delete calendar event", event);
-  }
-});
-
 socket.on('write task', function(task){
   var client = db();
   client.transaction(function*(t) {
@@ -170,6 +156,28 @@ socket.on('write task', function(task){
     task.task_id = result.task_id;
     app.io.emit('write task', task);
   }).catch(console.error);
+});
+
+socket.on('calendar event', function(event) {
+  var cal = require('./app_modules/cal');
+  var redisClient = redis();
+  redisClient.smembers(cookie.parse(event._cookie).token, function(err, reply){
+    var username = reply.toString('utf8');
+    cal.addCalendarEvent(username, event).then(function() {
+      app.io.emit("calendar event", event);
+    });
+  });
+});
+
+socket.on('delete calendar event', function(event) {
+  var cal = require('./app_modules/cal');
+  var redisClient = redis();
+  redisClient.smembers(cookie.parse(event._cookie).token, function(err, reply){
+    var username = reply.toString('utf8');
+    cal.deleteCalendarEvent(username, event).then(function() {
+      app.io.emit("delete calendar event", event);
+    });
+  });
 });
 
 socket.on('delete task', function(t_number){

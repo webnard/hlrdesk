@@ -2,6 +2,8 @@
 var cas = require('byu-cas');
 var db = require('./db')
 var co = require ('co')
+var uuid = require('node-uuid')
+var redis = require('./redis')
 
 check_id = co.wrap(function*(netid){
   var client = db();
@@ -10,6 +12,13 @@ check_id = co.wrap(function*(netid){
 })
 
 check_admin = co.wrap(function*(user){
+  var client = db();
+  var is_user = yield client.query("SELECT CASE WHEN EXISTS (SELECT * FROM users WHERE netid = $1 AND admin = 't') THEN 'TRUE' ELSE 'FALSE' end;", [user])
+  console.warn("The function 'check_admin' is deprecated. Use 'isAdmin' instead.");
+  return yield Promise.resolve(is_user.rows[0].case == "TRUE");
+})
+
+isAdmin = co.wrap(function*(user){
   var client = db();
   var is_user = yield client.query("SELECT CASE WHEN EXISTS (SELECT * FROM users WHERE netid = $1 AND admin = 't') THEN 'TRUE' ELSE 'FALSE' end;", [user])
   return yield Promise.resolve(is_user.rows[0].case == "TRUE");
@@ -27,8 +36,13 @@ module.exports = {
 
   login: function(ctx, obj) {
     var client = db();
+    var redisClient = redis();
     ctx.session.user=obj.username;
     ctx.session.attributes=obj.attributes;
+    var token = uuid.v4();
+    ctx.cookies.set('token', token, {maxAge: 43200000});
+    redisClient.sadd([token, obj.username]);
+    redisClient.expire(token, 43200);
     client.query("INSERT INTO users(netid) VALUES ($1);", [obj.username] )
   },
 
@@ -44,6 +58,7 @@ module.exports = {
   },
 
   check_admin: check_admin,
+  isAdmin: isAdmin,
 
   check_id: check_id,
 

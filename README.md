@@ -39,6 +39,10 @@ PGPASS=password
 #Google Analytics ID
 GAID=UA-57856521-1
 
+#Redis
+REDIS_PORT=6379
+REDIS_IP=hostname
+
 # Email G00dness
 
 EMAIL=hlr.dev.useyouremailN00Bulous@gmail.com
