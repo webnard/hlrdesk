@@ -3,6 +3,8 @@ hlrdesk
 [![Code Climate](https://codeclimate.com/github/BYU-ODH/hlrdesk/badges/gpa.svg)](https://codeclimate.com/github/BYU-ODH/hlrdesk)
 [![Test Coverage](https://codeclimate.com/github/BYU-ODH/hlrdesk/badges/coverage.svg)](https://codeclimate.com/github/BYU-ODH/hlrdesk)
 
+[Recent Build Screenshots](https://byu-odh.github.io/hlrdesk)
+
 ## Setup
 
 ### Configuration

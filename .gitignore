@@ -8,3 +8,4 @@ npm-debug.log
 .dump.sql
 nohup.out
 tests/screenshots/
+gh-pages/
