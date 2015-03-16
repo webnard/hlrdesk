@@ -1,5 +1,7 @@
 sudo: false
 language: node_js
+env:
+- BOTO_CONFIG=~/.boto
 git:
   depth: 18 # arbitrarily set, but lower than the default of 50
 node_js:
@@ -14,8 +16,18 @@ before_install:
 - psql < core/db/schema.sql
 - psql < core/db/mock-data.sql
 - npm install -g codeclimate-test-reporter
+- ./.compile-sass.sh
+
+# reqs for SlimerJS
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
+
+# reqs. for publishing images to Google Cloud Storage
+- pip install --user gsutil
+- cp .travis/.boto ~/.boto
+- echo "[Credentials]" >> ~/.boto
+- echo "gs_oauth2_refresh_token = $gs_oauth2_refresh_token" >> ~/.boto
+
 after_success: >
 
  BR=$TRAVIS_BRANCH;
@@ -45,7 +57,26 @@ after_success: >
 
 notifications:
   slack: hlrdev:GKTfYhesUBgIPeCNYx2qrKPP
-  
+
+# will be run regardless of success or failure
+after_script:
+  - export PATH=$PATH:~/.local/bin/ # gsutil is installed using pip install --user, so it's local
+  # upload screenshots to Google Cloud Storage
+  - gsutil cp -a public-read tests/screenshots/* "gs://byu-hlr-screenshots/$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH-`git log --pretty=format:\"%s (%cn)\" | head -n 1`/"
+  - ./.gen-gh-pages.sh
+  # publish pages
+  - git checkout --orphan gh-pages
+  - rm -rf `find ./* -not -path "./gh-pages/*" -not -name "gh-pages" -not -path "./.git/*" -not -name ".git"`
+  - mv ./gh-pages/* .
+  - rmdir gh-pages
+  - git config --global user.email "travis@travis-ci.org"
+  - git config --global user.name "travis-ci"
+  - git add -A -f
+  - git commit -m "Travis build $TRAVIS_BUILD_NUMBER"
+  - git push -f --quiet "https://webnard:${GH_TOKEN}@github.com/byu-odh/hlrdesk" gh-pages:gh-pages > /dev/null 2>&1
+  - echo "See build screenshots on https://byu-odh.github.io/hlrdesk"
+
+
 # TODO: Travis won't let us conditionally use this in after_success
 #addons:
 #  ssh_known_hosts:
