@@ -1,13 +1,13 @@
 @import 'admin';
 #center_panel {
-  @include basic_panel(75%,white,black);
+  @include basic_panel(75%,$creme,black);
   min-width: 200px;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
 #right_panel {
-  @include basic_panel(25%,#8c8686,#FFFFFF);
+  @include basic_panel(25%,$mainGrey,#FFFFFF);
   min-width: 115px;
 }
 
@@ -23,22 +23,21 @@
 .message{
   min-height: 90px;
   height: 10%;
-  width: calc(100%-10px);
-  background-color: #bfbdbe;
+  background-color: #E5E5E5;
   text-align: left;
   color: black;
   margin-top:10px;
   font-family:  Arial;
   font-weight:bold;
   &:hover {
-    background-color: #D7D7F7;
+    
   }
 }
 
 .projects{
   font-weight:bold;
   width: 100%;
-  height: 40px;
+  min-height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,7 +46,7 @@
   color: #FFFFFF;
   margin:0px;
   align:right;
-  background-color: #8c8686;
+  background-color: $mainGrey;
   border: 0px;
   -moz-border-radius:7px;
   -webkit-border-radius:7px;
@@ -60,27 +59,22 @@
 }
 
 #add_new{
-  height: 6%;
-  width: 100px;
-  border-radius: 5px ;
-  border: 2px solid #bfbdbe ;
-  background-color: white;
-  text-align: center;
-  color: black;
-  margin:5px;
-  align:right;
-  border: 0px;
-  -moz-border-radius:7px;
-  -webkit-border-radius:7px;
-  border-radius:7px;
+  width:8em;
+  display:inline;
+}
+
+button{
+  font-size:.8em;
+  font-weight:bold;
+  font-family:Arial;
 }
 
 .exit{
   font-weight:bold;
-  width: 25px;
-  height: 25px;
+  width: .1em;
+  height: .1em;
   border-radius:100%;
-  background-color: #b40000;
+  background-color: $mainGreyHL;	
   align:center;
   border: 0px;
   float:right;
@@ -120,7 +114,7 @@
 }
 
 .username_text {
-  color: white;
+  color: $mainGrey;
   font-size:.8em;
   margin: .2em;
 }
@@ -153,5 +147,13 @@ input{
 .on_drag {
   height: 2em;
   line-height: 1.2em;
+}
+
+#icon_exit{
+  font-size:1.2em;
+  color: #b40000;
+  cursor:pointer;
+  float:right;
+  margin:.7em;
 }
 

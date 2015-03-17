@@ -4,14 +4,14 @@
 
 <section id="center_panel">
 <p id="msg">Messages</p>
-<button id="add_new" onclick="newMsg()" >Add New</button>
+<button id="add_new" class="mainBtn" onclick="newMsg()" >Add New</button>
 <div id="black_bar"></div>
 <div>
 <div id="add_message"></div>
 <div id='all_m'>
 <% all_messages.rows.forEach(function(rows){%>
-<div class="message" id='message_<%=rows.message_id%>' ><img class="message_image" src="http://www.placecage.com/gif/1<%=rows.message_id%>/1<%=rows.message_id %>" alt="Message #<%=rows.message_id %>" width="75" height="75">
-<button class="exit" onclick="delMsg(<%=rows.message_id%>)">X</button>
+<div class="message" id='message_<%=rows.message_id%>' ><img class="message_image" src="http://www.placecage.com/gif/<%=rows.message_id + 80%>/<%=rows.message_id + 80%>" alt="Message #<%=rows.message_id %>" width="75" height="75">
+<i class="fa fa-times" id='icon_exit' onclick="delMsg(<%=rows.message_id%>)"></i>
 <text class="message_title"><%=rows.title %></text>
 <text class="message_body"><%=rows.message_body %></text>
 <br><br> <div class="username_text">Created By: <%=rows.username %></div>
@@ -24,7 +24,7 @@
 
 <section id="right_panel">
 <p id="tasks">Tasks</p>
-<button id="add_new" onClick="newTask()">Add New</button>
+<button id="add_new" class="mainBtn" onClick="newTask()">Add New</button>
 <div id="add_task"></div>
 <form id="task_sort">
 <% all_tasks.rows.forEach(function(rows){%>

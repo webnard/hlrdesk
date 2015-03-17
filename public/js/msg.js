@@ -44,11 +44,11 @@ function removeDraft(){
 //newMsg
 function newMsg(){
   var msg_form = "<div  class='message'><img class='message_image' src='http://www.placecage.com/gif/100/100' alt='New Message' width='100' height='100'>"
-    +"<button class='exit' onclick='removeDraft()'>X</button>"
+    +"<i class='fa fa-times' id='icon_exit' onclick='removeDraft()' ></i>"
     +"<form id='m_form'action=''>"
     +"<input id='m_title' autocomplete='off' autofocus placeholder='Title' required></input><br>"
     +"<input id='m_body' autocomplete='off' placeholder='Message' required></input><br>"
-    +"<button id='add_new'>Submit</button><br><br>"
+    +"<button class='greenBtn'>Submit</button><br><br>"
     +"</form></div>";
   document.getElementById("add_message").innerHTML = msg_form;
   $('#m_form').submit(function(){
@@ -81,7 +81,7 @@ function delMsg(message_number){
 
 function newTask() {
   var task_form = "<div><form id='t_form' action=''><input id='new_task' autocomplete='off' autofocus placeholder='New Task' required></input>"
-    +"<button id='add_new'>Submit</button></form></div>";
+    +"<button class='greenBtn' id='add_new'>Submit</button></form></div>";
   document.getElementById("add_task").innerHTML = task_form;
   $('#t_form').submit(function(evt){
     evt.preventDefault();

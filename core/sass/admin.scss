@@ -48,15 +48,7 @@ body
 }
 
 @mixin panel-button {
-  cursor:pointer;
-  height: 6%;
-  width: calc(100%-10px);
-  border-radius: 5px ;
-  background-color: #DBD9F2;
-  text-align: center;
-  color: #FFFFFF;
-  margin:5px;
-  align:right;
+  margin:.5em;
 }
 
 button{
@@ -64,7 +56,6 @@ button{
 }
 
 .lpanel{
-  @include panel-button;
   text-decoration: none;
   font-weight:bold;
   width: 100%;

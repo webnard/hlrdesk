@@ -72,7 +72,8 @@ INSERT INTO tasks(task, username, priority) VALUES
   ('TWO', 'prabbit' ,2),
   ('THREE', 'milo' ,3),
   ('FOUR', 'thoreau' ,4),
-  ('FIVE', 'trevren1' ,5);
+  ('FIVE', 'trevren1' ,5),
+  ('This text is meant to test the length of the tasks to see how they do', 'kondor' ,6);
   
   --Messages
 INSERT INTO messages(title, username, message_body) VALUES
@@ -80,5 +81,6 @@ INSERT INTO messages(title, username, message_body) VALUES
   ('Message TWO', 'prabbit' ,'2 do not be afraid'),
   ('Message THREE', 'milo' ,'3 it will be over soon'),
   ('Message FOUR', 'thoreau' ,'4 all you have to do is finish this program'),
-  ('Message FIVE', 'trevren1' ,'5 and everything will be ok and we will start on CLIPS...');
+  ('Message FIVE', 'trevren1' ,'5 and everything will be ok and we will start on CLIPS...'),
+  ('Message that has a really long title that should not be this long but just in case somebody decides to have a really long title then we will know if it looks good', 'trevren1' ,'This is a really long text body to see if it will work with the length as well, the limit is 500 characters. The rest is filler and not quite the limit Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nisl arcu, efficitur ac felis vitae, commodo vulputate urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sit amet nibh convallis ligula posuere ornare et sit amet nulla. Aenean lobortis lobortis quam at cursus. Ut iaculis, ligula ut cursus condimentum, orci elit cursus lectus, et iaculis eros sapien vel dui. Mauris eu cursus erat. Integer non viverra velit. Aliquam posuere orci volutpat.');
   
