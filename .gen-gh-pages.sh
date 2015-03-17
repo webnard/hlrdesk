@@ -6,8 +6,9 @@ echo "<!DOCTYPE html><h1>Screenshot directory</h1><h2>Images removed after 26 da
 IFS=$'\n'
 for i in $(gsutil ls "$PREFIX"byu-hlr-screenshots/ | sort -nr); do
   build=`basename $i`
+  escaped_build=`echo $build | sed 's/#/%23/g'`
   
-  echo "<li><a href='$build'>$build</a></li>" >> $INDEX
+  echo "<li><a href='$escaped_build'>$build</a></li>" >> $INDEX
 
   mkdir -p "gh-pages/$build"
   PAGE=gh-pages/$build/index.html
@@ -17,7 +18,8 @@ for i in $(gsutil ls "$PREFIX"byu-hlr-screenshots/ | sort -nr); do
   for j in `gsutil ls "$i"`; do
     FILE=${j:${#PREFIX}}
     URL=http://storage.googleapis.com/$FILE
-    echo "<a href=\"$URL\" class=img-holder><img src=\"$URL\"></a><small><a href=\"$URL\">$URL</a></small>" >> $PAGE
+    ESCAPED_URL=`echo $URL | sed 's/#/%23/g'`
+    echo "<a href=\"$ESCAPED_URL\" class=img-holder><img src=\"$ESCAPED_URL\"></a><small><a href=\"$ESCAPED_URL\">$URL</a></small>" >> $PAGE
   done
 done
 echo "</ol>" >> $INDEX
