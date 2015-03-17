@@ -53,3 +53,32 @@ insert into checked_out(call, copy, netid, attendant, due, extensions) VALUES
   ('DEADBEEF', 1, 'propylea', 'lecanii', 'today'::date + '1 day'::interval,3),
   ('DEADBEEF', 3, 'njuster', 'pomi', 'today'::date - '1 week'::interval,0),
   ('ZAMB0N123', 8, 'thoreau', 'pomi', 'today'::date - '2 weeks 1 month'::interval,1);
+
+  
+ -- CALENDAR
+ insert into calendar("user", "time", room, duration, title) VALUES
+  ('njuster', 'today'::date + '1 days'::interval, '1141A', 1, 'Studying'),
+  ('persicae', 'today'::date + '2 days'::interval, '1141B', 1, 'Studying like crazy'),
+  ('propylea', 'today'::date - '3 days'::interval, '1141D', 1, 'Napping'),
+  ('lecanii', 'today'::date + '1 week'::interval, '1141A', 1, 'Studying'),
+  ('prabbit', 'today'::date + '5 days'::interval, '1141C', 1, 'PPI'),
+  ('luke1298', 'today'::date + '8 days'::interval, 'Recording Studio', 1, 'So Powerful'),
+  ('dahlal', 'today'::date + '4 days'::interval, 'Recording Studio', 1, 'Hot Date');
+  
+    
+--Tasks
+INSERT INTO tasks(task, username, priority) VALUES
+  ('ONE', 'pomi' ,1),
+  ('TWO', 'prabbit' ,2),
+  ('THREE', 'milo' ,3),
+  ('FOUR', 'thoreau' ,4),
+  ('FIVE', 'trevren1' ,5);
+  
+  --Messages
+INSERT INTO messages(title, username, message_body) VALUES
+  ('Message ONE', 'pomi' ,'1 This is a test'),
+  ('Message TWO', 'prabbit' ,'2 do not be afraid'),
+  ('Message THREE', 'milo' ,'3 it will be over soon'),
+  ('Message FOUR', 'thoreau' ,'4 all you have to do is finish this program'),
+  ('Message FIVE', 'trevren1' ,'5 and everything will be ok and we will start on CLIPS...');
+  

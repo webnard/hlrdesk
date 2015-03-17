@@ -84,7 +84,7 @@ function updateGrid() {
   }
 }
 updateGrid();
-if (window.now.getHours() >= 21 && window.now.getDay() == 6) {changeWeek(1)}
+if (now.getHours() >= 21 && now.getDay() == 6) {changeWeek(1)}
 
 function markCellAsBookedByUser(cell, event) {
   cell.className = "bookedByUser";
@@ -217,7 +217,7 @@ function changeView() {
 }
 
 socket.on("calendar event", function(event){
-  event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
+  event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours())).toLocaleString();
   events.push(event);
   document.getElementById("popup").className = "hidden";
   while (document.getElementsByClassName("selected").length > 0) {
@@ -227,7 +227,6 @@ socket.on("calendar event", function(event){
 });
 
 socket.on("delete calendar event", function(event) {
-  event.time = new Date(new Date(event.time).setHours(new Date(event.time).getHours()+7)).toISOString();
   for (var i = 0; i < events.length; i++) {
     if (new Date(events[i].time).toLocaleString() === event.time && events[i].room === event.room) {
        events.splice(i,1);
@@ -237,7 +236,7 @@ socket.on("delete calendar event", function(event) {
   while (document.getElementsByClassName("selected").length > 0) {
     document.getElementsByClassName("selected")[0].classList.remove("selected");
   }
-  updateGrid()
+  updateGrid();
 });
 
 function deleteCell(event) {
@@ -254,7 +253,12 @@ function submit() {
   eventTime = new Date(document.getElementById("dateSelect").value+" "+Number(document.getElementById("timeSelect").value)+":00:00").toLocaleString();
   selectedRoom = document.getElementById("roomSelect").value;
   selectedDuration = document.getElementById("durationSelect").value;
+  if (document.getElementById("userInput")) {
+    var user = document.getElementById("userInput").value;
+  } else {
+    var user = window.userName;
+  }
   
-  socket.emit('calendar event', {"time":eventTime, "room":selectedRoom, "duration":selectedDuration, "title":eventTitle, "user":window.userName});
+  socket.emit('calendar event', {"user":user, "time":eventTime, "room":selectedRoom, "duration":selectedDuration, "title":eventTitle});
 }
 })();
