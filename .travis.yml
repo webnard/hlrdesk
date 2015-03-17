@@ -16,7 +16,6 @@ before_install:
 - psql < core/db/schema.sql
 - psql < core/db/mock-data.sql
 - npm install -g codeclimate-test-reporter
-- ./.compile-sass.sh
 
 # reqs for SlimerJS
 - export DISPLAY=:99.0
