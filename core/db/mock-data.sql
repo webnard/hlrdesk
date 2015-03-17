@@ -64,3 +64,21 @@ insert into checked_out(call, copy, netid, attendant, due, extensions) VALUES
   ('prabbit', 'today'::date + '5 days'::interval, '1141C', 1, 'PPI'),
   ('luke1298', 'today'::date + '8 days'::interval, 'Recording Studio', 1, 'So Powerful'),
   ('dahlal', 'today'::date + '4 days'::interval, 'Recording Studio', 1, 'Hot Date');
+  
+    
+--Tasks
+INSERT INTO tasks(task, username, priority) VALUES
+  ('ONE', 'pomi' ,1),
+  ('TWO', 'prabbit' ,2),
+  ('THREE', 'milo' ,3),
+  ('FOUR', 'thoreau' ,4),
+  ('FIVE', 'trevren1' ,5);
+  
+  --Messages
+INSERT INTO messages(title, username, message_body) VALUES
+  ('Message ONE', 'pomi' ,'1 This is a test'),
+  ('Message TWO', 'prabbit' ,'2 do not be afraid'),
+  ('Message THREE', 'milo' ,'3 it will be over soon'),
+  ('Message FOUR', 'thoreau' ,'4 all you have to do is finish this program'),
+  ('Message FIVE', 'trevren1' ,'5 and everything will be ok and we will start on CLIPS...');
+  
