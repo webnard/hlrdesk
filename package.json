@@ -44,8 +44,7 @@
     "test": "./.run-tests.sh",
     "server": "node --harmony core/runserver",
     "start": "(export $(./.env.sh) && npm run server)",
-    "install": "wget https://raw.githubusercontent.com/BYU-ODH/byu-odh.github.io/master/patternLibrary.scss -O ./core/sass/patternLibrary.scss",
-    "install": "wget https://raw.githubusercontent.com/BYU-ODH/byu-odh.github.io/master/colors.scss -O ./core/sass/colors.scss",
+    "install": "wget https://raw.githubusercontent.com/BYU-ODH/byu-odh.github.io/master/patternLibrary.scss -O ./core/sass/patternLibrary.scss; wget https://raw.githubusercontent.com/BYU-ODH/byu-odh.github.io/master/colors.scss -O ./core/sass/colors.scss",
     "postinstall": "(export $(./.env.sh) && if [ \"$HLRDESK_DEV\" = \"true\" ]; then cat core/db/drop-db.sql core/db/schema.sql core/db/mock-data.sql | psql; fi)",
     "compile-sass": "./.compile-sass.sh",
     "deploy": "./.deploy.sh"
