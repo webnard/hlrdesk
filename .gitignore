@@ -9,3 +9,4 @@ npm-debug.log
 nohup.out
 tests/screenshots/
 gh-pages/
+core/sass/patternLibrary.scss
