@@ -31,7 +31,7 @@ export PGDATABASE=$TEST_DB
 export TEMPLATE_DB=$TEMPLATE_DB
 export PHANTOMJS_EXECUTABLE=$(npm root)/casperjs/node_modules/phantomjs/bin/phantomjs
 
-node --harmony $ISTANBUL_BIN cover $MOCHA_BIN -- --require co-mocha --harmony tests/ "$@"
+#node --harmony $ISTANBUL_BIN cover $MOCHA_BIN -- --require co-mocha --harmony tests/ "$@"
 
 # NOTE: potential race condition
 which netstat && \
@@ -74,4 +74,4 @@ printf "\n"
 echo "Running CasperJS tests."
 echo "Screenshots saved to tests/screenshots/"
 
-$CASPER_BIN --engine=slimerjs test tests/casperjs/*.js || CASPER_STATUS=1 exit
+$CASPER_BIN --engine=slimerjs test tests/casperjs/ || CASPER_STATUS=1 exit
