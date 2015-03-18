@@ -18,6 +18,6 @@ casper.test.begin('check in', function(test) {
       casper.capture(SHOTS + 'checked-out-items-list.png');
     });
   })
-  .then(function(){this.clear(); test.done()})
+  .then(function(){casper.clear(); test.done()})
   .run();
 });

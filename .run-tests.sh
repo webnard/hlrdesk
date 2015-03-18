@@ -74,4 +74,7 @@ printf "\n"
 echo "Running CasperJS tests."
 echo "Screenshots saved to tests/screenshots/"
 
-$CASPER_BIN --engine=slimerjs test tests/casperjs/ || CASPER_STATUS=1 exit
+for i in `ls tests/casperjs/*.js`; do
+  # ugly, but CasperJS won't run all our files in one command
+  $CASPER_BIN --engine=slimerjs test $i || CASPER_STATUS=1 exit
+done
