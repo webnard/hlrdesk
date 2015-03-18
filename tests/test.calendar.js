@@ -13,7 +13,7 @@ describe('calendar', function() {
   describe('#addCalendarEvent', function() {
     it("should write the event to the database", function*() {
       var promise = cal.addCalendarEvent(username, event);
-      return expect(promise).to.eventually.be.rejected;
+      return expect(promise).to.eventually.be.true;
     });
   });
   

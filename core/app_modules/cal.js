@@ -3,7 +3,7 @@ var co = require('co');
 var auth = require('./auth');
 module.exports = {};
 
-module.exports.addCalendarEvent = co.wrap(function*(username, event){
+module.exports.addCalendarEvent = co.wrap(function*(username, event, reply){
   var client = db();
   var a = yield auth.isAdmin(username);
   var user = a ? event.user : reply;
