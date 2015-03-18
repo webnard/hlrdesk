@@ -43,9 +43,9 @@ SET default_with_oids = false;
 
 CREATE TABLE messages (
     message_id integer NOT NULL,
-    title character varying(50) NOT NULL,
-    username character varying(50) NOT NULL,
-    message_body character varying(500),
+    title character varying(250) NOT NULL,
+    username character varying(8) NOT NULL,
+    message_body character varying(750),
     posted date DEFAULT ('now'::text)::date
 );
 
@@ -56,8 +56,8 @@ CREATE TABLE messages (
 CREATE TABLE tasks
 (
   task_id serial NOT NULL,
-  task character varying(80) NOT NULL,
-  username character varying(50) NOT NULL,
+  task character varying(150) NOT NULL,
+  username character varying(8) NOT NULL,
   posted date DEFAULT ('now'::text)::date,
   priority int,
   CONSTRAINT tasks_pkey PRIMARY KEY (task_id)
