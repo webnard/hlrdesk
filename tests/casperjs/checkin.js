@@ -13,7 +13,7 @@ casper.test.begin('check in', function(test) {
     this.click('.lpanel.check-in');
   })
   .then(function() {
-    casper.waitFor(function(){return this.exists('#checked-out-items')}, function then() {
+    casper.waitForSelector('#checked-out-items', function then() {
       test.assertExists('#checked-out-items');
       casper.capture(SHOTS + 'checked-out-items-list.png');
     });

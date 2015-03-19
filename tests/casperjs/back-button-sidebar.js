@@ -10,7 +10,7 @@ casper.test.begin('clicking back button should keep side bar', function(test) {
     this.click('.lpanel.check-in');
   })
   .then(function() {
-    casper.waitFor(function(){return this.exists('#checked-out-items')});
+    casper.waitForSelector('#checked-out-items');
   })
   .thenOpen('http://www.example.com')
   .then(function() {
