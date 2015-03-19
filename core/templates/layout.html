@@ -11,7 +11,14 @@
 <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48">
 
+<script>
+  window.HLRDESK = window.HLRDESK || {};
+  window.HLRDESK.init = {};
+</script>
+
 <script type='text/javascript' src='https://code.jquery.com/jquery-2.1.1.min.js'></script>
+<script type="text/javascript" src="/js/jquery.tablesorter.min.js"></script> 
+<script type='text/javascript' src='/js/checkin.js'></script>
 
 <script type='text/javascript' src='/js/admin.js'></script>
 <script src="/socket.io/socket.io.js"></script>
@@ -21,7 +28,7 @@
 <body>
 <section id="left_panel">
 <div id="logo_container"><img id="logo" alt="Logo" src="/resources/logo.png"/></div>
-<a class="lpanel check-in" href=/checked-out data-title="Check In">Check In</a>
+<a class="lpanel check-in" href=/checked-out data-init=checkin data-title="Check In">Check In</a>
 <a class="lpanel">Edit Catalog</a>
 <a class="lpanel" href="https://hummedia.byu.edu/api/v2//account/login?r=https://hummedia.byu.edu">Hummedia</a>
 <a class="lpanel" data-title=Messages href="/message?">Messaging</a>
@@ -45,9 +52,15 @@
 </script>
 <script>
 $(".lpanel[data-title]").click(function loadMsg(ev){
+  var $this = $(this);
   ev.preventDefault();
-  history.pushState(null, $(this).data("title"), $(this).attr("href"));
-  $( "#loader" ).load( $(this).attr("href") );
+  history.pushState(null, $this.data("title"), $this.attr("href"));
+  $( "#loader" ).load( $this.attr("href"), function() {
+    if(typeof HLRDESK.init[$this.data('init')] === 'function') {
+      HLRDESK.init[$this.data('init')]();
+    }
+  });
+  
 });
 </script>
 

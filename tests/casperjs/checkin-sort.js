@@ -4,6 +4,10 @@ const PORT = require('system').env.PORT;
 const BASE = 'http://127.0.0.1:' + PORT;
 const SHOTS = 'tests/screenshots/';
 
+casper.on('remote.message', function(msg) {
+  this.echo('remote message caught: ' + msg);
+});
+
 casper.test.begin('change sorting of checkin with column clicks', function(test) {
   casper.options.viewportSize = {top: 0, left: 0, width: 1280, height: 720};
 
@@ -17,10 +21,12 @@ casper.test.begin('change sorting of checkin with column clicks', function(test)
     test.assertExists('.lpanel.check-in');
     this.click('.lpanel.check-in');
   });
-  casper.waitForResource('checkout.js');
-  casper.waitForSelector('#checked-out-items td[data-date]');
-  casper.waitForSelector('#checked-out-items.col-due.header');
-  casper.thenClick('#checked-out-items .col-due.header');
+  casper.waitFor(function() {
+    return this.evaluate(function() {
+      return typeof $("#checked-out-items").tablesorter ===  "function";
+    });
+  });
+  casper.thenClick('#checked-out-items .col-due');
   casper.then(function() {
     order_asc_top = this.evaluate(function(){return document.querySelector('#checked-out-items tr:first-child td[data-date]').getAttribute('data-date');});
     casper.capture(SHOTS + 'checkin-sort-date-asc.png');
