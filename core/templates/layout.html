@@ -34,7 +34,7 @@
 <a class="lpanel check-in" href=/checked-out data-init=checkin data-title="Check In">Check In</a>
 <a class="lpanel">Edit Catalog</a>
 <a class="lpanel" href="https://hummedia.byu.edu/api/v2//account/login?r=https://hummedia.byu.edu">Hummedia</a>
-<a class="lpanel" data-title=Messages href="/message?">Messaging</a>
+<a class="lpanel" data-title=Messages href="/message">Messaging</a>
 <a class="lpanel" href=/calendar data-title=Calendar>Calendar</a>
 <a class="lpanel" id="logout" href="/logout">Sign Out</a>
 
@@ -53,15 +53,8 @@
   ga('send', 'pageview');
 
 </script>
-<script>
-$(".lpanel[data-title]").click(function loadMsg(ev){
-  var $this = $(this);
-  ev.preventDefault();
-  history.pushState(null, $this.data("title"), $this.attr("href"));
-  $( "#loader" ).load( $this.attr("href"));
-});
+<script src="/js/admin.js">
 </script>
-
 
 </body>
 </html>
