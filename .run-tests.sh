@@ -76,5 +76,7 @@ echo "Screenshots saved to tests/screenshots/"
 
 for i in `ls tests/casperjs/*.js`; do
   # ugly, but CasperJS won't run all our files in one command
-  $CASPER_BIN --engine=slimerjs test $i || CASPER_STATUS=1 exit
+  ERROR_LOG=tests/logs/slimer-`basename $i`.txt
+  $CASPER_BIN --engine=slimerjs --verbose --error-log-file="$ERROR_LOG" test $i || CASPER_STATUS=1 exit
+  echo "Any JavaScript error logs sent to $ERROR_LOG"
 done
