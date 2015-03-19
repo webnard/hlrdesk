@@ -1,10 +1,6 @@
-<link rel="stylesheet" type="text/css" href="/css/msg.css">
-<script type='text/javascript' src='/js/msg.js'></script>
-<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-
 <section id="center_panel">
 <p id="msg">Messages</p>
-<button id="add_new" class="mainBtn" onclick="newMsg()" >Add New</button>
+<button id="add_new" class="message-add mainBtn">Add New</button>
 <div id="black_bar"></div>
 <div>
 <div id="add_message"></div>
@@ -24,7 +20,7 @@
 
 <section id="right_panel">
 <p id="tasks">Tasks</p>
-<button id="add_new" class="mainBtn" onClick="newTask()">Add New</button>
+<button id="add_new" class="mainBtn task-add">Add New</button>
 <div id="add_task"></div>
 <form id="task_sort">
 <% all_tasks.rows.forEach(function(rows){%>
@@ -33,4 +29,4 @@
 %>
 </form>
 </section>
-
+<script>window.HLRDESK.init.messages();</script>
