@@ -21,20 +21,15 @@ casper.test.begin('change sorting of checkin with column clicks', function(test)
     test.assertExists('.lpanel.check-in');
     this.click('.lpanel.check-in');
   });
-  casper.waitFor(function() {
-    return this.evaluate(function() {
-      return typeof $("#checked-out-items").tablesorter ===  "function";
-    });
-  });
+  casper.waitForSelector('#checked-out-items .col-due.header');
   casper.thenClick('#checked-out-items .col-due');
   casper.then(function() {
     order_asc_top = this.evaluate(function(){return document.querySelector('#checked-out-items tr:first-child td[data-date]').getAttribute('data-date');});
     casper.capture(SHOTS + 'checkin-sort-date-asc.png');
   });
   casper.thenClick('#checked-out-items .col-due');
-  casper.wait(500);
+  casper.wait(1);
   casper.then(function() {
-    console.log("DESC!!");
     order_desc_bottom = this.evaluate(function(){return document.querySelector('#checked-out-items tr:last-child td[data-date]').getAttribute('data-date');});
     casper.capture(SHOTS + 'checkin-sort-date-desc.png');
 
