@@ -13,8 +13,9 @@ casper.test.begin('check in', function(test) {
     test.assertExists('.lpanel.check-in');
     this.click('.lpanel.check-in');
   });
-  casper.waitForSelector('#checked-out-items');
-  casper.capture(SHOTS + 'checked-out-items-list.png');
+  casper.waitForSelector('#checked-out-items', function() {
+    casper.capture(SHOTS + 'checked-out-items-list.png');
+  });
   casper.then(function(){casper.clear(); test.done()});
   casper.run();
 });

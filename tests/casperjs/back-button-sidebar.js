@@ -12,8 +12,8 @@ casper.test.begin('clicking back button should keep side bar', function(test) {
   casper.waitForSelector('#checked-out-items');
   casper.thenOpen('http://www.example.com')
   casper.back();
-  casper.capture(SHOTS + 'back-button-clicked.png');
   casper.then(function(){
+    casper.capture(SHOTS + 'back-button-clicked.png');
     test.assertExists('#left_panel');
   });
   casper.then(function(){casper.clear(); test.done()})
