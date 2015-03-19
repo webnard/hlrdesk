@@ -5,21 +5,17 @@ const SHOTS = 'tests/screenshots/';
 casper.test.begin('clicking back button should keep side bar', function(test) {
   casper.options.viewportSize = {top: 0, left: 0, width: 1280, height: 720};
 
-  casper.start(BASE + '/logmein?as=prabbit')
- .thenOpen(BASE, function() {
+  casper.start(BASE + '/logmein?as=prabbit');
+  casper.thenOpen(BASE, function() {
     this.click('.lpanel.check-in');
   })
-  .then(function() {
-    casper.waitFor(function(){return this.exists('#checked-out-items')});
-  })
-  .thenOpen('http://www.example.com')
-  .then(function() {
-    casper.back();
-  })
-  .then(function(){
+  casper.waitForSelector('#checked-out-items');
+  casper.thenOpen('http://www.example.com')
+  casper.back();
+  casper.then(function(){
     casper.capture(SHOTS + 'back-button-clicked.png');
     test.assertExists('#left_panel');
-  })
-  .then(function(){casper.clear(); test.done()})
-  .run();
+  });
+  casper.then(function(){casper.clear(); test.done()})
+  casper.run();
 });
