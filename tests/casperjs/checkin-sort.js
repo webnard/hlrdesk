@@ -13,7 +13,7 @@ casper.test.begin('change sorting of checkin with column clicks', function(test)
     this.click('.lpanel.check-in');
   })
   .then(function() {
-    casper.waitForSelector('.field-due')
+    casper.waitForSelector('#checked-out td[data-date]')
     .then(function() {
       test.assertExists('.tablesorter');
       test.assertExists('#checked-out-items .col-due');
