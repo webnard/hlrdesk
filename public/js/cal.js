@@ -16,17 +16,17 @@ var displayedDate = window.now.toDateString();
 var days = ["", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 var currentView = "week";
 
-document.getElementById("displayRoomSelect").addEventListener("change", function(event) {updateGrid()});
-document.getElementById("dateSelect").addEventListener("change", function(event) {updateCell()});
-document.getElementById("timeSelect").addEventListener("change", function(event) {updateCell()});
-document.getElementById("roomSelect").addEventListener("change", function(event) {updateCell(); document.getElementById("displayRoomSelect").selectedIndex = document.getElementById("roomSelect").selectedIndex; updateGrid()});
-document.getElementById("durationSelect").addEventListener("change", function(event) {updateCell()});
-document.getElementById("forwardBtn").addEventListener("click", function() {changeWeek(1)});
-document.getElementById("backBtn").addEventListener("click", function() {changeWeek(-1)});
-document.getElementById("switchView").addEventListener("click", function() {changeView()});
-document.getElementById("previousDay").addEventListener("click", function() {changeDay(-1)});
-document.getElementById("nextDay").addEventListener("click", function() {changeDay(1)});
-document.getElementById("saveButton").addEventListener("click", function() {submit()});
+document.getElementById("displayRoomSelect").addEventListener("change", function(event) {updateGrid();});
+document.getElementById("dateSelect").addEventListener("change", function(event) {updateCell();});
+document.getElementById("timeSelect").addEventListener("change", function(event) {updateCell();});
+document.getElementById("roomSelect").addEventListener("change", function(event) {updateCell(); document.getElementById("displayRoomSelect").selectedIndex = document.getElementById("roomSelect").selectedIndex; updateGrid();});
+document.getElementById("durationSelect").addEventListener("change", function(event) {updateCell();});
+document.getElementById("forwardBtn").addEventListener("click", function() {changeWeek(1);});
+document.getElementById("backBtn").addEventListener("click", function() {changeWeek(-1);});
+document.getElementById("switchView").addEventListener("click", function() {changeView();});
+document.getElementById("previousDay").addEventListener("click", function() {changeDay(-1);});
+document.getElementById("nextDay").addEventListener("click", function() {changeDay(1);});
+document.getElementById("saveButton").addEventListener("click", function() {submit();});
 
 function updateGrid() {
 
@@ -131,7 +131,7 @@ function clickCell(event) { //places the popup box
   }
 
   document.getElementById("popup").className = "popup";
-  document.getElementById("popup").style.top = currentView == "week"  ? ((cell.offsetTop-document.getElementById("popup").offsetHeight+(document.getElementById("weekView").offsetHeight/14)-13)+document.getElementById("weekView").offsetTop).toString()+"px" : ((cell.offsetTop-document.getElementById("popup").offsetHeight+(document.getElementById("dayView").offsetHeight/14)-13)+document.getElementById("dayView").offsetTop).toString()+"px";
+  document.getElementById("popup").style.top = 'calc(' + ((document.getElementById("switchView").offsetHeight*2 + cell.offsetTop) - document.getElementById("popup").offsetHeight)+"px" + ' - 1em)';  
   document.getElementById("popup").style.left = (cell.offsetLeft.toString()-((document.getElementById("popup").offsetWidth-cell.offsetWidth)/2))+"px";
 
   for (var i = 0; i < document.getElementById("dateSelect").length; i++) { //selects right date
@@ -188,6 +188,8 @@ function changeWeek(direction) {
   updateGrid();
   document.getElementById("backBtn").disabled = (weekDiff === 0) ? true : false;
   document.getElementById("forwardBtn").disabled = (weekDiff >= 2) ? true : false;
+  document.getElementById("backBtn").className = document.getElementById("backBtn").disabled ? "disabledBtn" : "mainBtn";
+  document.getElementById("forwardBtn").className = document.getElementById("forwardBtn").disabled ? "disabledBtn" : "mainBtn";
 }
 
 function changeDay(direction) {
@@ -196,6 +198,9 @@ function changeDay(direction) {
   document.getElementById("date").innerHTML = displayedDate;
   updateGrid();
   document.getElementById("previousDay").disabled = (displayedDate === window.now.toDateString()) ? true : false;
+  document.getElementById("nextDay").disabled =  (new Date(displayedDate).getTime() - 1209600000 >= window.now.getTime()) ? true : false;
+  document.getElementById("previousDay").className = document.getElementById("previousDay").disabled ? "disabledBtn" : "mainBtn";
+  document.getElementById("nextDay").className = document.getElementById("nextDay").disabled ? "disabledBtn" : "mainBtn";
   selectedDay = displayedDate;
 }
 

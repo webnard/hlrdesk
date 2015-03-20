@@ -59,10 +59,6 @@ body
   align:right;
 }
 
-button{
-  @include panel-button;
-}
-
 .lpanel{
   @include panel-button;
   text-decoration: none;
