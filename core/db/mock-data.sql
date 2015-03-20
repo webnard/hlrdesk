@@ -26,6 +26,11 @@ insert into inventory(call, quantity, title) values
   ('DEADBEEF', 3, 'Fables of the Reconstruction'),
   ('CRUFTSURGE', 1, 'Automatic for the People'),
   ('M347FEST', 1, 'Out of Time'),
+   
+   -- keep BORGES limited to these two items for test purposes
+  ('9780307950925', 2, 'Ficciones, Jorge Borges'),
+  ('BORGESBORGES', 1, 'Tlon, Uqbar, Orbis Tertius'),
+
   ('ZAMB0N123', 5, 'Accelerate'),
   ('HELLO', 5, 'Around the Sun'),
   ('JENNY8675309', 2, 'From the Mixed-Up Files of Mrs. Basil E. Frankweiler'),

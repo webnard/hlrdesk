@@ -7,6 +7,29 @@ describe('inventory', function() {
   beforeEach(require('./resetdb'));
   var inventory  = require ('../core/app_modules/inventory');
 
+  describe('#search(value)', function () {
+    it('should return an array when items are found', function* () {
+      expect(yield inventory.search('HELLO')).to.be.an.instanceof(Array);
+    });
+    it('should return an empty array when no items are found', function* () {
+      var result = yield inventory.search('I-DO-NOT-EXIST');
+      expect(result).to.be.an.instanceof(Array);
+      expect(result.length).to.equal(0);
+    });
+    it('performs case-insensitive lookup in call number and title', function* () {
+      var result = yield inventory.search('borges');
+      expect(result.length).to.equal(2);
+    });
+    it('returns an item with appropriate and accurate fields', function* () {
+      var item = (yield inventory.search('HELLO'))[0];
+      // TODO: deal with volumes somehow
+      expect(item).to.contain.keys(['call_number', 'quantity', 'title']);
+      expect(item.call_number).to.equal('HELLO');
+      expect(item.quantity).to.equal(5);
+      expect(item.title).to.equal('Around the Sun');
+    });
+  });
+
   describe('#exists(call)', function() {
     it('should return true if item exists', function* () {
       expect(yield inventory.exists('HELLO')).to.be.true;
