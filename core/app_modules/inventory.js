@@ -13,6 +13,19 @@ inventory.exists = co.wrap(function*(call) {
   return yield Promise.resolve(result.rows.length > 0);
 });
 
+inventory.search = co.wrap(function* (text) {
+  var items = [];
+  var client = db();
+
+  // NOTE: the percent signs need to be concatenated for the $1 replacement to work
+  var query = 'SELECT "call" as "call_number", "title", "quantity" FROM "inventory" ' +
+    ' WHERE LOWER("call") LIKE LOWER(\'%\' || $1 || \'%\')' +
+    ' OR LOWER("title") LIKE LOWER(\'%\' || $1 || \'%\');';
+
+  var result = yield client.query(query, [text]);
+  return yield Promise.resolve(result.rows);
+});
+
 inventory.check_in = co.wrap(function*(call, patron, employee) {
 
   assert(yield inventory.exists(call), 'The item ' + call + ' does not exist');
