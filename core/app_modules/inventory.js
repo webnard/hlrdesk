@@ -16,6 +16,7 @@ inventory.exists = co.wrap(function*(call) {
 inventory.check_in = co.wrap(function*(call, patron, employee) {
 
   assert(yield inventory.exists(call), 'The item ' + call + ' does not exist');
+  assert(yield auth.isAdmin(employee), employee + ' is not an admin and cannot check in ' + call + ' for ' + patron);
 
   // TODO: ensure that only employees can check items in
   var client = db();
@@ -24,9 +25,9 @@ inventory.check_in = co.wrap(function*(call, patron, employee) {
     'checked_out WHERE call = $1 AND ' +
     'netid = $2 AND $3 in (SELECT netid FROM users WHERE netid = $3) ' +
     'ORDER BY due ASC LIMIT 1) LIMIT 1;';
-  var result = yield client.query(count_query, [call, patron, employee]);
+  var count_result = yield client.query(count_query, [call, patron, employee]);
 
-  assert(result.rows.length > 0, call + ' not checked out by ' + patron);
+  assert(count_result.rows.length > 0, call + ' not checked out by ' + patron);
 
   var query = 'DELETE FROM checked_out WHERE ctid IN (SELECT ctid FROM ' +
     'checked_out WHERE call = $1 AND ' +
@@ -67,7 +68,7 @@ Object.defineProperty(inventory, 'checked_out', {
     var formatted = results.map(function(a) {
       a.due = moment(a.due).toDate();
       a.call_number = a.call;
-      a.overdue = moment(a.due).isBefore(new Date);
+      a.overdue = moment(a.due).isBefore(new Date());
       return a;
     });
     return yield Promise.resolve(formatted);
