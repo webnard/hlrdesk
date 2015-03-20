@@ -157,5 +157,12 @@ describe('inventory', function() {
       var promise = inventory.check_in(call, patron, 'tock');
       return expect(promise).to.eventually.be.rejected;
     });
+    it('should throw an error if the person doing the check-in for the patron is not an employee', function* () {
+      var call = 'HELLO';
+      var patron = 'psota';
+      var employee = 'notadm';
+      var promise = inventory.check_in(call, patron, employee);
+      return expect(promise).to.eventually.be.rejected;
+    });
   });
 });
