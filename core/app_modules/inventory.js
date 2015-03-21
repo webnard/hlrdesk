@@ -13,7 +13,8 @@ inventory.exists = co.wrap(function*(call) {
   return yield Promise.resolve(result.rows.length > 0);
 });
 
-inventory.search = co.wrap(function* (text) {
+inventory.search = co.wrap(function* (text, username) {
+  assert(yield auth.isAdmin(username), 'Only admins can search the database. No searching for ' + username);
   var items = [];
   var client = db();
 
