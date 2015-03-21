@@ -2,9 +2,9 @@
 <link rel="stylesheet" type="text/css" href="/css/calendar.css">
 <body>
   <section id="calendar">
-    <button id="switchView">Change View</button>
+    <button id="switchView" class = "mainBtn">Change View</button>
     <div id="weekView">
-      <button id="backBtn" disabled=true>Back</button><button id="forwardBtn">Forward</button><select id="displayRoomSelect">
+      <button id="backBtn" disabled=true class = "disabledBtn">Back</button><button id="forwardBtn" class = "mainBtn">Forward</button><select id="displayRoomSelect">
         <option>Recording Studio</option>
         <option>1141A</option>
         <option>1141B</option>
@@ -36,7 +36,7 @@
     </div>
     <div id="dayView" class="hidden">
       <button id="date"><%= date.toDateString() %></button>
-      <button id="previousDay" disabled=true>Previous Day</button><button id="nextDay">Next Day</button>
+      <button id="previousDay" disabled=true class = "disabledBtn">Previous Day</button><button id="nextDay" class = "mainBtn">Next Day</button>
       <table id="dayGrid" class="calendar">
         <% var rooms = ["Recording Studio", "1141A", "1141B", "1141C", "1141D"]; %>
         <% for (var i=7; i<=20; i++) { if (i == 7) { %>
@@ -60,7 +60,7 @@
       </table>
     </div>
     <div id="popup" style="position: absolute;" class="hidden">
-      <%if (isAdmin) { %> User: <input id=userInput maxlength=8 size=8></input><br> <% }; %>
+      <%if (isAdmin) { %> User: <input id=userInput maxlength=8 size=8 value=<%=user%>></input><br> <% }; %>
       Room: <select id="roomSelect">
         <option>Recording Studio</option>
         <option>1141A</option>
@@ -90,7 +90,9 @@
         <option value="3">3 Hours</option>
       </select><br>
       Event Name: <input id=nameInput maxlength="20"></input><br>
-      <button id="deleteButton">Delete</button><button id="saveButton">Save</button>
+      <div id="popupButtons">
+        <button id="deleteButton" class="redBtn">Delete</button><button id="saveButton" class="greenBtn">Save</button>
+      </div>
     </div>
   </section>
 </body>
