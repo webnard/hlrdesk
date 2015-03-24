@@ -17,7 +17,7 @@ casper.test.begin('change sorting of checkin with column clicks', function(test)
   });
   casper.waitForSelector('td[data-time][data-day]:not(.disabled)');
   casper.thenClick('td[data-time][data-day]:not(.disabled)');
-  casper.wait(1);
+  casper.wait(100);
   casper.then(function() {
     casper.capture(SHOTS + 'click-calendar-cell.png');
     test.assertVisible('#popup', 'Calendar popup menu visible after click');

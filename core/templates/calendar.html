@@ -1,100 +1,100 @@
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/calendar.css">
 <body>
-  <section id="calendar">
-    <button id="switchView" class = "mainBtn">Change View</button>
-    <div id="weekView">
-      <button id="backBtn" disabled=true class = "disabledBtn">Back</button><button id="forwardBtn" class = "mainBtn">Forward</button><select id="displayRoomSelect">
-        <option>Recording Studio</option>
-        <option>1141A</option>
-        <option>1141B</option>
-        <option>1141C</option>
-        <option>1141D</option>
-      </select>
-      <br>
-      <table id="weekGrid" class="calendar">
-        <% var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]; %>
-        <% for (var i=7; i<=20; i++) { if (i == 7) { %>
-          <tr>
-            <th></th>
-              <% for (var k=0; k<days.length; k++) { %>
-              <th class="day" id="<%= new Date(date.getTime()+((k)-(date.getDay()-1))*86400000).toDateString() %>">
-                <%= days[k]+" "+new Date(date.getTime()+((k)-(date.getDay()-1))*86400000).getDate() %>
-              </th>
-            <% } %>
-          </tr>
-      <% } else { %>
+<section id="calendar">
+  <button id="switchView" class = "mainBtn">Change View</button>
+  <div id="weekView">
+    <button id="backBtn" disabled=true class = "disabledBtn">Back</button><button id="forwardBtn" class = "mainBtn">Forward</button><select id="displayRoomSelect">
+      <option>Recording Studio</option>
+      <option>1141A</option>
+      <option>1141B</option>
+      <option>1141C</option>
+      <option>1141D</option>
+    </select>
+    <br>
+    <table id="weekGrid" class="calendar">
+      <% var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]; %>
+      <% for (var i=7; i<=20; i++) { if (i == 7) { %>
         <tr>
-          <% for (var j=0; j<=6; j++) { if (j==0) { %>
-            <th class="time"><%= (i!=7)?((i<=12)?i:i-12):"" %>:00</th>
-          <% } else { %>
-            <td id= "<%=days[j-1]+" "+i%>" data-time="<%=i%>" data-day="<%=j%>" ></td>
-          <% } } %>
+          <th></th>
+            <% for (var k=0; k<days.length; k++) { %>
+            <th class="day" id="<%= new Date(date.getTime()+((k)-(date.getDay()-1))*86400000).toDateString() %>">
+              <%= days[k]+" "+new Date(date.getTime()+((k)-(date.getDay()-1))*86400000).getDate() %>
+            </th>
+          <% } %>
         </tr>
-      <% } } %>
-      </table>
-    </div>
-    <div id="dayView" class="hidden">
-      <button id="date"><%= date.toDateString() %></button>
-      <button id="previousDay" disabled=true class = "disabledBtn">Previous Day</button><button id="nextDay" class = "mainBtn">Next Day</button>
-      <table id="dayGrid" class="calendar">
-        <% var rooms = ["Recording Studio", "1141A", "1141B", "1141C", "1141D"]; %>
-        <% for (var i=7; i<=20; i++) { if (i == 7) { %>
-          <tr>
-            <th></th>
-              <% for (var k=0; k<rooms.length; k++) { %>
-              <th class="room">
-                <%= rooms[k] %>
-              </th>
-            <% } %>
-          </tr>
-      <% } else { %>
+    <% } else { %>
+      <tr>
+        <% for (var j=0; j<=6; j++) { if (j==0) { %>
+          <th class="time"><%= (i!=7)?((i<=12)?i:i-12):"" %>:00</th>
+        <% } else { %>
+          <td id= "<%=days[j-1]+" "+i%>" data-time="<%=i%>" data-day="<%=j%>" ></td>
+        <% } } %>
+      </tr>
+    <% } } %>
+    </table>
+  </div>
+  <div id="dayView" class="hidden">
+    <button id="date"><%= date.toDateString() %></button>
+    <button id="previousDay" disabled=true class = "disabledBtn">Previous Day</button><button id="nextDay" class = "mainBtn">Next Day</button>
+    <table id="dayGrid" class="calendar">
+      <% var rooms = ["Recording Studio", "1141A", "1141B", "1141C", "1141D"]; %>
+      <% for (var i=7; i<=20; i++) { if (i == 7) { %>
         <tr>
-          <% for (var j=0; j<=rooms.length; j++) { if (j==0) { %>
-            <th class="time"><%= (i!=7)?((i<=12)?i:i-12):"" %>:00</th>
-          <% } else { %>
-            <td id= "<%=rooms[j-1]+" "+i%>" data-time="<%=i%>" data-room="<%= rooms[j-1] %>"></td>
-          <% } } %>
+          <th></th>
+            <% for (var k=0; k<rooms.length; k++) { %>
+            <th class="room">
+              <%= rooms[k] %>
+            </th>
+          <% } %>
         </tr>
-      <% } } %>
-      </table>
-    </div>
-    <div id="popup" style="position: absolute;" class="hidden">
-      <%if (isAdmin) { %> User: <input id=userInput maxlength=8 size=8 value=<%=user%>></input><br> <% }; %>
-      Room: <select id="roomSelect">
-        <option>Recording Studio</option>
-        <option>1141A</option>
-        <option>1141B</option>
-        <option>1141C</option>
-        <option>1141D</option>
-      </select><br>
-      Date: <select id="dateSelect">
-        <% for (var i = 0; i <= 14; i++) { %>
-          <% var newDate =  new Date(date.getTime()+86400000*i) %>
-          <% if (newDate.getHours() >= 21) { %>
-            <% newDate.setTime(newDate.getTime() + 86400000); %>
-          <% } %>
-          <% if (newDate.getDay() !== 0) { %>
-            <option> <%= newDate.toDateString() %> </option>
-          <% } %>
+    <% } else { %>
+      <tr>
+        <% for (var j=0; j<=rooms.length; j++) { if (j==0) { %>
+          <th class="time"><%= (i!=7)?((i<=12)?i:i-12):"" %>:00</th>
+        <% } else { %>
+          <td id= "<%=rooms[j-1]+" "+i%>" data-time="<%=i%>" data-room="<%= rooms[j-1] %>"></td>
+        <% } } %>
+      </tr>
+    <% } } %>
+    </table>
+  </div>
+  <div id="popup" style="position: absolute;" class="hidden">
+    <%if (isAdmin) { %> User: <input id=userInput maxlength=8 size=8 value=<%=user%>></input><br> <% }; %>
+    Room: <select id="roomSelect">
+      <option>Recording Studio</option>
+      <option>1141A</option>
+      <option>1141B</option>
+      <option>1141C</option>
+      <option>1141D</option>
+    </select><br>
+    Date: <select id="dateSelect">
+      <% for (var i = 0; i <= 14; i++) { %>
+        <% var newDate =  new Date(date.getTime()+86400000*i) %>
+        <% if (newDate.getHours() >= 21) { %>
+          <% newDate.setTime(newDate.getTime() + 86400000); %>
         <% } %>
-      </select><br>
-      Time: <select id="timeSelect">
-        <% for (var i = 8; i<=20; i++) { %>
-          <option value=<%= i %>><%= (i!=7)?((i<=12)?i:i-12):"" %>:00</option>
+        <% if (newDate.getDay() !== 0) { %>
+          <option> <%= newDate.toDateString() %> </option>
         <% } %>
-      </select><br>
-      Duration: <select id="durationSelect">
-        <option value="1">1 Hour</option>
-        <option value="2">2 Hours</option>
-        <option value="3">3 Hours</option>
-      </select><br>
-      Event Name: <input id=nameInput maxlength="20"></input><br>
-      <div id="popupButtons">
-        <button id="deleteButton" class="redBtn">Delete</button><button id="saveButton" class="greenBtn">Save</button>
-      </div>
+      <% } %>
+    </select><br>
+    Time: <select id="timeSelect">
+      <% for (var i = 8; i<=20; i++) { %>
+        <option value=<%= i %>><%= (i!=7)?((i<=12)?i:i-12):"" %>:00</option>
+      <% } %>
+    </select><br>
+    Duration: <select id="durationSelect">
+      <option value="1">1 Hour</option>
+      <option value="2">2 Hours</option>
+      <option value="3">3 Hours</option>
+    </select><br>
+    Event Name: <input id=nameInput maxlength="20"></input><br>
+    <div id="popupButtons">
+      <button id="deleteButton" class="redBtn">Delete</button><button id="saveButton" class="greenBtn">Save</button>
     </div>
-  </section>
+  </div>
+</section>
 </body>
 <script>
   window.now = <%- date.getTime() %>;
@@ -102,5 +102,4 @@
   window.allEvents = <%- JSON.stringify(allCalendarEvents) %>;
   window.userName = "<%- user %>";
 </script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="\js\cal.js"></script>
+<script src="/js/cal.js"></script>

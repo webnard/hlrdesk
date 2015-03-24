@@ -1,4 +1,4 @@
-﻿(function(){
+(function(){
 
 var events = window.allEvents.rows;
 
@@ -111,7 +111,7 @@ function markCellAsEnabled(cell) {
 }
 
 function clickCell(event) { //places the popup box
-  var cell = event.srcElement ? event.srcElement : event;
+  var cell = event.target ? event.target : event;
   while (cell.className != "") {
     if (document.getElementById((currentView === "week" ? days[cell.dataset.day] : cell.dataset.room)+" "+(Number(cell.dataset.time)+1))) {
       cell = document.getElementById((currentView === "week" ? days[cell.dataset.day] : cell.dataset.room)+" "+(Number(cell.dataset.time)+1));
@@ -246,7 +246,7 @@ socket.on("delete calendar event", function(event) {
 
 function deleteCell(event) {
   if(confirm("Are you sure you want to delete this room reservation?")){
-    cell = event.srcElement;
+    cell = event.target;
     eventDate = new Date((currentView === "week") ? new Date(new Date().setDate(window.now.getDate()+7*weekDiff+(cell.dataset.day-window.now.getDay()))) : cellDate = new Date(displayedDate)).toDateString();
     eventTime = new Date(new Date(eventDate).setHours(cell.dataset.time)).toLocaleString();
     socket.emit('delete calendar event', {"room":(currentView === "week" ? document.getElementById("displayRoomSelect").value : cell.dataset.room), "time":eventTime, "user":window.userName});
