@@ -11,7 +11,7 @@ body
   height: 100%;
 }
 
-section
+#calendar
 {
   position: relative;
   text-align: center;
@@ -19,7 +19,6 @@ section
   height: 600px;
   min-width: 300px;
   min-height: 150px;
-}
 
 #weekView, #dayView
 {
@@ -150,4 +149,5 @@ th
 .time
 {
   width: 4%;
+}
 }
