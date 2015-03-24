@@ -50,14 +50,13 @@ export PORT=$port
 echo "Starting server in background on port $PORT"
 nohup npm run server -- COME_AND_GET_ME &>nohup.out &
 
-CASPER_STATUS=0
 function killserver {
-  pkill -f COME_AND_GET_ME
-  PKILL_STATUS=$?
-  if [[ $CASPER_STATUS -ne  0 ]]; then
-    exit $CASPER_STATUS
+  FAIL=$?
+  pkill -f COME_AND_GET_ME || :
+  if [[ $FAIL -ne  0 ]]; then
+    exit $FAIL
   fi
-  exit $PKILL_STATUS
+  exit 0
 }
 trap killserver EXIT
 
@@ -74,9 +73,14 @@ printf "\n"
 echo "Running CasperJS tests."
 echo "Screenshots saved to tests/screenshots/"
 
+CASPER_STATUS=0
 for i in `ls tests/casperjs/*.js`; do
   # ugly, but CasperJS won't run all our files in one command
+  OUTPUT=`mktemp`
   ERROR_LOG=tests/logs/slimer-`basename $i`.txt
-  $CASPER_BIN --engine=slimerjs --ssl-protocol=any --error-log-file="$ERROR_LOG" test $i || CASPER_STATUS=1 exit
+  $CASPER_BIN --engine=slimerjs --ssl-protocol=any --error-log-file="$ERROR_LOG" test $i | tee -i $OUTPUT
+  # remove color, if found (thanks to Zhoul on http://www.commandlinefu.com/commands/view/3584/remove-color-codes-special-characters-with-sed)
+  sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" $OUTPUT | grep -e "^FAIL " >/dev/null && CASPER_STATUS=1 || :
   echo "Any JavaScript error logs sent to $ERROR_LOG"
 done
+exit $CASPER_STATUS
