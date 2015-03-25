@@ -56,7 +56,7 @@ inventory.check_in = co.wrap(function*(call, patron, employee) {
 inventory.check_out = co.wrap(function*(call, patron, employee, due) {
 
   assert(due > (new Date()), "Due date " + due + " is earlier than now.");
-  assert(yield auth.check_admin(employee), employee + " is not an admin.");
+  assert(yield auth.isAdmin(employee), employee + " is not an admin.");
   assert(yield auth.check_id(patron), patron + " is not a valid user.");
   assert(yield inventory.exists(call), call + " doesn't exist; cannot rent");
 
