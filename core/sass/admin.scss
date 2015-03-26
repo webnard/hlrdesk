@@ -24,10 +24,11 @@ html, body
   margin:0;
   overflow:hidden;
 }
-section
+section,table,thead
 {
   height:100%;
   width:100%;
+  overflow:auto;
 }
 
 #left_panel {
@@ -49,6 +50,10 @@ body
 
 @mixin panel-button {
   margin:.5em;
+}
+
+button{
+  @include panel-button;
 }
 
 .lpanel{

@@ -1,33 +1,36 @@
 <link rel="stylesheet" type="text/css" href="/css/checkIN.css" />
-<form id="live-search" action="" class="styled" method="">
+<section id="checkIn">
+<form id="live-search" action="" class="keepTop" method="">
     <fieldset>
-        <input type="text" class="text-input" id="filter" value="" />
+        <input type="text" class="text-input" id="filter" value="" placeholder="Search"/>
         <span id="filter-count"></span>
+        <button class="mainBtn">Check In</button>
+        <button class="mainBtn">Extend</button>
+        <button class="mainBtn">Select All</button><!--Add toggle that goes to select none-->
     </fieldset>
 </form>
 <table id=checked-out-items class="checkIN tablesorter">
   <thead>
     <tr>
-      <td><input type=checkbox></td>
-      <th scope=col>Call Number</th>
-      <th scope=col>Name</th>
-      <th scope=col>Net ID</th>
-      <th scope=col class=col-due>Due</th>
-      <td colspan=2></td>
+      <th scope=col><i class="fa fa-sort"></i> Call Number</th>
+      <th scope=col><i class="fa fa-sort"></i> Name</th>
+      <th scope=col class="colWidth"><i class="fa fa-sort"></i> Net ID</th>
+      <th scope=col class="colWidth"><i class="fa fa-sort"></i> Due</th>
+      <th scope=col>More</th>
     </tr>
   </thead>
   <tbody>
     <% items.forEach(function(item, index) { %>
       <tr class='<%= item.overdue? "overdue" : "" %>'>
-        <td><input type=checkbox></td>
         <td><%= item.call_number %></td>
         <td><%= item.name %></td>
         <td><%= item.owner %></td>
         <td data-date="<%=item.due.getTime()%>"><%= moment(item.due).format("MMM D") %></td>
-        <td><input type=button value='Extend'></td>
-        <td><input type=button value='Check In'></td>
+        <td ><i class="fa fa-plus-square-o"></i></td>
       </tr>
     <% }); %>
   </tbody>
 </table>
 <script>window.HLRDESK.init.checkin();</script>
+</section>
+

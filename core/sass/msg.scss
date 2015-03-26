@@ -1,5 +1,4 @@
 @import 'admin';
-#messages {
 #center_panel {
   @include basic_panel(75%,$creme,black);
   min-width: 200px;
@@ -12,15 +11,6 @@
   min-width: 115px;
 }
 
-#leaveMessage
-{
-  position: absolute;
-  top: 20%;
-  left :20%;
-  transform: translateX(-50%) translateY(-50%);
-  text-align: center;
-}
-
 .message{
   min-height: 90px;
   height: 10%;
@@ -30,9 +20,6 @@
   margin-top:10px;
   font-family:  Arial;
   font-weight:bold;
-  &:hover {
-    
-  }
 }
 
 .projects{
@@ -62,12 +49,6 @@
 #add_new{
   width:8em;
   display:inline;
-}
-
-button{
-  font-size:.8em;
-  font-weight:bold;
-  font-family:Arial;
 }
 
 .exit{
@@ -143,6 +124,8 @@ input{
 
 #task_sort {
   cursor:pointer;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .on_drag {
@@ -157,4 +140,4 @@ input{
   float:right;
   margin:.7em;
 }
-}
+
