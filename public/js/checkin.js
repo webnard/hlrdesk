@@ -14,4 +14,8 @@ window.HLRDESK.init.checkin = function() {
     return $(node).data("date")||$(node).text()
   }
   $(".checkIN").tablesorter( {textExtraction: myTextExtraction} );
+  
+  $("#checked-out-items tbody tr").click(function(){
+    $( this ).toggleClass( "selected" );
+  });
 }

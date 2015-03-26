@@ -1,21 +1,99 @@
+@import 'admin';
+
+#checkIn{
+button{
+  float:right;  
+}
+
 .checkIN {
   padding:1em;
 }
 
 .checkIN th {
-    padding:1em;
-    font-family:arial;
-    font-size:1.2em;
-    background-color:#1c305d;
-    color:white;
-    width:20%;
+  padding:1em;
+  font-family:arial;
+  font-size:1.2em;
+  background-color:#1c305d;
+  color:white;
+}
+
+.colWidth{
+  width:10%;
 }
 
 .checkIN tr {
-    background-color:#efefef;
+  background-color:#efefef;
+}
+
+.fa-plus-square-o {
+    &:hover {
+    color:red;
+  }
+  cursor:pointer;
+}
+
+fieldset{
+  border:none;
+  background:$creme;
+}
+
+td {
+  word-wrap: break-word;
+  min-width:3.5em; 
+  padding: 1em;
+  margin:none; 
+}
+
+td:hover{
+  background:none;
+  transition:none;
+}
+
+table{
+  border-collapse:collapse;
+  height: 6em;
+  margin:0;
+}
+
+th{
+  text-align:left;
+  cursor:pointer;
+}
+
+tr {
+  //border: 1px solid #D9E4E6;
+  max-height:3em;
+  &:nth-child(odd) { 
+    background-color: $creme;
+  }  
+  &:hover {
+    background-color: $mainGreyHL;
+  }
 }
 
 
 tr.overdue {
-    background-color:red;
+  background-color:$red;
+  color:white;
+  &:hover {
+    background-color: $redHL;
+  }
+}
+
+body {
+  font-family: Arial, sans-serif;
+  //color: $mainBlue;
+  background: $creme;
+}
+
+tr.selected{
+  background-color: $byuBlue;
+  color:white;
+    &:hover {
+    background-color: $byuBlueHL;
+  }
+  font-weight:bold;
+  font-size:1.1em;
+}
+
 }
