@@ -10,9 +10,10 @@ module.exports = function(socket, app) {
     var redisClient = redis();
     redisClient.smembers(cookie.parse(event._cookie).token, function(err, reply){
       var username = reply.toString('utf8');
-      console.log(username);
       inventory.search(event.text, username).then(function(results) {
-        mysocket.send('inv.search.results', results);
+        mysocket.emit('inv.search.results', results);
+      }).catch(function(e) {
+        console.error(e);
       });
     });
   });

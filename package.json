@@ -34,6 +34,7 @@
     "node-sass": "^0.9.6",
     "prom-spawn": "0.0.3",
     "slimerjs": "^0.9.5",
+    "socket.io-client": "^1.3.5",
     "supertest": "^0.15.0"
   },
   "engines": {
