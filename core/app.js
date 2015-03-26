@@ -131,8 +131,22 @@ app.use(_.get("/mkadmin",function *(){
 
 socket.start(app);
 
-socket.use(function*(){
-  this.data._cookie = this.socket.handshake.headers.cookie;
+socket.use(function*(next){
+  // TODO: get our test sockets to send cookies
+  // Currently we can't send headers in our tests
+  if(ENV.NODE_TEST) {
+    var cookie = this.socket.handshake.query._cookie;
+    if(!cookie) {
+      yield next;
+      return;
+    }
+    this.data._cookie = cookie;
+  }
+  else
+  {
+    this.data._cookie = this.socket.handshake.headers.cookie;
+  }
+  yield next;
 });
 
 // Load in all socket files
