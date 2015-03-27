@@ -1,0 +1,34 @@
+@import 'colors.scss';
+#check-out {
+  background-color: $creme;
+
+  // needed to help make sure the form is vertically-centered
+  -webkit-transform-style: preserve-3d;
+  moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  $label-margin-bottom: 0.5em;
+  $search-height: 2.1em;
+  $calculated-input-location: "50% - #{$search-height} - #{$label-margin-bottom}";
+
+  .check-out-form {
+    text-align: center;
+    position: relative;
+    top: calc(#{$calculated-input-location});
+    transform: translateY( calc( -#{$calculated-input-location} ) );
+  }
+  .check-out-main-label {
+    display: block;
+    font-size: ($search-height - 0.2em);
+    height: $search-height;
+    line-height: $search-height;
+    color: $byuBlue;
+    margin-bottom: $label-margin-bottom;
+  }
+  .check-out-search {
+    width: 90%;
+    font-size: 2em;
+    height: $search-height;
+    line-height: $search-height;
+    border: solid $mainGreyHL 1px;
+  }
+}
