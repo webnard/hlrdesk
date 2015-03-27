@@ -6,8 +6,8 @@ window.HLRDESK.init.checkout = function initCheckout() {
   var searchEl = document.getElementById('check-out-search');
   var searchForm = document.getElementById('check-out-form');
   var searchResults = document.querySelectorAll('#check-out-search-results ul')[0];
+  var searchResultsCount = document.querySelectorAll('#check-out-search-results .results-count')[0];
   var selectedItems = document.querySelectorAll('#check-out-search-selection ul')[0];
-  var loadSpinner = document.querySelectorAll('#check-out-search-results .load-spinner')[0];
 
   searchForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
@@ -23,19 +23,21 @@ window.HLRDESK.init.checkout = function initCheckout() {
       clearResults();
       return;
     }
-    loadSpinner.classList.add('active');
 
     socket.emit('inv.search', {'text': text});
   }
 
   function clearResults() {
-    loadSpinner.classList.remove('active');
     searchResults.innerHTML='';
+    searchResultsCount.innerText = '';
   };
 
   function populateResults(items) {
     clearResults();
     var fragment = document.createDocumentFragment();
+    var count = items.length;
+    var plural = count !== 1 ? 's':'';
+    searchResultsCount.innerText = count + ' item' + plural  + ' found';
     items.forEach(function(item) {
       var li = document.createElement('li');
       li.textContent = item.title;

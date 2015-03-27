@@ -77,6 +77,26 @@
     transform: rotateX(0deg);
   }
 }
+$check-out-h2-margin-bottom: 1em;
+$check-out-result-count-margin-bottom: 8px;
+$result-count-height: 15px;
+#check-out-search-results, #check-out-search-selection {
+  h2 {
+    margin-bottom: $check-out-h2-margin-bottom;
+  }
+  .results-count {
+    display: block;
+    font-size: 0.8em;
+    line-height: $result-count-height;
+    height: $result-count-height;
+    margin-top: - $result-count-height;
+  }
+}
+#check-out-search-selection {
+  ul {
+    margin-top: $result-count-height;
+  }
+}
 ul.satchel, ol.satchel {
   list-style: none;
   margin: 0;
