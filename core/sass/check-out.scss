@@ -127,8 +127,19 @@ ul.satchel, ol.satchel {
       animation-duration: 0.5s;
       animation-name: satchel-flip-down;
     }
+    &.outgoing {
+      -webkit-animation-duration: 0.5s;
+      -webkit-animation-name: satchel-flip-down;
+      -webkit-animation-direction: reverse;
+      animation-duration: 0.5s;
+      animation-name: satchel-flip-down;
+      animation-direction: reverse;
+    }
   }
   li:hover {
     background-color: $mainGreyHL;
   }
+}
+#check-out-prompt {
+  display: none;
 }
