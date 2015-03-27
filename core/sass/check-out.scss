@@ -1,4 +1,5 @@
 @import 'colors.scss';
+@import 'patternLibrary.scss';
 #check-out {
   background-color: white;
 
@@ -56,6 +57,18 @@
       display: block;
     }
   }
+  .check-out-btn {
+    display: inline-block;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-right: 10%;
+    vertical-align: top;
+    margin: 0;
+  }
+  .check-out-btn ~ span {
+    display: inline-block;
+    vertical-align: top;
+  }
 }
 @keyframes satchel-flip-down {
   from {
@@ -83,6 +96,8 @@ $result-count-height: 15px;
 #check-out-search-results, #check-out-search-selection {
   h2 {
     margin-bottom: $check-out-h2-margin-bottom;
+    height: 1.3em;
+    line-height: default;
   }
   .results-count {
     display: block;

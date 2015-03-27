@@ -8,9 +8,16 @@ window.HLRDESK.init.checkout = function initCheckout() {
   var searchResults = document.querySelectorAll('#check-out-search-results ul')[0];
   var searchResultsCount = document.querySelectorAll('#check-out-search-results .results-count')[0];
   var selectedItems = document.querySelectorAll('#check-out-search-selection ul')[0];
+  var checkOutPrompt = document.getElementById('check-out-prompt');
+  var checkOutPromptClose = document.querySelectorAll('#check-out-prompt .close')[0];
+  var checkOutButton = document.querySelectorAll('#check-out-search-selection .check-out-btn')[0];
 
   searchForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
+  });
+  checkOutButton.addEventListener('click', function handleCheckoutClick() { 
+    var close = window.patternlibrary.displayModal(checkOutPrompt);
+    checkOutPromptClose.onclick = close; // TODO: this isn't working
   });
 
   socket.on('inv.search.results', populateResults);
