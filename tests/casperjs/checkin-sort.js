@@ -24,7 +24,7 @@ casper.test.begin('change sorting of checkin with column clicks', function(test)
     casper.capture(SHOTS + 'checkin-sort-date-asc.png');
   });
   casper.thenClick('#checked-out-items .col-due');
-  casper.wait(1);
+  casper.wait(500);
   casper.then(function() {
     order_desc_bottom = this.evaluate(function(){return document.querySelector('#checked-out-items tr:last-child td[data-date]').getAttribute('data-date');});
     casper.capture(SHOTS + 'checkin-sort-date-desc.png');
