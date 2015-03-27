@@ -2,9 +2,17 @@
   <form id=check-out-form class=check-out-form>
     <label class=check-out-main-label for=check-out-search>Enter an item or call number</label>
     <input id=check-out-search class=check-out-search autofocus incremental type=search placeholder="Nicolas Cage Collection, Vol. XII">
-    <div class=load-spinner></div>
   </form>
-  <ul id=check-out-search-results></ul>
-  <ul id=check-out-search-selection></ul>
+  <div class=check-out-inventory>
+    <div id=check-out-search-results>
+      <h2>Results</h2>
+      <div class=load-spinner><img src=//placecage.com/150/150></div>
+      <ul class=satchel></ul>
+    </div>
+    <div id=check-out-search-selection>
+      <h2>Satchel</h2>
+      <ul class=satchel></ul>
+    </div>
+  </div>
 </section>
 <script>window.HLRDESK.init.checkout();</script>

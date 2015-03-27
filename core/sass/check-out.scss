@@ -1,6 +1,6 @@
 @import 'colors.scss';
 #check-out {
-  background-color: $creme;
+  background-color: white;
 
   // needed to help make sure the form is vertically-centered
   -webkit-transform-style: preserve-3d;
@@ -8,13 +8,11 @@
   transform-style: preserve-3d;
   $label-margin-bottom: 0.5em;
   $search-height: 2.1em;
-  $calculated-input-location: "50% - #{$search-height} - #{$label-margin-bottom}";
+  $search-width: 90%;
 
   .check-out-form {
     text-align: center;
     position: relative;
-    top: calc(#{$calculated-input-location});
-    transform: translateY( calc( -#{$calculated-input-location} ) );
   }
   .check-out-main-label {
     display: block;
@@ -25,10 +23,51 @@
     margin-bottom: $label-margin-bottom;
   }
   .check-out-search {
-    width: 90%;
+    width: $search-width;
     font-size: 2em;
     height: $search-height;
     line-height: $search-height;
     border: solid $mainGreyHL 1px;
+  }
+  .check-out-inventory {
+    width: $search-width;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+  #check-out-search-selection {
+    order: 2;
+  }
+  #check-out-search-results {
+    order: 1;
+  }
+  .load-spinner {
+    display: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    &.active {
+      display: block;
+    }
+  }
+}
+ul.satchel, ol.satchel {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  li {
+    background-color: $mainGrey;
+    color: $creme;
+    padding: 0.5em;
+    cursor: pointer;
+  }
+  li:hover {
+    background-color: $mainGreyHL;
   }
 }

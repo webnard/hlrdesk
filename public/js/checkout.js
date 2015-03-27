@@ -5,6 +5,9 @@ window.HLRDESK.init.checkout = function initCheckout() {
   var socket = io();
   var searchEl = document.getElementById('check-out-search');
   var searchForm = document.getElementById('check-out-form');
+  var searchResults = document.querySelectorAll('#check-out-search-results ul')[0];
+  var selectedItems = document.querySelectorAll('#check-out-search-selection ul')[0];
+  var loadSpinner = document.querySelectorAll('#check-out-search-results .load-spinner')[0];
 
   searchForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
@@ -20,12 +23,14 @@ window.HLRDESK.init.checkout = function initCheckout() {
       clearResults();
       return;
     }
+    loadSpinner.classList.add('active');
 
     socket.emit('inv.search', {'text': text});
   }
 
   function clearResults() {
-    document.getElementById('check-out-search-results').innerHTML='';
+    loadSpinner.classList.remove('active');
+    searchResults.innerHTML='';
   };
 
   function populateResults(items) {
@@ -34,8 +39,19 @@ window.HLRDESK.init.checkout = function initCheckout() {
     items.forEach(function(item) {
       var li = document.createElement('li');
       li.textContent = item.title;
+      li.addEventListener('click', moveItem);
       fragment.appendChild(li);
     });
-    document.getElementById('check-out-search-results').appendChild(fragment);
+    searchResults.appendChild(fragment);
+  }
+
+  function moveItem(evt) {
+    if(evt.target.parentNode === searchResults) {
+      selectedItems.appendChild(evt.target);
+    }
+    else
+    {
+      searchResults.appendChild(evt.target);
+    }
   }
 };
