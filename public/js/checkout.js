@@ -39,19 +39,22 @@ window.HLRDESK.init.checkout = function initCheckout() {
     items.forEach(function(item) {
       var li = document.createElement('li');
       li.textContent = item.title;
-      li.addEventListener('click', moveItem);
+      li.addEventListener('click', addToCart);
       fragment.appendChild(li);
     });
     searchResults.appendChild(fragment);
   }
 
-  function moveItem(evt) {
-    if(evt.target.parentNode === searchResults) {
-      selectedItems.appendChild(evt.target);
-    }
-    else
-    {
-      searchResults.appendChild(evt.target);
-    }
+  function addToCart(evt) {
+    var clone = evt.target.cloneNode(true);
+    evt.target.classList.add('flash');
+    evt.target.classList.remove('flash');
+    clone.classList.add('incoming');
+
+    clone.addEventListener('click', removeFromCart);
+    selectedItems.appendChild(clone);
+  }
+  function removeFromCart(evt) {
+    selectedItems.removeChild(evt.target);
   }
 };
