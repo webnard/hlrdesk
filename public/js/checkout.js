@@ -9,7 +9,6 @@ window.HLRDESK.init.checkout = function initCheckout() {
   var resultsCount = document.querySelector('#check-out-search-results .results-count');
   var selected = document.querySelector('#check-out-search-selection ul');
   var checkOutPrompt = document.getElementById('check-out-prompt');
-  var checkOutPromptClose = document.querySelector('#check-out-prompt .close');
   var checkOutButton = document.querySelector('#check-out-search-selection .check-out-btn');
 
   var selectedItems = [];
@@ -21,12 +20,28 @@ window.HLRDESK.init.checkout = function initCheckout() {
   });
   checkOutButton.addEventListener('click', function handleCheckoutClick() { 
     var close = window.patternlibrary.displayModal(checkOutPrompt);
-    checkOutPromptClose.onclick = close; // TODO: this isn't working
+    var checkOutPromptClose = document.querySelector('.modalWindow .close.check-out-prompt');
+    checkOutPromptClose.onclick = close;
+    appendInventory(document.querySelector('.modalWindow table.check-out-prompt.inventory'));
   });
 
   socket.on('inv.search.results', populateResults);
 
   searchEl.addEventListener('search', handleSearchEvt)
+
+  function appendInventory(table) {
+    var items = selected.querySelectorAll('li');
+    var fragment = document.createDocumentFragment();
+
+    for(var i = 0; i<items.length; i++) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + items[i].getAttribute('data-call') + '</td>' +
+        '<td>' + items[i].getAttribute('data-title') + '</td>';
+      fragment.appendChild(tr);
+    }
+    var tbody = table.querySelector('tbody');
+    tbody.appendChild(fragment);
+  }
 
   function handleSearchEvt() {
     var text = searchEl.value;
@@ -71,6 +86,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
       li.querySelector('.title').textContent = item.title;
       li.querySelector('.call').textContent = item.call_number;
       li.setAttribute('data-call', item.call_number);
+      li.setAttribute('data-title', item.title);
       li.addEventListener('click', function(){
         if(li.parentNode === results) {
           swapLocation(li);
@@ -95,8 +111,9 @@ window.HLRDESK.init.checkout = function initCheckout() {
   }
 
   function swapLocation(el) {
-    // prevent multi-clicks
     el.classList.remove('incoming');
+    
+    // debounce
     if(el.classList.contains('outgoing')) {
       return;
     }

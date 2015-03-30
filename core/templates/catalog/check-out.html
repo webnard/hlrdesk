@@ -17,11 +17,22 @@
     </div>
   </div>
 </section>
-<div id=check-out-prompt>
-  <header>Welcome!</header>
-  <p>Hello. Please do a thing.</p>
-  <button class='redBtn close'></button>
-</div>
+
+<template id=check-out-prompt>
+  <header>Check out</header>
+  <table class='inventory check-out-prompt'>
+    <thead><tr><th>Call</th><th>Title</th></thead>
+    <tbody></tbody>
+  </table>
+  <form>
+    <label for=check-out-due>Due Date:</label><input type=date name=due required>
+    <label for=check-out-netid>Patron's Net ID:</label><input type=text name=netid required>
+    <label for=check-out-email>Patron's Email:</label><input type=email name=email>
+    <label for=check-out-phone>Patron's Phone:</label><input type=email name=email>
+  </form>
+  <button class='redBtn close check-out-prompt'></button>
+  <button class='mainBtn check-out-prompt submit'>Submit</button>
+</template>
 
 <template id=tpl-satchel-li>
 <li>
