@@ -35,7 +35,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
       return;
     }
 
-    socket.emit('inv.search', {'text': text});
+    socket.emit('inv.search', {'text': text, exclude: selectedItems});
   }
 
   function clearResults() {

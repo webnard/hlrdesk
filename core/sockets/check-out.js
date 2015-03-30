@@ -14,7 +14,8 @@ module.exports = function(socket, app) {
         return;
       }
       var username = reply.toString('utf8');
-      inventory.search(event.text, username).then(function(results) {
+      var params = {exclude: event.exclude};
+      inventory.search(event.text, username, params).then(function(results) {
         mysocket.emit('inv.search.results', results);
       }).catch(function(e) {
         console.error(e);
