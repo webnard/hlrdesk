@@ -56,14 +56,8 @@
     }
   }
   .check-out-btn {
-    display: inline-block;
-    padding-top: 0;
-    padding-bottom: 0;
-    margin-right: 10%;
-    vertical-align: top;
-    margin: 0;
+    font-size: 1.2em;
     cursor: pointer;
-
     // TODO: this is hacky; include in pattern library
     &[disabled], &[disabled]:hover {
       @extend .disabledBtn;
@@ -153,6 +147,14 @@ ul.satchel, ol.satchel {
     color: $creme;
     padding: 0.5em;
     cursor: pointer;
+    .title {
+      font-weight: 800;
+      display: block;
+    }
+    .call {
+      font-size: 0.8em;
+      font-variant: small-caps;
+    }
     button.closeBtn {
       cursor: pointer;
     }

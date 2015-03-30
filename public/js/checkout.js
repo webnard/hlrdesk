@@ -12,6 +12,8 @@ window.HLRDESK.init.checkout = function initCheckout() {
   var checkOutPromptClose = document.querySelector('#check-out-prompt .close');
   var checkOutButton = document.querySelector('#check-out-search-selection .check-out-btn');
 
+  var selectedItems = [];
+
   var SATCHEL_ANIMATION_DURATION = 250; // MUST MATCH WHAT IS IN CSS
 
   searchForm.addEventListener('submit', function(evt) {
@@ -58,12 +60,17 @@ window.HLRDESK.init.checkout = function initCheckout() {
     }
 
     items.forEach(function(item) {
+      // don't load stuff that's already here
+      if(selectedItems.indexOf(item.call_number) !== -1) {
+        return;
+      }
+
       var tpl = document.getElementById('tpl-satchel-li');
       var node = document.importNode(tpl.content, true);
       var li = node.querySelector('li');
       li.querySelector('.title').textContent = item.title;
       li.querySelector('.call').textContent = item.call_number;
-      li.attributes['data-call'] = item.call_num;
+      li.setAttribute('data-call', item.call_number);
       li.addEventListener('click', function(){
         swapLocation(li);
         this.removeEventListener('click', arguments.callee);
@@ -73,6 +80,16 @@ window.HLRDESK.init.checkout = function initCheckout() {
     results.appendChild(fragment);
   }
 
+  function addToCollection(call) {
+    selectedItems.push(call);
+  }
+
+  function removeFromCollection(call) {
+    var idx = selectedItems.indexOf(call);
+    if(idx === -1) { return; }
+    selectedItems.splice(idx, 1);
+  }
+
   function swapLocation(el) {
     // prevent multi-clicks
     el.classList.remove('incoming');
@@ -80,7 +97,19 @@ window.HLRDESK.init.checkout = function initCheckout() {
       return;
     }
     el.classList.add('outgoing');
-    var opposite = el.parentNode === results ? selected : results;
+    var intoSatchel = el.parentNode === results ? true : false;
+    var opposite = null;
+    var call = el.getAttribute('data-call');
+    
+    if(intoSatchel) {
+      opposite = selected;
+      addToCollection(call);
+    }
+    else
+    {
+      opposite = results;
+      removeFromCollection(call);
+    }
 
     window.setTimeout(function removeFromCollection() {
       opposite.appendChild(el);
