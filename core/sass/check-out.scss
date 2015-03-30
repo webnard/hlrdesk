@@ -143,10 +143,17 @@ ul.satchel, ol.satchel {
   margin: 0;
   padding: 0;
   li {
+    $li-padding: 0.5em;
+    display: flex;
+    align-items: center;
     background-color: $mainGrey;
     color: $creme;
-    padding: 0.5em;
+    padding: $li-padding;
     cursor: pointer;
+    .details {
+      vertical-align: middle;
+      max-width: calc(100% - 3em);
+    }
     .title {
       font-weight: 800;
       display: block;
@@ -156,6 +163,7 @@ ul.satchel, ol.satchel {
       font-variant: small-caps;
     }
     button.closeBtn {
+      margin-right: $li-padding;
       cursor: pointer;
     }
   }

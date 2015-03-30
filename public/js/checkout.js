@@ -72,8 +72,12 @@ window.HLRDESK.init.checkout = function initCheckout() {
       li.querySelector('.call').textContent = item.call_number;
       li.setAttribute('data-call', item.call_number);
       li.addEventListener('click', function(){
+        if(li.parentNode === results) {
+          swapLocation(li);
+        }
+      });
+      li.querySelector('.closeBtn').addEventListener('click', function() {
         swapLocation(li);
-        this.removeEventListener('click', arguments.callee);
       });
       fragment.appendChild(node);
     });
