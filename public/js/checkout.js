@@ -5,12 +5,14 @@ window.HLRDESK.init.checkout = function initCheckout() {
   var socket = io();
   var searchEl = document.getElementById('check-out-search');
   var searchForm = document.getElementById('check-out-form');
-  var searchResults = document.querySelectorAll('#check-out-search-results ul')[0];
-  var searchResultsCount = document.querySelectorAll('#check-out-search-results .results-count')[0];
-  var selectedItems = document.querySelectorAll('#check-out-search-selection ul')[0];
+  var results = document.querySelectorAll('#check-out-search-results ul')[0];
+  var resultsCount = document.querySelectorAll('#check-out-search-results .results-count')[0];
+  var selected = document.querySelectorAll('#check-out-search-selection ul')[0];
   var checkOutPrompt = document.getElementById('check-out-prompt');
   var checkOutPromptClose = document.querySelectorAll('#check-out-prompt .close')[0];
   var checkOutButton = document.querySelectorAll('#check-out-search-selection .check-out-btn')[0];
+
+  var SATCHEL_ANIMATION_DURATION = 250; // MUST MATCH WHAT IS IN CSS
 
   searchForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
@@ -35,8 +37,8 @@ window.HLRDESK.init.checkout = function initCheckout() {
   }
 
   function clearResults() {
-    searchResults.innerHTML='';
-    searchResultsCount.innerText = '';
+    results.innerHTML='';
+    resultsCount.innerText = '';
   };
 
   function populateResults(items) {
@@ -44,26 +46,48 @@ window.HLRDESK.init.checkout = function initCheckout() {
     var fragment = document.createDocumentFragment();
     var count = items.length;
     var plural = count !== 1 ? 's':'';
-    searchResultsCount.innerText = count + ' item' + plural  + ' found';
+    resultsCount.innerText = count + ' item' + plural  + ' found';
+
+    var helpText = document.querySelectorAll('#check-out-search-results .help')[0];
+    if(count === 0) {
+      helpText.classList.add('active');
+    }
+    else
+    {
+      helpText.classList.remove('active');
+    }
+
     items.forEach(function(item) {
       var li = document.createElement('li');
       li.textContent = item.title;
-      li.addEventListener('click', addToCart);
+      li.attributes['data-call'] = item.call_num;
+      li.addEventListener('click', function(){swapLocation(li)});
       fragment.appendChild(li);
     });
-    searchResults.appendChild(fragment);
+    results.appendChild(fragment);
   }
 
-  function addToCart(evt) {
-    var clone = evt.target.cloneNode(true);
-    evt.target.classList.add('flash');
-    evt.target.classList.remove('flash');
-    clone.classList.add('incoming');
+  function swapLocation(el) {
+    // prevent multi-clicks
+    el.classList.remove('incoming');
+    if(el.classList.contains('outgoing')) {
+      return;
+    }
+    el.classList.add('outgoing');
+    var opposite = el.parentNode === results ? selected : results;
 
-    clone.addEventListener('click', removeFromCart);
-    selectedItems.appendChild(clone);
-  }
-  function removeFromCart(evt) {
-    selectedItems.removeChild(evt.target);
+    window.setTimeout(function removeFromCollection() {
+      opposite.appendChild(el);
+      el.classList.remove('outgoing');
+      el.classList.add('incoming');
+
+      if(selected.children.length === 0) {
+        checkOutButton.setAttribute('disabled','disabled');
+      }
+      else
+      {
+        checkOutButton.removeAttribute('disabled');
+      }
+    }, SATCHEL_ANIMATION_DURATION);
   }
 };
