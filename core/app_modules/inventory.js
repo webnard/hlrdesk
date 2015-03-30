@@ -1,3 +1,5 @@
+"use strict";
+
 var moment = require('moment');
 var db = require('./db');
 var co = require('co');
@@ -13,17 +15,28 @@ inventory.exists = co.wrap(function*(call) {
   return yield Promise.resolve(result.rows.length > 0);
 });
 
-inventory.search = co.wrap(function* (text, username) {
+inventory.search = co.wrap(function* (text, username, params) {
   assert(yield auth.isAdmin(username), 'Only admins can search the database. No searching for ' + username);
   var items = [];
   var client = db();
 
+  var exclude_qry = '';
+  var exclude = params && params.exclude || [];
+
+  var offset = 2;
+  if(exclude.length > 0) {
+    exclude_qry = params.exclude.map(function(v, i) {
+      return '$' + (i + offset);
+    }).join(',');
+    exclude_qry = '"call" NOT IN (' + exclude_qry + ') AND';
+  }
+
   // NOTE: the percent signs need to be concatenated for the $1 replacement to work
   var query = 'SELECT "call" as "call_number", "title", "quantity" FROM "inventory" ' +
-    ' WHERE LOWER("call") LIKE LOWER(\'%\' || $1 || \'%\')' +
-    ' OR LOWER("title") LIKE LOWER(\'%\' || $1 || \'%\');';
+    ' WHERE TRUE AND ' + exclude_qry + ' (LOWER("call") LIKE LOWER(\'%\' || $1 || \'%\')' +
+    ' OR LOWER("title") LIKE LOWER(\'%\' || $1 || \'%\'));';
 
-  var result = yield client.query(query, [text]);
+  var result = yield client.query(query, [text].concat(exclude));
   return yield Promise.resolve(result.rows);
 });
 
