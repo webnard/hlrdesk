@@ -5,12 +5,12 @@ window.HLRDESK.init.checkout = function initCheckout() {
   var socket = io();
   var searchEl = document.getElementById('check-out-search');
   var searchForm = document.getElementById('check-out-form');
-  var results = document.querySelectorAll('#check-out-search-results ul')[0];
-  var resultsCount = document.querySelectorAll('#check-out-search-results .results-count')[0];
-  var selected = document.querySelectorAll('#check-out-search-selection ul')[0];
+  var results = document.querySelector('#check-out-search-results ul');
+  var resultsCount = document.querySelector('#check-out-search-results .results-count');
+  var selected = document.querySelector('#check-out-search-selection ul');
   var checkOutPrompt = document.getElementById('check-out-prompt');
-  var checkOutPromptClose = document.querySelectorAll('#check-out-prompt .close')[0];
-  var checkOutButton = document.querySelectorAll('#check-out-search-selection .check-out-btn')[0];
+  var checkOutPromptClose = document.querySelector('#check-out-prompt .close');
+  var checkOutButton = document.querySelector('#check-out-search-selection .check-out-btn');
 
   var SATCHEL_ANIMATION_DURATION = 250; // MUST MATCH WHAT IS IN CSS
 
@@ -48,7 +48,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
     var plural = count !== 1 ? 's':'';
     resultsCount.innerText = count + ' item' + plural  + ' found';
 
-    var helpText = document.querySelectorAll('#check-out-search-results .help')[0];
+    var helpText = document.querySelector('#check-out-search-results .help');
     if(count === 0) {
       helpText.classList.add('active');
     }
@@ -58,11 +58,17 @@ window.HLRDESK.init.checkout = function initCheckout() {
     }
 
     items.forEach(function(item) {
-      var li = document.createElement('li');
-      li.textContent = item.title;
+      var tpl = document.getElementById('tpl-satchel-li');
+      var node = document.importNode(tpl.content, true);
+      var li = node.querySelector('li');
+      li.querySelector('.title').textContent = item.title;
+      li.querySelector('.call').textContent = item.call_number;
       li.attributes['data-call'] = item.call_num;
-      li.addEventListener('click', function(){swapLocation(li)});
-      fragment.appendChild(li);
+      li.addEventListener('click', function(){
+        swapLocation(li);
+        this.removeEventListener('click', arguments.callee);
+      });
+      fragment.appendChild(node);
     });
     results.appendChild(fragment);
   }
@@ -80,6 +86,9 @@ window.HLRDESK.init.checkout = function initCheckout() {
       opposite.appendChild(el);
       el.classList.remove('outgoing');
       el.classList.add('incoming');
+      window.setTimeout(function removeIncomingClass() {
+        el.classList.remove('incoming');
+      }, SATCHEL_ANIMATION_DURATION);
 
       if(selected.children.length === 0) {
         checkOutButton.setAttribute('disabled','disabled');

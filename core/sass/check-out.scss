@@ -130,6 +130,9 @@ $result-count-height: 15px;
   &.incoming {
     @include animation('satchel-leave reverse 0.25s');
   }
+  .closeBtn {
+    display: none;
+  }
 }
 #check-out-search-selection ul.satchel li {
   text-align: left;
@@ -150,8 +153,7 @@ ul.satchel, ol.satchel {
     color: $creme;
     padding: 0.5em;
     cursor: pointer;
-    button.delete {
-      @extend .closeBtn;
+    button.closeBtn {
       cursor: pointer;
     }
   }
