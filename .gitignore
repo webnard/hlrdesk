@@ -12,3 +12,4 @@ tests/screenshots/
 gh-pages/
 core/sass/patternLibrary.scss
 core/sass/colors.scss
+js/lib/patternLibrary.js

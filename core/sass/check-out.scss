@@ -1,0 +1,179 @@
+@import 'colors.scss';
+@import 'patternLibrary.scss';
+@import 'animation.scss';
+
+#check-out {
+  background-color: white;
+
+  $label-margin-bottom: 0.5em;
+  $search-height: 2.1em;
+  $search-width: 90%;
+
+  .check-out-form {
+    text-align: center;
+    position: relative;
+  }
+  .check-out-main-label {
+    display: block;
+    font-size: ($search-height - 0.2em);
+    height: $search-height;
+    line-height: $search-height;
+    color: $byuBlue;
+    margin-bottom: $label-margin-bottom;
+  }
+  .check-out-search {
+    width: $search-width;
+    font-size: 2em;
+    height: $search-height;
+    line-height: $search-height;
+    border: solid $mainGreyHL 1px;
+  }
+  .check-out-inventory {
+    width: $search-width;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0.5em;
+    display: block;
+    div[id|=check-out-search] {
+      display: inline-block;
+      width: 40%;
+      &:nth-of-type(2) {
+        float: right;
+        text-align: right;
+      }
+    }
+  }
+  .load-spinner {
+    display: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    &.active {
+      display: block;
+    }
+  }
+  .check-out-btn {
+    font-size: 1.2em;
+    cursor: pointer;
+    // TODO: this is hacky; include in pattern library
+    &[disabled], &[disabled]:hover {
+      @extend .disabledBtn;
+      background: $disabledGrey !important;
+      cursor: default;
+    }
+  }
+  .check-out-btn ~ span {
+    display: inline-block;
+    vertical-align: top;
+  }
+  .help:not(.active) {
+    display: none;
+  }
+}
+
+@include keyframes(satchel-enter) {
+  from {
+    background-color: $mainGreyHL;
+    transform: translateX(100%);
+  }
+  to {
+    background-color: $mainGrey;
+    transform: translateX(0);
+  }
+}
+@include keyframes(satchel-leave) {
+  from {
+    background-color: $mainGrey;
+    transform: translateX(0);
+  }
+  to {
+    background-color: $mainGreyHL;
+    transform: translateX(-100%);
+  }
+}
+$check-out-h2-margin-bottom: 1em;
+$check-out-result-count-margin-bottom: 8px;
+$result-count-height: 15px;
+#check-out-search-results, #check-out-search-selection {
+  overflow-x: hidden;
+  h2 {
+    margin-bottom: $check-out-h2-margin-bottom;
+    height: 1.3em;
+    line-height: default;
+  }
+  .results-count {
+    display: block;
+    font-size: 0.8em;
+    line-height: $result-count-height;
+    height: $result-count-height;
+    margin-top: - $result-count-height;
+  }
+}
+#check-out-search-selection {
+  ul {
+    margin-top: $result-count-height;
+  }
+}
+#check-out-search-results ul.satchel li {
+  &.outgoing {
+    @include animation('satchel-leave 0.25s');
+  }
+  &.incoming {
+    @include animation('satchel-leave reverse 0.25s');
+  }
+  .closeBtn {
+    display: none;
+  }
+}
+#check-out-search-selection ul.satchel li {
+  text-align: left;
+  cursor: default;
+  &.incoming {
+    @include animation('satchel-enter 0.25s');
+  }
+  &.outgoing {
+    @include animation('satchel-enter reverse 0.25s');
+  }
+}
+ul.satchel, ol.satchel {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  li {
+    $li-padding: 0.5em;
+    display: flex;
+    align-items: center;
+    background-color: $mainGrey;
+    color: $creme;
+    padding: $li-padding;
+    cursor: pointer;
+    .details {
+      vertical-align: middle;
+      max-width: calc(100% - 3em);
+    }
+    .title {
+      font-weight: 800;
+      display: block;
+    }
+    .call {
+      font-size: 0.8em;
+      font-variant: small-caps;
+    }
+    button.closeBtn {
+      margin-right: $li-padding;
+      cursor: pointer;
+    }
+  }
+  li:hover {
+    background-color: $mainGreyHL;
+  }
+}
+#check-out-prompt {
+  display: none;
+}
+table.check-out-prompt.inventory {
+  height: auto;
+}

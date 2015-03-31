@@ -9,8 +9,13 @@ module.exports = function(socket, app) {
     var id = this.id;
     var redisClient = redis();
     redisClient.smembers(cookie.parse(event._cookie).token, function(err, reply){
+      if(!reply) {
+        console.error('User is not authenticated; cannot search in the database.');
+        return;
+      }
       var username = reply.toString('utf8');
-      inventory.search(event.text, username).then(function(results) {
+      var params = {exclude: event.exclude};
+      inventory.search(event.text, username, params).then(function(results) {
         mysocket.emit('inv.search.results', results);
       }).catch(function(e) {
         console.error(e);

@@ -18,8 +18,6 @@ var db = require('./app_modules/db')
 const ENV = process.env;
 const SERVICE = auth.service(ENV.HLRDESK_HOST, ENV.PORT, '/signin', !ENV.HLRDESK_DEV);
 
-var USE_LAYOUT;
-
 if(ENV.HLRDESK_DEV) {
   app.use(require('./app_modules/koa-sassy').Sassy);
 }
@@ -62,11 +60,11 @@ render(app, {
 app.use(function *(next) {
   if(this.request.header['x-requested-with'] === 'XMLHttpRequest')
   {
-    USE_LAYOUT = false;
+    this.USE_LAYOUT = false;
   }
   else
   {
-    USE_LAYOUT = 'layout';
+    this.USE_LAYOUT = 'layout';
   }
   yield next;
 });
@@ -87,18 +85,25 @@ app.use(_.get("/message", function *() {
   var client = db();
   var all_messages = yield client.query("SELECT * FROM messages;");
   var all_tasks = yield client.query("Select * FROM tasks ORDER BY priority ASC");
-  yield this.render('msg', {layout: USE_LAYOUT, all_messages: all_messages, all_tasks: all_tasks});
+  yield this.render('msg', {layout: this.USE_LAYOUT, all_messages: all_messages, all_tasks: all_tasks});
 }));
 
-app.use(_.get('/checked-out', function *() {
+app.use(_.get('/check-in', function *() {
   var inv = require('./app_modules/inventory');
   var items = yield inv.checked_out;
 
-  yield this.render('catalog/checked-out', {
+  yield this.render('catalog/check-in', {
     items: items,
     moment: require('moment'),
-    title: "Checked Out",
-    layout: USE_LAYOUT
+    title: "Check In",
+    layout: this.USE_LAYOUT
+  });
+}));
+
+app.use(_.get('/check-out', function *() {
+  yield this.render('catalog/check-out', {
+    title: "Check Out",
+    layout: this.USE_LAYOUT
   });
 }));
 
@@ -106,7 +111,7 @@ app.use(_.get("/calendar", function *() {
   var client = db();
   var allCalendarEvents = yield client.query("SELECT * FROM calendar;");
   var isAdmin = yield auth.isAdmin(this.session.user);
-  yield this.render('calendar', {layout: USE_LAYOUT, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user, isAdmin:isAdmin});
+  yield this.render('calendar', {layout: this.USE_LAYOUT, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user, isAdmin:isAdmin});
 }));
 
 app.use(_.get("/signin", function *(next){

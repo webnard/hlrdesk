@@ -20,18 +20,21 @@
 <script type='text/javascript' src='https://code.jquery.com/jquery-2.1.1.min.js'></script>
 <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 <script type="text/javascript" src="/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="/js/lib/patternLibrary.js"></script>
 <script type='text/javascript' src='/js/checkin.js'></script>
 <script type='text/javascript' src='/js/msg.js'></script>
-
+<script type='text/javascript' src='/js/checkout.js'></script>
 <script type='text/javascript' src='/js/admin.js'></script>
 <script src="/socket.io/socket.io.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/css/admin.css">
+<link rel="stylesheet" type="text/css" href="/css/check-out.css">
 </head>
 <body>
 <section id="left_panel">
 <div id="logo_container"><img id="logo" alt="Logo" src="/resources/logo.png"/></div>
-<a class="lpanel check-in" href=/checked-out data-init=checkin data-title="Check In">Check In</a>
+<a class="lpanel check-in" href=/check-in data-init=checkin data-title="Check In">Check In</a>
+<a class="lpanel check-out" href=/check-out data-init=checkout data-title="Check Out">Check Out</a>
 <a class="lpanel">Edit Catalog</a>
 <a class="lpanel" href="https://hummedia.byu.edu/api/v2//account/login?r=https://hummedia.byu.edu">Hummedia</a>
 <a class="lpanel" data-title=Messages href="/message">Messaging</a>

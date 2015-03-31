@@ -7,7 +7,7 @@ describe('inventory', function() {
   beforeEach(require('./resetdb'));
   var inventory  = require ('../core/app_modules/inventory');
 
-  describe('#search(value)', function () {
+  describe('#search(value, user, params)', function () {
     it('should return an array when items are found', function* () {
       var user = 'tock';
       expect(yield inventory.search('HELLO', user)).to.be.an.instanceof(Array);
@@ -36,6 +36,15 @@ describe('inventory', function() {
       var user = 'notadm';
       var item = inventory.search('HELLO', user);
       expect(item).to.eventually.be.rejected;
+    });
+    it('should exclude given call numbers with {exclude: [call1, call2, ...]}', function* () {
+      var user = 'tock';
+      var call = 'I-AM-NOT-CHECKED-OUT';
+      var exclusion = [call];
+      var params  = {exclude: exclusion};
+      var items_no_exclude = yield inventory.search(call, user);
+      var items = yield inventory.search(call, user, params);
+      expect(items_no_exclude).to.have.length.above(items.length);
     });
   });
 
