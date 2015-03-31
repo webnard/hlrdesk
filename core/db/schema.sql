@@ -139,7 +139,33 @@ CREATE TABLE inventory (
     quantity integer DEFAULT 1 NOT NULL,
     volume integer default null,
     title character varying(255),
+    is_reserve BOOLEAN DEFAULT FALSE, -- these are for items left by professors for us to check out
     CONSTRAINT inventory_pkey PRIMARY KEY (call)
+);
+
+CREATE TABLE languages (
+  code character varying(3) NOT NULL PRIMARY KEY, -- these are ISO 639-3 language codes
+  name character varying(150) NOT NULL
+);
+
+CREATE TABLE media (
+  medium character varying(150) NOT NULL PRIMARY KEY
+);
+
+CREATE TABLE media_items (
+  medium character varying(150) not null,
+  call character varying(32) not null,
+  constraint media_items_pkey primary key (medium, call),
+  CONSTRAINT media_inventory_call_fkey FOREIGN KEY (call) REFERENCES inventory(call),
+  CONSTRAINT medium_fkey FOREIGN KEY (medium) REFERENCES media(medium)
+);
+
+CREATE TABLE languages_items (
+  language_code character varying(3) not null,
+  inventory_call character varying(32) not null,
+  constraint languages_items_pkey primary key (language_code, inventory_call),
+  CONSTRAINT inventory_call_fkey FOREIGN KEY (inventory_call) REFERENCES inventory(call),
+  CONSTRAINT language_code_fkey FOREIGN KEY (language_code) REFERENCES languages(code)
 );
 
 --
