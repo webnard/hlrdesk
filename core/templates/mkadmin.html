@@ -1,0 +1,17 @@
+<link rel="stylesheet" type="text/css" href="/css/mkadmin.css">
+<body>
+  <form method = "POST">
+  <input name ="user" id = 'admin_name' type = 'text'></input>
+        <button name = "delete" type = "submit" id="deleteButton" class="redBtn" onclick = "Admin_action('delete');">Delete</button>
+        <button name = "save" type = "submit" id="saveButton" class="greenBtn" onclick = "Admin_action('save');">Save</button>
+  <input type = "hidden" value = <%=csrf%> name = "csrf" />
+  </form>
+
+  <script>
+    function Admin_action(action) {
+      var to_do = document.getElementById('admin_name').value
+      if (action == 'save'){
+      }
+    }
+  </script>
+</body>

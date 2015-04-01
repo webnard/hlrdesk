@@ -8,8 +8,12 @@ var fs = require('fs');
 var socket = require('koa-socket');
 
 var session = require('koa-session')
+var parse = require('co-body')
+var csrf = require('koa-csrf')
 
 var app = koa();
+
+require('koa-csrf')(app)
 
 var email = require('./app_modules/email')
 
@@ -129,9 +133,25 @@ app.use(_.get("/logout", function *(){
   this.redirect(url);
 }));
 
+app.use(_.post("/mkadmin",function *(){
+  var body = yield parse(this) // co-body or something
+  try {
+    this.assertCSRF(body.csrf)
+    to_mk=this.request.query.user;
+    auth.mkadmin(this.session.user, to_mk);
+    this.redirect('/mkadmin');
+  }
+  catch (err) {
+    this.status = 403
+    this.body = {
+      message: 'This CSRF token is invalid!'
+    }
+    return
+  }
+}));
+
 app.use(_.get("/mkadmin",function *(){
-  to_mk=this.request.query.user;
-  auth.mkadmin(this.session.user, to_mk);
+  yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf});
 }));
 
 socket.start(app);
