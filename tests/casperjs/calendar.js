@@ -4,7 +4,7 @@ const PORT = require('system').env.PORT;
 const BASE = 'http://127.0.0.1:' + PORT;
 const SHOTS = 'tests/screenshots/';
 
-casper.test.begin('change sorting of checkin with column clicks', function(test) {
+casper.test.begin('popup calendar menu should work', function(test) {
   casper.options.viewportSize = {top: 0, left: 0, width: 1280, height: 720};
   
   casper.start(BASE + '/logmein?as=prabbit', function() {
