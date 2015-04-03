@@ -15,7 +15,7 @@ casper.test.begin('check out page', function(test) {
   });
   casper.waitForSelector('#check-out');
   casper.then(function() {
-    casper.sendKeys('#check-out-search', 'DEADBEEF', {keepFocus: true});
+    casper.sendKeys('#check-out-search', 'DEADBEEF', {keepFocus: false});
   });
   casper.then(function() {
     // should be disabled initially

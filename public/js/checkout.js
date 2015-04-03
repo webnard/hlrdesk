@@ -2,6 +2,7 @@ window.HLRDESK = window.HLRDESK || {};
 window.HLRDESK.init = window.HLRDESK.init || {};
 
 window.HLRDESK.init.checkout = function initCheckout() {
+  var searchAvailable = 'onsearch' in document.documentElement;
   var socket = io();
   var searchEl = document.getElementById('check-out-search');
   var searchForm = document.getElementById('check-out-form');
@@ -11,6 +12,8 @@ window.HLRDESK.init.checkout = function initCheckout() {
   var checkOutPrompt = document.getElementById('check-out-prompt');
   var checkOutButton = document.querySelector('#check-out-search-selection .check-out-btn');
 
+  var FIREFOX_SEARCH_DEBOUNCE_TIME = 250;
+
   var selectedItems = [];
 
   var SATCHEL_ANIMATION_DURATION = 250; // MUST MATCH WHAT IS IN CSS
@@ -18,6 +21,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
   searchForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
   });
+
   checkOutButton.addEventListener('click', function handleCheckoutClick() { 
     var close = window.patternlibrary.displayModal(checkOutPrompt);
     var checkOutPromptClose = document.querySelector('.modalWindow .close.check-out-prompt');
@@ -27,7 +31,17 @@ window.HLRDESK.init.checkout = function initCheckout() {
 
   socket.on('inv.search.results', populateResults);
 
-  searchEl.addEventListener('search', handleSearchEvt)
+  if(searchAvailable) {
+    searchEl.addEventListener('search', handleSearchEvt);
+  }
+  else
+  {
+    var changeDebounce = null;
+    searchEl.addEventListener('keyup', function(evt) {
+      window.clearTimeout(changeDebounce);
+      changeDebounce = window.setTimeout(handleSearchEvt, FIREFOX_SEARCH_DEBOUNCE_TIME); 
+    });
+  }
 
   function appendInventory(table) {
     var items = selected.querySelectorAll('li');
