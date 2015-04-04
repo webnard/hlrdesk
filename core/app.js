@@ -57,11 +57,18 @@ render(app, {
   cache: !ENV.HLRDESK_DEV,
   debug: ENV.HLRDESK_DEV,
   locals: {
-  title: 'HLRDesk'
+    title: 'HLRDesk',
+    token: function() {
+      console.log("My token is ", this.session.token);
+      return this.session.token;
+    }
   }
 });
 
 app.use(function *(next) {
+  for(var i in this.render) {
+    console.log(i);
+  }
   if(this.request.header['x-requested-with'] === 'XMLHttpRequest')
   {
     this.USE_LAYOUT = false;
@@ -157,20 +164,9 @@ app.use(_.get("/mkadmin",function *(){
 socket.start(app);
 
 socket.use(function*(next){
-  // TODO: get our test sockets to send cookies
-  // Currently we can't send headers in our tests
-  if(ENV.NODE_TEST) {
-    var cookie = this.socket.handshake.query._cookie;
-    if(!cookie) {
-      yield next;
-      return;
-    }
-    this.data._cookie = cookie;
-  }
-  else
-  {
-    this.data._cookie = this.socket.handshake.headers.cookie;
-  }
+  this.user = yield auth.getUser(this.data.token);
+  console.log(this.data.token);
+  console.log(this.user);
   yield next;
 });
 

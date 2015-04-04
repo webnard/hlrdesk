@@ -1,9 +1,9 @@
 //Gets developers personal config Information
 var cas = require('byu-cas');
-var db = require('./db')
-var co = require ('co')
-var uuid = require('node-uuid')
-var redis = require('./redis')
+var db = require('./db');
+var co = require ('co');
+var uuid = require('node-uuid');
+var redis = require('./redis');
 
 check_id = co.wrap(function*(netid){
   var client = db();
@@ -37,14 +37,25 @@ module.exports = {
   login: function(ctx, obj) {
     var client = db();
     var redisClient = redis();
-    ctx.session.user=obj.username;
-    ctx.session.attributes=obj.attributes;
     var token = uuid.v4();
-    ctx.cookies.set('token', token, {maxAge: 43200000});
+    ctx.session.user=obj.username;
+    ctx.session.token=token;
+    ctx.session.attributes=obj.attributes;
     redisClient.sadd([token, obj.username]);
     redisClient.expire(token, 43200);
     client.query("INSERT INTO users(netid) VALUES ($1);", [obj.username] )
   },
+
+  getUser: co.wrap(function* (token) {
+
+    return new Promise(function(resolve, reject) {
+      redis().smembers(token, function(err, reply){ 
+        if(err) { reject(err); }
+        resolve(reply);
+      });
+    });
+
+ }),
 
   // retrieves a service for use when logging in through CAS
   service: function(host, port, endpoint, no_proxy) {

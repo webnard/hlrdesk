@@ -15,6 +15,11 @@
 <script>
   window.HLRDESK = window.HLRDESK || {};
   window.HLRDESK.init = {};
+  <% if(token) { %>
+  window.HLRDESK.token = '<%=token%>';
+  <% } else { %>
+    window.HLRDESK.token = null;
+  <% } %>
 </script>
 
 <script type='text/javascript' src='https://code.jquery.com/jquery-2.1.1.min.js'></script>

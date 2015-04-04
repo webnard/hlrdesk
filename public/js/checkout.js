@@ -50,7 +50,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
       return;
     }
 
-    socket.emit('inv.search', {'text': text, exclude: selectedItems});
+    socket.emit('inv.search', {'text': text, exclude: selectedItems, token: window.HLRDESK.token});
   }
 
   function clearResults() {
