@@ -13,7 +13,7 @@ describe('socket: inv.search', function() {
     socket.on('inv.search.results', function() {
       done();
     });
-    socket.emit('inv.search', {'text': 'HELLO'});
+    socket.emit('inv.search', {'text': 'HELLO', token: socket.__token});
   });
 
   it('should respond with an array of data', function*(done) {
@@ -23,7 +23,7 @@ describe('socket: inv.search', function() {
       expect(results).to.be.an.Array;
       done();
     });
-    socket.emit('inv.search', {'text': 'HELLO'});
+    socket.emit('inv.search', {'text': 'HELLO', token: socket.__token});
   });
 
 });

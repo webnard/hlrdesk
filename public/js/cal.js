@@ -249,7 +249,7 @@ function deleteCell(event) {
     cell = event.target;
     eventDate = new Date((currentView === "week") ? new Date(new Date().setDate(window.now.getDate()+7*weekDiff+(cell.dataset.day-window.now.getDay()))) : cellDate = new Date(displayedDate)).toDateString();
     eventTime = new Date(new Date(eventDate).setHours(cell.dataset.time)).toLocaleString();
-    socket.emit('delete calendar event', {"room":(currentView === "week" ? document.getElementById("displayRoomSelect").value : cell.dataset.room), "time":eventTime, "user":window.userName});
+    socket.emit('delete calendar event', {"token": window.HLRDESK.token, "room":(currentView === "week" ? document.getElementById("displayRoomSelect").value : cell.dataset.room), "time":eventTime, "user":window.userName});
   }
 }
 
@@ -264,6 +264,6 @@ function submit() {
     var user = window.userName;
   }
   
-  socket.emit('calendar event', {"user":user, "time":eventTime, "room":selectedRoom, "duration":selectedDuration, "title":eventTitle});
+  socket.emit('calendar event', {"token": window.HLRDESK.token, "user":user, "time":eventTime, "room":selectedRoom, "duration":selectedDuration, "title":eventTitle});
 }
 })();

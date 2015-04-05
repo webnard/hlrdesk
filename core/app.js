@@ -57,7 +57,10 @@ render(app, {
   cache: !ENV.HLRDESK_DEV,
   debug: ENV.HLRDESK_DEV,
   locals: {
-  title: 'HLRDesk'
+    title: 'HLRDesk',
+    token: function() {
+      return this.session.token;
+    }
   }
 });
 
@@ -157,20 +160,7 @@ app.use(_.get("/mkadmin",function *(){
 socket.start(app);
 
 socket.use(function*(next){
-  // TODO: get our test sockets to send cookies
-  // Currently we can't send headers in our tests
-  if(ENV.NODE_TEST) {
-    var cookie = this.socket.handshake.query._cookie;
-    if(!cookie) {
-      yield next;
-      return;
-    }
-    this.data._cookie = cookie;
-  }
-  else
-  {
-    this.data._cookie = this.socket.handshake.headers.cookie;
-  }
+  this.socket.user = yield auth.getUser(this.data.token);
   yield next;
 });
 
