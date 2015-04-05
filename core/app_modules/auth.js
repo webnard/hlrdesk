@@ -41,21 +41,32 @@ module.exports = {
     ctx.session.user=obj.username;
     ctx.session.token=token;
     ctx.session.attributes=obj.attributes;
+
+    /**
+     * NB: cookie is set only for testing purposes.
+     * Tokens should be taken either from session storage
+     * (server side) or window.HLRDESK.token (client side).
+     * Setting it here in the cookie is an easy way to extract
+     * it when needing to test sockets server-side, because it
+     * can be taken right from the cookie. Ideally, this line
+     * wouldn't be necessary, and it may very well not be if
+     * someone can get the tests to otherwise work.
+     */
+    ctx.cookies.set('token', token, {maxAge: 0});
+
     redisClient.sadd([token, obj.username]);
     redisClient.expire(token, 43200);
     client.query("INSERT INTO users(netid) VALUES ($1);", [obj.username] )
   },
 
   getUser: co.wrap(function* (token) {
-
     return new Promise(function(resolve, reject) {
       redis().smembers(token, function(err, reply){ 
         if(err) { reject(err); }
         resolve(reply.toString());
       });
     });
-
- }),
+  }),
 
   // retrieves a service for use when logging in through CAS
   service: function(host, port, endpoint, no_proxy) {
