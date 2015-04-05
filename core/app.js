@@ -59,16 +59,12 @@ render(app, {
   locals: {
     title: 'HLRDesk',
     token: function() {
-      console.log("My token is ", this.session.token);
       return this.session.token;
     }
   }
 });
 
 app.use(function *(next) {
-  for(var i in this.render) {
-    console.log(i);
-  }
   if(this.request.header['x-requested-with'] === 'XMLHttpRequest')
   {
     this.USE_LAYOUT = false;
@@ -164,9 +160,7 @@ app.use(_.get("/mkadmin",function *(){
 socket.start(app);
 
 socket.use(function*(next){
-  this.user = yield auth.getUser(this.data.token);
-  console.log(this.data.token);
-  console.log(this.user);
+  this.socket.user = yield auth.getUser(this.data.token);
   yield next;
 });
 

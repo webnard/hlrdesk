@@ -51,7 +51,7 @@ module.exports = {
     return new Promise(function(resolve, reject) {
       redis().smembers(token, function(err, reply){ 
         if(err) { reject(err); }
-        resolve(reply);
+        resolve(reply.toString());
       });
     });
 
