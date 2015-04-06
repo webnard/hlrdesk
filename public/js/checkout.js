@@ -14,7 +14,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
 
   var FIREFOX_SEARCH_DEBOUNCE_TIME = 250;
 
-  var selectedItems = [];
+  var selectedItems = {};
 
   var SATCHEL_ANIMATION_DURATION = 250; // MUST MATCH WHAT IS IN CSS
 
@@ -39,7 +39,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
     var changeDebounce = null;
     searchEl.addEventListener('keyup', function(evt) {
       window.clearTimeout(changeDebounce);
-      changeDebounce = window.setTimeout(handleSearchEvt, FIREFOX_SEARCH_DEBOUNCE_TIME); 
+      changeDebounce = window.setTimeout(handleSearchEvt, FIREFOX_SEARCH_DEBOUNCE_TIME);
     });
   }
 
@@ -90,38 +90,55 @@ window.HLRDESK.init.checkout = function initCheckout() {
 
     items.forEach(function(item) {
       // don't load stuff that's already here
+      /* TODO:
       if(selectedItems.indexOf(item.call_number) !== -1) {
         return;
       }
+      */
 
-      var tpl = document.getElementById('tpl-satchel-li');
-      var node = document.importNode(tpl.content, true);
-      var li = node.querySelector('li');
-      li.querySelector('.title').textContent = item.title;
-      li.querySelector('.call').textContent = item.call_number;
-      li.setAttribute('data-call', item.call_number);
-      li.setAttribute('data-title', item.title);
-      li.addEventListener('click', function(){
-        if(li.parentNode === results) {
+      item.copies_available.sort();
+      item.copies_available.forEach(function(copy) {
+        var tpl = document.getElementById('tpl-satchel-li');
+        var node = document.importNode(tpl.content, true);
+        var li = node.querySelector('li');
+        li.querySelector('.title').textContent = item.title;
+        li.querySelector('.call').textContent = item.call_number;
+        li.querySelector('.copy').textContent = copy;
+        li.setAttribute('data-call', item.call_number);
+        li.setAttribute('data-title', item.title);
+        li.setAttribute('data-copy', copy);
+        li.addEventListener('click', function(){
+          if(li.parentNode === results) {
+            swapLocation(li);
+          }
+        });
+        li.querySelector('.closeBtn').addEventListener('click', function() {
           swapLocation(li);
-        }
+        });
+        fragment.appendChild(node);
       });
-      li.querySelector('.closeBtn').addEventListener('click', function() {
-        swapLocation(li);
-      });
-      fragment.appendChild(node);
     });
     results.appendChild(fragment);
   }
 
-  function addToCollection(call) {
-    selectedItems.push(call);
+  function addToCollection(call, copy) {
+    selectedItems[call] = selectedItems[call] || [];
+    if(selectedItems[call].indexOf(copy) !== -1) {
+      throw "Copy " + copy + " already selected for checkout for call " + call;
+    }
+    selectedItems[call].push(copy);
   }
 
-  function removeFromCollection(call) {
-    var idx = selectedItems.indexOf(call);
-    if(idx === -1) { return; }
-    selectedItems.splice(idx, 1);
+  function removeFromCollection(call, copy) {
+    var item = selectedItems[call];
+    if(item === undefined) {
+      throw "Cannot remove call " + call + " from items selected for checkout. Does not exist.";
+    }
+    var idx = item.indexOf(copy);
+    if(idx === -1) {
+      throw "Cannot remove copy " + copy + " of call " + call + " from items selected for checkout. Does not exist.";
+    }
+    item.splice(idx, 1);
   }
 
   function swapLocation(el) {
@@ -135,15 +152,16 @@ window.HLRDESK.init.checkout = function initCheckout() {
     var intoSatchel = el.parentNode === results ? true : false;
     var opposite = null;
     var call = el.getAttribute('data-call');
+    var copy = el.getAttribute('data-copy');
     
     if(intoSatchel) {
       opposite = selected;
-      addToCollection(call);
+      addToCollection(call, copy);
     }
     else
     {
       opposite = results;
-      removeFromCollection(call);
+      removeFromCollection(call, copy);
     }
 
     window.setTimeout(function removeFromCollection() {
