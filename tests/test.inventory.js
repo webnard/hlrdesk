@@ -27,9 +27,11 @@ describe('inventory', function() {
       var user = 'tock';
       var item = (yield inventory.search('HELLO', user))[0];
       // TODO: deal with volumes somehow
-      expect(item).to.contain.keys(['call_number', 'quantity', 'title']);
+      expect(item).to.contain.keys(['call_number', 'quantity', 'copies_available', 'title']);
       expect(item.call_number).to.equal('HELLO');
       expect(item.quantity).to.equal(5);
+      expect(item.copies_available.length).to.equal(3);
+      expect(item.copies_available).to.deep.equal([3,4,5]);
       expect(item.title).to.equal('Around the Sun');
     });
     it('should throw an error when non-admins search the database', function* () {
