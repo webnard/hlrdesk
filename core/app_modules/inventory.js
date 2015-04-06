@@ -31,6 +31,10 @@ inventory.search = co.wrap(function* (text, username, params) {
     exclude_qry = 'inv."call" NOT IN (' + exclude_qry + ') AND';
   }
 
+  // TODO: This has a high cost; it may be beneficial enforce a limit on the
+  // subquery that matches text where a large inventory and high volume of searches
+  // are concerned
+
   // NOTE: the percent signs need to be concatenated for the $1 replacement to work
   var query = 'SELECT '+
     ' inv."call" as "call_number", inv."title", inv."quantity",' +
