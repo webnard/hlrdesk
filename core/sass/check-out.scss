@@ -176,4 +176,12 @@ ul.satchel, ol.satchel {
 }
 table.check-out-prompt.inventory {
   height: auto;
+  th {
+    background: none;
+    color: #1c305d;
+    font-size: 1.3em;
+    font-weight: bold;
+    text-transform: uppercase;
+
+  }
 }

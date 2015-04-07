@@ -2,6 +2,7 @@ window.HLRDESK = window.HLRDESK || {};
 window.HLRDESK.init = window.HLRDESK.init || {};
 
 window.HLRDESK.init.checkout = function initCheckout() {
+  var searchAvailable = 'onsearch' in document.documentElement;
   var socket = io();
   var searchEl = document.getElementById('check-out-search');
   var searchForm = document.getElementById('check-out-form');
@@ -11,13 +12,16 @@ window.HLRDESK.init.checkout = function initCheckout() {
   var checkOutPrompt = document.getElementById('check-out-prompt');
   var checkOutButton = document.querySelector('#check-out-search-selection .check-out-btn');
 
-  var selectedItems = [];
+  var FIREFOX_SEARCH_DEBOUNCE_TIME = 250;
+
+  var selectedItems = {};
 
   var SATCHEL_ANIMATION_DURATION = 250; // MUST MATCH WHAT IS IN CSS
 
   searchForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
   });
+
   checkOutButton.addEventListener('click', function handleCheckoutClick() { 
     var close = window.patternlibrary.displayModal(checkOutPrompt);
     var checkOutPromptClose = document.querySelector('.modalWindow .close.check-out-prompt');
@@ -27,7 +31,17 @@ window.HLRDESK.init.checkout = function initCheckout() {
 
   socket.on('inv.search.results', populateResults);
 
-  searchEl.addEventListener('search', handleSearchEvt)
+  if(searchAvailable) {
+    searchEl.addEventListener('search', handleSearchEvt);
+  }
+  else
+  {
+    var changeDebounce = null;
+    searchEl.addEventListener('keyup', function(evt) {
+      window.clearTimeout(changeDebounce);
+      changeDebounce = window.setTimeout(handleSearchEvt, FIREFOX_SEARCH_DEBOUNCE_TIME);
+    });
+  }
 
   function appendInventory(table) {
     var items = selected.querySelectorAll('li');
@@ -50,7 +64,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
       return;
     }
 
-    socket.emit('inv.search', {'text': text, exclude: selectedItems, token: window.HLRDESK.token});
+    socket.emit('inv.search', {'text': text, token: window.HLRDESK.token});
   }
 
   function clearResults() {
@@ -75,39 +89,60 @@ window.HLRDESK.init.checkout = function initCheckout() {
     }
 
     items.forEach(function(item) {
-      // don't load stuff that's already here
-      if(selectedItems.indexOf(item.call_number) !== -1) {
-        return;
-      }
-
-      var tpl = document.getElementById('tpl-satchel-li');
-      var node = document.importNode(tpl.content, true);
-      var li = node.querySelector('li');
-      li.querySelector('.title').textContent = item.title;
-      li.querySelector('.call').textContent = item.call_number;
-      li.setAttribute('data-call', item.call_number);
-      li.setAttribute('data-title', item.title);
-      li.addEventListener('click', function(){
-        if(li.parentNode === results) {
-          swapLocation(li);
+      // don't display stuff that's already here
+      var copies = item.copies_available.filter(function(copy) {
+        if(selectedItems[item.call_number] !== undefined) {
+          if(selectedItems[item.call_number].indexOf(copy) !== -1) {
+            return false;
+          }
         }
+        return true;
       });
-      li.querySelector('.closeBtn').addEventListener('click', function() {
-        swapLocation(li);
+      copies.sort();
+      copies.forEach(function(copy) {
+        var tpl = document.getElementById('tpl-satchel-li');
+        var node = document.importNode(tpl.content, true);
+        var li = node.querySelector('li');
+        li.querySelector('.title').textContent = item.title;
+        li.querySelector('.call').textContent = item.call_number;
+        li.querySelector('.copy').textContent = copy;
+        li.setAttribute('data-call', item.call_number);
+        li.setAttribute('data-title', item.title);
+        li.setAttribute('data-copy', copy);
+        li.addEventListener('click', function(){
+          if(li.parentNode === results) {
+            swapLocation(li);
+          }
+        });
+        li.querySelector('.closeBtn').addEventListener('click', function() {
+          swapLocation(li);
+        });
+        fragment.appendChild(node);
       });
-      fragment.appendChild(node);
     });
     results.appendChild(fragment);
   }
 
-  function addToCollection(call) {
-    selectedItems.push(call);
+  function addToCollection(call, copy) {
+    var icopy = Number(copy);
+    selectedItems[call] = selectedItems[call] || [];
+    if(selectedItems[call].indexOf(icopy) !== -1) {
+      throw "Copy " + icopy + " already selected for checkout for call " + call;
+    }
+    selectedItems[call].push(icopy);
   }
 
-  function removeFromCollection(call) {
-    var idx = selectedItems.indexOf(call);
-    if(idx === -1) { return; }
-    selectedItems.splice(idx, 1);
+  function removeFromCollection(call, copy) {
+    var icopy = Number(copy);
+    var item = selectedItems[call];
+    if(item === undefined) {
+      throw "Cannot remove call " + call + " from items selected for checkout. Does not exist.";
+    }
+    var idx = item.indexOf(icopy);
+    if(idx === -1) {
+      throw "Cannot remove copy " + icopy + " of call " + call + " from items selected for checkout. Does not exist.";
+    }
+    item.splice(idx, 1);
   }
 
   function swapLocation(el) {
@@ -121,15 +156,16 @@ window.HLRDESK.init.checkout = function initCheckout() {
     var intoSatchel = el.parentNode === results ? true : false;
     var opposite = null;
     var call = el.getAttribute('data-call');
+    var copy = el.getAttribute('data-copy');
     
     if(intoSatchel) {
       opposite = selected;
-      addToCollection(call);
+      addToCollection(call, copy);
     }
     else
     {
       opposite = results;
-      removeFromCollection(call);
+      removeFromCollection(call, copy);
     }
 
     window.setTimeout(function removeFromCollection() {
