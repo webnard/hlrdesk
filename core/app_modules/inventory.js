@@ -28,13 +28,25 @@ inventory.search = co.wrap(function* (text, username, params) {
     exclude_qry = params.exclude.map(function(v, i) {
       return '$' + (i + offset);
     }).join(',');
-    exclude_qry = '"call" NOT IN (' + exclude_qry + ') AND';
+    exclude_qry = 'inv."call" NOT IN (' + exclude_qry + ') AND';
   }
 
+  // TODO: This has a high cost; it may be beneficial enforce a limit on the
+  // subquery that matches text where a large inventory and high volume of searches
+  // are concerned
+
   // NOTE: the percent signs need to be concatenated for the $1 replacement to work
-  var query = 'SELECT "call" as "call_number", "title", "quantity" FROM "inventory" ' +
-    ' WHERE TRUE AND ' + exclude_qry + ' (LOWER("call") LIKE LOWER(\'%\' || $1 || \'%\')' +
-    ' OR LOWER("title") LIKE LOWER(\'%\' || $1 || \'%\'));';
+  var query = 'SELECT '+
+    ' inv."call" as "call_number", inv."title", inv."quantity",' +
+    '   array_agg(foo.copies_available) as copies_available' +
+    ' FROM "inventory" as inv ' +
+    ' JOIN ( SELECT copies_available, subq.call FROM ' +
+    '   ( SELECT call, generate_series(1,quantity) AS copies_available FROM inventory) AS subq ' +
+    '   WHERE subq.copies_available NOT IN ' +
+    '     ( SELECT copy FROM checked_out WHERE checked_out.call=subq.call) ' +
+    ' ) as foo ON foo.call = inv.call ' +
+    ' WHERE TRUE AND ' + exclude_qry + ' (LOWER(inv."call") LIKE LOWER(\'%\' || $1 || \'%\')' +
+    ' OR LOWER("title") LIKE LOWER(\'%\' || $1 || \'%\')) GROUP BY inv.call;';
 
   var result = yield client.query(query, [text].concat(exclude));
   return yield Promise.resolve(result.rows);
