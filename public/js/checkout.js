@@ -64,7 +64,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
       return;
     }
 
-    socket.emit('inv.search', {'text': text, exclude: selectedItems, token: window.HLRDESK.token});
+    socket.emit('inv.search', {'text': text, token: window.HLRDESK.token});
   }
 
   function clearResults() {
@@ -96,8 +96,16 @@ window.HLRDESK.init.checkout = function initCheckout() {
       }
       */
 
-      item.copies_available.sort();
-      item.copies_available.forEach(function(copy) {
+      var copies = item.copies_available.filter(function(copy) {
+        if(selectedItems[item.call_number] !== undefined) {
+          if(selectedItems[item.call_number].indexOf(copy) !== -1) {
+            return false;
+          }
+        }
+        return true;
+      });
+      copies.sort();
+      copies.forEach(function(copy) {
         var tpl = document.getElementById('tpl-satchel-li');
         var node = document.importNode(tpl.content, true);
         var li = node.querySelector('li');
@@ -122,21 +130,23 @@ window.HLRDESK.init.checkout = function initCheckout() {
   }
 
   function addToCollection(call, copy) {
+    var icopy = Number(copy);
     selectedItems[call] = selectedItems[call] || [];
-    if(selectedItems[call].indexOf(copy) !== -1) {
-      throw "Copy " + copy + " already selected for checkout for call " + call;
+    if(selectedItems[call].indexOf(icopy) !== -1) {
+      throw "Copy " + icopy + " already selected for checkout for call " + call;
     }
-    selectedItems[call].push(copy);
+    selectedItems[call].push(icopy);
   }
 
   function removeFromCollection(call, copy) {
+    var icopy = Number(copy);
     var item = selectedItems[call];
     if(item === undefined) {
       throw "Cannot remove call " + call + " from items selected for checkout. Does not exist.";
     }
-    var idx = item.indexOf(copy);
+    var idx = item.indexOf(icopy);
     if(idx === -1) {
-      throw "Cannot remove copy " + copy + " of call " + call + " from items selected for checkout. Does not exist.";
+      throw "Cannot remove copy " + icopy + " of call " + call + " from items selected for checkout. Does not exist.";
     }
     item.splice(idx, 1);
   }
