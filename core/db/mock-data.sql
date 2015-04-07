@@ -3062,7 +3062,7 @@ insert into checked_out(call, copy, netid, attendant, due, extensions) VALUES
   ('3M8413NXB492', 1, 'persicae', 'lecanii', 'today'::date + '7 months'::interval,0),
   ('DEADBEEF', 1, 'propylea', 'lecanii', 'today'::date + '1 day'::interval,3),
   ('DEADBEEF', 3, 'njuster', 'pomi', 'today'::date - '1 week'::interval,0),
-  ('ZAMB0N123', 8, 'thoreau', 'pomi', 'today'::date - '2 weeks 1 month'::interval,1);
+  ('ZAMB0N123', 2, 'thoreau', 'pomi', 'today'::date - '2 weeks 1 month'::interval,1);
 
   
  -- CALENDAR
