@@ -13,8 +13,7 @@ cache:
   - node_modules
 before_install:
 - psql -c 'CREATE DATABASE travis;' -U postgres
-- psql < core/db/schema.sql
-- psql < core/db/mock-data.sql
+- cat core/db/*.sql | psql
 - npm install -g codeclimate-test-reporter
 
 # reqs for SlimerJS
