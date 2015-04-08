@@ -11,14 +11,16 @@ case "$1" in
     APP=hlrdesk
     DB=hlrdesk
     cd core/db
-    cat drop-db.sql schema.sql mock-data.sql | ssh dokku@$REMOTE postgresql:restore $DB
+    cat *.sql | ssh dokku@$REMOTE postgresql:restore $DB
     cd -
     ;;
   staging)
+    # TODO: handle schema migrations
     REMOTE=hlrdesk-staging.byu.edu
     APP=hlrdesk-staging
     ;;
   production)
+    # TODO: handle schema migrations
     REMOTE=hlrdesk-prod.byu.edu
     APP=hlrdesk
     ;;
