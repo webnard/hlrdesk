@@ -171,17 +171,36 @@ ul.satchel, ol.satchel {
     background-color: $mainGreyHL;
   }
 }
-#check-out-prompt {
-  display: none;
-}
-table.check-out-prompt.inventory {
-  height: auto;
-  th {
-    background: none;
-    color: #1c305d;
-    font-size: 1.3em;
-    font-weight: bold;
-    text-transform: uppercase;
 
+.modalWindow form.check-out-prompt {
+  border-top: dotted $mainGrey 1px;
+  padding-top: 1em;
+  margin-top: 1em;
+  label {
+    display: block;
+    font-weight: bold;
+  }
+  input:not([type=submit]) {
+    display: block;
+    margin-left: 0;
+    margin-bottom: 0.5em;
+  }
+}
+.modalWindow ol.inventory.check-out-prompt {
+  display: table;
+  li {
+    display: table-row;
+    &>span {
+      display: table-cell;
+      padding: 0.2rem;
+    }
+    span.copy {
+      &:before {
+        content: '(#';
+      }
+      &:after {
+        content: ')';
+      }
+    }
   }
 }

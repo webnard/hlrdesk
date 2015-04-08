@@ -26,7 +26,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
     var close = window.patternlibrary.displayModal(checkOutPrompt);
     var checkOutPromptClose = document.querySelector('.modalWindow .close.check-out-prompt');
     checkOutPromptClose.onclick = close;
-    appendInventory(document.querySelector('.modalWindow table.check-out-prompt.inventory'));
+    appendInventory(document.querySelector('.modalWindow .check-out-prompt.inventory'));
   });
 
   socket.on('inv.search.results', populateResults);
@@ -43,18 +43,26 @@ window.HLRDESK.init.checkout = function initCheckout() {
     });
   }
 
-  function appendInventory(table) {
+  function appendInventory(ol) {
     var items = selected.querySelectorAll('li');
     var fragment = document.createDocumentFragment();
 
+    var tpl = document.getElementById('tpl-checkout-popup-li');
     for(var i = 0; i<items.length; i++) {
-      var tr = document.createElement('tr');
-      tr.innerHTML = '<td>' + items[i].getAttribute('data-call') + '</td>' +
-        '<td>' + items[i].getAttribute('data-title') + '</td>';
-      fragment.appendChild(tr);
+      var node = document.importNode(tpl.content, true);
+      var li = node.querySelector('li');
+      
+      var call  = items[i].getAttribute('data-call'),
+          copy  = items[i].getAttribute('data-copy'),
+          title = items[i].getAttribute('data-title');
+
+      li.querySelector('.title').textContent = title;
+      li.querySelector('.call').textContent = call;
+      li.querySelector('.copy').textContent = copy;
+
+      fragment.appendChild(li);
     }
-    var tbody = table.querySelector('tbody');
-    tbody.appendChild(fragment);
+    ol.appendChild(fragment);
   }
 
   function handleSearchEvt() {
@@ -105,7 +113,12 @@ window.HLRDESK.init.checkout = function initCheckout() {
         var li = node.querySelector('li');
         li.querySelector('.title').textContent = item.title;
         li.querySelector('.call').textContent = item.call_number;
-        li.querySelector('.copy').textContent = copy;
+
+        if(item.quantity > 1) {
+          // the copy number is redundant if there is only one item of this call
+          li.querySelector('.copy').textContent = copy;
+        }
+
         li.setAttribute('data-call', item.call_number);
         li.setAttribute('data-title', item.title);
         li.setAttribute('data-copy', copy);
