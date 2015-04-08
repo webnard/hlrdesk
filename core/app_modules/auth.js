@@ -60,9 +60,19 @@ module.exports = {
   },
 
   getUser: co.wrap(function* (token) {
+    if(typeof token !== 'string') {
+      return yield Promise.resolve(false); 
+    }
     return new Promise(function(resolve, reject) {
-      redis().smembers(token, function(err, reply){ 
-        if(err) { reject(err); }
+      redis().smembers(token, function(err, reply){
+        if(err) {
+          reject(err);
+          return;
+        }
+        if(reply.length === 0) {
+          resolve(false);
+          return;
+        }
         resolve(reply.toString());
       });
     });

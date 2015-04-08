@@ -20,6 +20,25 @@ describe('auth', function() {
     });
   });
 
+  describe('#getUser(token)', function() {
+    it('should return false with a made-up token', function*() {
+      var username = yield auth.getUser("ay, ay, ay, ay / canta y no llores");
+      expect(username).to.be.false;
+    });
+    it('should return false when given an empty string', function*() {
+      var username = yield auth.getUser("");
+      expect(username).to.be.false;
+    });
+    it('should return false when given undefined', function*() {
+      var username = yield auth.getUser(undefined);
+      expect(username).to.be.false;
+    });
+    it('should return false when given null', function*() {
+      var username = yield auth.getUser(null);
+      expect(username).to.be.false;
+    });
+  });
+
 });
 
 describe('browser login', function(done) {
