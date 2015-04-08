@@ -34,12 +34,13 @@ insert into inventory(call, quantity, title) values
   ('ZAMB0N123', 5, 'Accelerate'),
   ('HELLO', 5, 'Around the Sun'),
   ('JENNY8675309', 2, 'From the Mixed-Up Files of Mrs. Basil E. Frankweiler'),
-  ('DE305D5475B4431BADB2EB6B9E546013', 493, 'Paperclip'),
+  ('DE305D5475B4431BADB2EB6B9E546013', 35, 'Paperclip'),
   ('492M123NX841JMF84', 1, 'Vilhelm Hammershøi Art Book'),
   ('3M8413NXB492', 1, 'Map of 武夷山市'),
   ('UUDDLRLRBAS3L3CTST4RT99999199999', 10, 'Une journée bien remplie ou Neuf meurtres insolites dans une même journée par un seul homme dont ce n''est pas le métier'),
   ('CAS74WY', 1, 'Animal'),
   ('I-AM-NOT-CHECKED-OUT', 2, 'Murmur');
+
 
 insert into checked_out(call, copy, netid, attendant, due, extensions) VALUES
   ('HELLO', 1, 'psota', 'tock', 'tomorrow'::date + '3 days'::interval,1),
@@ -57,7 +58,7 @@ insert into checked_out(call, copy, netid, attendant, due, extensions) VALUES
   ('3M8413NXB492', 1, 'persicae', 'lecanii', 'today'::date + '7 months'::interval,0),
   ('DEADBEEF', 1, 'propylea', 'lecanii', 'today'::date + '1 day'::interval,3),
   ('DEADBEEF', 3, 'njuster', 'pomi', 'today'::date - '1 week'::interval,0),
-  ('ZAMB0N123', 8, 'thoreau', 'pomi', 'today'::date - '2 weeks 1 month'::interval,1);
+  ('ZAMB0N123', 2, 'thoreau', 'pomi', 'today'::date - '2 weeks 1 month'::interval,1);
 
   
  -- CALENDAR

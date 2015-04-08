@@ -3,8 +3,7 @@ set -e
 
 TEST_DB=hlrdesk_test_db
 TEMPLATE_DB=hlrdesk_test_template_db
-SCHEMA_FILE=core/db/schema.sql
-MOCK_DATA_FILE=core/db/mock-data.sql
+DB_FILES=core/db/*.sql
 CASPER_BIN=$(npm root)/casperjs/bin/casperjs
 ISTANBUL_BIN=$(npm root)/istanbul/lib/cli.js
 MOCHA_BIN=$(npm root)/mocha/bin/_mocha
@@ -16,9 +15,7 @@ dropdb $TEMPLATE_DB --if-exists > /dev/null
 printf "."
 createdb $TEMPLATE_DB > /dev/null
 printf "."
-psql $TEMPLATE_DB < $SCHEMA_FILE > /dev/null
-printf "."
-psql $TEMPLATE_DB < $MOCK_DATA_FILE > /dev/null
+cat $DB_FILES | psql $TEMPLATE_DB > /dev/null
 printf "."
 dropdb $TEST_DB --if-exists > /dev/null
 printf "."

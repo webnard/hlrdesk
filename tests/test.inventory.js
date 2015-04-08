@@ -25,14 +25,14 @@ describe('inventory', function() {
     });
     it('returns an item with appropriate and accurate fields', function* () {
       var user = 'tock';
-      var item = (yield inventory.search('HELLO', user))[0];
+      var item = (yield inventory.search('ZAMB0N123', user))[0];
       // TODO: deal with volumes somehow
-      expect(item).to.contain.keys(['call_number', 'quantity', 'copies_available', 'title']);
-      expect(item.call_number).to.equal('HELLO');
+      expect(item).to.contain.keys(['call_number', 'quantity', 'title']);
+      expect(item.call_number).to.equal('ZAMB0N123');
       expect(item.quantity).to.equal(5);
-      expect(item.copies_available.length).to.equal(3);
-      expect(item.copies_available).to.deep.equal([3,4,5]);
-      expect(item.title).to.equal('Around the Sun');
+      expect(item.copies_available.length).to.equal(4);
+      expect(item.copies_available).to.deep.equal([1,3,4,5]);
+      expect(item.title).to.equal('Accelerate');
     });
     it('should throw an error when non-admins search the database', function* () {
       var user = 'notadm';
