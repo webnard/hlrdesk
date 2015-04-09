@@ -12,7 +12,8 @@ insert into users(netid) values
   ('notadm'),
   ('prabbit'),
   ('luke1298'),
-  ('dahlal');
+  ('dahlal'),
+  ('trevren1');
 
 update users set admin='TRUE' where netid = 'pomi';
 update users set admin='TRUE' where netid = 'lecanii';
@@ -20,6 +21,7 @@ update users set admin='TRUE' where netid = 'tock';
 update users set admin='TRUE' where netid = 'luke1298';
 update users set admin='TRUE' where netid = 'dahlal';
 update users set admin='TRUE' where netid = 'prabbit';
+update users set admin='TRUE' where netid = 'trevren1';
 
 -- INVENTORY
 insert into inventory(call, quantity, title) values
