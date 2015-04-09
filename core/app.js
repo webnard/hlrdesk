@@ -114,6 +114,10 @@ app.use(_.get('/check-out', function *() {
   });
 }));
 
+app.use(_.get("/extras", function *() {
+  yield this.render('extras', {layout: this.USE_LAYOUT });
+}));
+
 app.use(_.get("/calendar", function *() {
   var client = db();
   var allCalendarEvents = yield client.query("SELECT * FROM calendar;");
