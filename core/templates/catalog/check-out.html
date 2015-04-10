@@ -20,7 +20,7 @@
 
 <template id=check-out-prompt>
   <header>Check out</header>
-  <form class='check-out-prompt'>
+  <form id=check-out-form class='check-out-prompt'>
     <ol class='inventory check-out-prompt'></ol>
     <div class='check-out-input-container'>
       <label for=check-out-netid>Patron's Net ID</label><input id=check-out-netid type=text name=netid required>
@@ -47,7 +47,9 @@
   <span class=title></span>
   <span class=call></span>
   <span class=copy></span>
-  <input type=date title='Due Date' required>
+  <input class=due type=date title='Due Date' required>
+  <input class=input-copy type=hidden>
+  <input class=input-call type=hidden>
 </li>
 </template>
 

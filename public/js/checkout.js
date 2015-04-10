@@ -17,6 +17,8 @@ window.HLRDESK.init.checkout = function initCheckout() {
   var selectedItems = {};
 
   var SATCHEL_ANIMATION_DURATION = 250; // MUST MATCH WHAT IS IN CSS
+  
+  socket.on('inv.search.results', populateResults);
 
   searchForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
@@ -25,11 +27,14 @@ window.HLRDESK.init.checkout = function initCheckout() {
   checkOutButton.addEventListener('click', function handleCheckoutClick() { 
     var close = window.patternlibrary.displayModal(checkOutPrompt);
     var checkOutPromptClose = document.querySelector('.modalWindow .close.check-out-prompt');
+    document.getElementById('check-out-form').onsubmit = submitRequest;
     checkOutPromptClose.onclick = close;
     appendInventory(document.querySelector('.modalWindow .check-out-prompt.inventory'));
   });
 
-  socket.on('inv.search.results', populateResults);
+  function submitRequest(evt) {
+    evt.preventDefault();
+  };
 
   if(searchAvailable) {
     searchEl.addEventListener('search', handleSearchEvt);
@@ -59,6 +64,12 @@ window.HLRDESK.init.checkout = function initCheckout() {
       li.querySelector('.title').textContent = title;
       li.querySelector('.call').textContent = call;
       li.querySelector('.copy').textContent = copy;
+
+      li.querySelector('.due').name = 'input[' + i +'][due]';
+      li.querySelector('.input-call').name = 'input[' + i +'][call]';
+      li.querySelector('.input-call').value = call;
+      li.querySelector('.input-copy').name = 'input[' + i +'][copy]';
+      li.querySelector('.input-copy').value = copy;
 
       fragment.appendChild(li);
     }
