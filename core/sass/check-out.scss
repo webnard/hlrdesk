@@ -172,25 +172,42 @@ ul.satchel, ol.satchel {
   }
 }
 
-.modalWindow form.check-out-prompt {
-  border-top: dotted $mainGrey 1px;
-  padding-top: 1em;
-  margin-top: 1em;
+.modalWindow form.check-out-prompt{
+  ol.inventory {
+    border-bottom: dotted $mainGrey 1px;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    padding-left: 0;
+    width: 100%;
+    input {
+      display: inline;
+      margin-left: auto;
+      margin-bottom: auto;
+    }
+  }
   label {
     display: block;
     font-weight: bold;
+    text-align: left;
   }
   input:not([type=submit]) {
     display: block;
     margin-left: 0;
+    margin-right: 0;
     margin-bottom: 0.5em;
+    border: solid $mainGrey 1px;
+  }
+  .check-out-input-container {
+    display: block;
+    float: right;
+    text-align: right;
   }
 }
 .modalWindow ol.inventory.check-out-prompt {
   display: table;
   li {
     display: table-row;
-    &>span {
+    &>span, &>input {
       display: table-cell;
       padding: 0.2rem;
     }
