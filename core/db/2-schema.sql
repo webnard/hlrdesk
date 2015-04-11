@@ -109,9 +109,11 @@ ALTER SEQUENCE messages_message_id_seq OWNED BY messages.message_id;
 
 CREATE TABLE users (
     netid character varying(8),
+    admin boolean default false,
+    email varchar(254) default null,
+    telephone varchar(32) default null, -- note: varchar 32 chosen arbitrarily; may be something more sensible
     CONSTRAINT users_pkey PRIMARY KEY (netid)
 );
-ALTER TABLE users ADD "admin" boolean DEFAULT false;
 
 
 --
