@@ -72,6 +72,15 @@ describe('inventory', function() {
     });
   });
 
+  describe('#is_checked_out(call, copy)', function() {
+    it('should resolve true when checked out', function *() {
+      expect(yield inventory.is_checked_out('HELLO',1)).to.be.true;
+    });
+    it('should resolve false when not checked out', function *() {
+      expect(yield inventory.is_checked_out('M347FEST',1)).to.be.false;
+    });
+  });
+
   describe('#check_out([{call:..., copy:..., due:...},...], patron, employee)', function() {
     var moment = require('moment');
     const TOMORROW = moment().add(1, 'day').toDate();
@@ -86,7 +95,7 @@ describe('inventory', function() {
       return expect(promise).to.eventually.be.rejected;
     });
     it('should throw an error if the patron does not exist', function* () {
-      var call = 'HELLO';
+      var call = 'M347FEST';
       var patron = 'I-SHOULD-NOT-EXIST';
       var copy = 1;
       var items = [{call: call, copy: copy, due: TOMORROW}];
@@ -94,7 +103,7 @@ describe('inventory', function() {
       return expect(promise).to.eventually.be.rejected;
     });
     it('should throw an error if the employee is not an admin', function* () {
-      var call = 'HELLO';
+      var call = 'M347FEST';
       var patron = 'milo';
       var employee = 'notadm';
       var copy = 1;
@@ -103,6 +112,14 @@ describe('inventory', function() {
       return expect(promise).to.eventually.be.rejected;
     });
     it('should throw an error if the due date is before the current time', function* () {
+      var call = 'M347FEST';
+      var patron = 'milo';
+      var copy = 1;
+      var items = [{call: call, copy: copy, due: YESTERDAY}];
+      var promise = inventory.check_out(items, patron, 'tock');
+      return expect(promise).to.eventually.be.rejected;
+    });
+    it('should throw an error if the call/copy combo is already checked out', function* () {
       var call = 'HELLO';
       var patron = 'milo';
       var copy = 1;
