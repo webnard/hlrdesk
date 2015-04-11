@@ -20,12 +20,12 @@
 
 <template id=check-out-prompt>
   <header>Check out</header>
-  <form id=check-out-form class='check-out-prompt'>
+  <form class='check-out-verify check-out-prompt' method=POST>
     <ol class='inventory check-out-prompt'></ol>
     <div class='check-out-input-container'>
       <label for=check-out-netid>Patron's Net ID</label><input id=check-out-netid type=text name=netid required>
       <label for=check-out-email>Patron's Email</label><input id=check-out-email type=email name=email>
-      <label for=check-out-phone>Patron's Phone</label><input id=check-out-phone type=email name=email>
+      <label for=check-out-phone>Patron's Phone</label><input id=check-out-phone type=tel name=tel>
       <button class='redBtn close check-out-prompt'></button>
       <input type=submit value='Submit' class='mainBtn check-out-prompt submit'>
     </div>
@@ -43,13 +43,13 @@
 </li>
 </template>
 <template id=tpl-checkout-popup-li>
-<li>
+<li class=ready-for-checkout>
   <span class=title></span>
   <span class=call></span>
   <span class=copy></span>
-  <input class=due type=date title='Due Date' required>
-  <input class=input-copy type=hidden>
-  <input class=input-call type=hidden>
+  <span><input class=due type=date title='Due Date' name=due required></span> <!-- TODO: implement min attribute for date -->
+  <input class=input-copy type=hidden name=copy>
+  <input class=input-call type=hidden name=call>
 </li>
 </template>
 

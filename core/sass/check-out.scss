@@ -207,9 +207,12 @@ ul.satchel, ol.satchel {
   display: table;
   li {
     display: table-row;
-    &>span, &>input {
+    &>span {
       display: table-cell;
       padding: 0.2rem;
+      &:last-of-type {
+        text-align: right;
+      }
     }
     span.copy {
       &:before {

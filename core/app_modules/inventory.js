@@ -80,7 +80,7 @@ inventory.check_in = co.wrap(function*(call, patron, employee) {
 });
 
 inventory.check_out = co.wrap(function*(call, patron, employee, due) {
-
+  // TODO: allow for multiple items at a time
   assert(due > (new Date()), "Due date " + due + " is earlier than now.");
   assert(yield auth.isAdmin(employee), employee + " is not an admin.");
   assert(yield auth.check_id(patron), patron + " is not a valid user.");

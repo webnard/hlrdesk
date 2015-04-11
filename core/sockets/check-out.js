@@ -11,6 +11,14 @@ module.exports = function(socket, app) {
     }).catch(function(e) {
       console.error(e);
     });
-
+  });
+  socket.on('inv.checkout', function(event) {
+    var that = this;
+    inventory.check_out(/** TODO **/).then(function(results) {
+      that.emit('inv.checkout.success', results);
+    }).catch(function(e) {
+      that.emit('error', 'Could not check out items.');
+      console.error(e);
+    });
   });
 };
