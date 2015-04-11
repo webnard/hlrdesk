@@ -79,21 +79,36 @@ inventory.check_in = co.wrap(function*(call, patron, employee) {
   return yield Promise.resolve(true);
 });
 
-inventory.check_out = co.wrap(function*(call, patron, employee, due) {
-  // TODO: allow for multiple items at a time
-  assert(due > (new Date()), "Due date " + due + " is earlier than now.");
+inventory.is_checked_out = co.wrap(function*(call, copy) {
+  var query = 'SELECT COUNT(*) c FROM checked_out WHERE "call" = $1 AND ' +
+    '"copy" = $2 LIMIT 1';
+  var client = db();
+  var result = yield client.query(query, [call, copy]);
+  return yield Promise.resolve(Number(result.rows[0].c) >= 1);
+});
+
+inventory.check_out = co.wrap(function*(items, patron, employee) {
   assert(yield auth.isAdmin(employee), employee + " is not an admin.");
   assert(yield auth.check_id(patron), patron + " is not a valid user.");
-  assert(yield inventory.exists(call), call + " doesn't exist; cannot rent");
 
   var client = db();
-  var copy = (yield client.query('SELECT COUNT(*)+1 c FROM checked_out WHERE call = $1',
-    [call])).rows[0].c;
+  yield client.transaction(function*(t) {
+    for(var i = 0; i<items.length; i++) {
+      var item = items[0];
+      var due = item.due;
+      var call = item.call;
+      var copy = item.copy;
 
-  var q = 'INSERT INTO checked_out(call, copy, netid, attendant, due)' +
-    'VALUES($1, $2, $3, $4, $5)';
-  yield client.query(q , [call, copy, patron, employee, due]);
+      assert(due > (new Date()), "Due date " + due + " is earlier than now.");
+      var checked_out = yield inventory.is_checked_out(call, copy);
+      assert(!checked_out, call + " (copy #" + copy + ") is already checked out");
+      assert(yield inventory.exists(call), call + " doesn't exist; cannot rent");
 
+      var q = 'INSERT INTO checked_out(call, copy, netid, attendant, due)' +
+        'VALUES($1, $2, $3, $4, $5)';
+      yield t.query(q , [call, copy, patron, employee, due]);
+    };
+  });
   return yield Promise.resolve(true);
 });
 
