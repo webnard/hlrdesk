@@ -133,7 +133,7 @@ describe('inventory', function() {
       var employee = 'tock';
       var copy = 1;
       var items = [{call: call, copy: copy, due: TOMORROW}];
-      var val = yield inventory.check_out(call, patron, employee, TOMORROW);
+      var val = yield inventory.check_out(items, patron, employee);
       expect(val).to.be.ok;
     });
     it('should increase the number of checked-out items by one', function* () {
@@ -146,6 +146,45 @@ describe('inventory', function() {
       yield inventory.check_out(items, patron, employee);
       var checked_out_length2 = (yield inventory.checked_out).length;
       expect(checked_out_length2).to.equal(checked_out_length + 1);
+    });
+    it('should allow me to check out multiple items at once', function* () {
+      var patron = 'milo';
+      var employee = 'tock';
+      var items = [
+        {
+        call: 'M347FEST',
+        copy: 1,
+        due: TOMORROW
+        },{
+        call: 'DEADBEEF',
+        copy: 2,
+        due: TOMORROW
+        }
+      ];
+      var checked_out_length = (yield inventory.checked_out).length;
+      yield inventory.check_out(items, patron, employee);
+      var checked_out_length2 = (yield inventory.checked_out).length;
+      expect(checked_out_length2).to.equal(checked_out_length + items.length);
+    });
+    it('should fail an entire batch of items if one is wrong', function* () {
+      var patron = 'milo';
+      var employee = 'tock';
+      var items = [
+        {
+        call: 'M347FEST',
+        copy: 1,
+        due: TOMORROW
+        },{
+        call: 'DEADBEEF',
+        copy: 2,
+        due: YESTERDAY
+        }
+      ];
+      var checked_out_length = (yield inventory.checked_out).length;
+      var promise = inventory.check_out(items, patron, employee);
+      expect(promise).to.eventually.be.rejected;
+      var checked_out_length2 = (yield inventory.checked_out).length;
+      expect(checked_out_length2).to.equal(checked_out_length);
     });
     it('should add the checked-out item to the database', function* () {
       // remove everything first of all, because it's easier to parse then

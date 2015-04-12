@@ -92,9 +92,10 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
   assert(yield auth.check_id(patron), patron + " is not a valid user.");
 
   var client = db();
-  yield client.transaction(function*(t) {
+  try{
+    client.nonQuery('BEGIN TRANSACTION');
     for(var i = 0; i<items.length; i++) {
-      var item = items[0];
+      var item = items[i];
       var due = item.due;
       var call = item.call;
       var copy = item.copy;
@@ -106,9 +107,13 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
 
       var q = 'INSERT INTO checked_out(call, copy, netid, attendant, due)' +
         'VALUES($1, $2, $3, $4, $5)';
-      yield t.query(q , [call, copy, patron, employee, due]);
+      yield client.nonQuery(q , [call, copy, patron, employee, due]);
     };
-  });
+    client.nonQuery('COMMIT');
+  }catch(e) {
+    client.nonQuery('ROLLBACK');
+    throw e;
+  }
   return yield Promise.resolve(true);
 });
 
