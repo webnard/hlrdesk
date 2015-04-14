@@ -29,6 +29,7 @@
 <script type='text/javascript' src='/js/checkin.js'></script>
 <script type='text/javascript' src='/js/msg.js'></script>
 <script type='text/javascript' src='/js/checkout.js'></script>
+<script type='text/javascript' src='/js/alerts.js'></script>
 <script src="/socket.io/socket.io.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/css/admin.css">
@@ -46,7 +47,6 @@
 <a class="lpanel calendar" href=/calendar data-title=Calendar>Calendar</a>
 <a class="lpanel" href=/extras data-title=Extras>Extras</a>
 <a class="lpanel" id="logout" href="/logout">Sign Out</a>
-
 </section>
 <section id="loader">
 <%- body %>
@@ -64,6 +64,7 @@
 </script>
 <script src="/js/admin.js"></script>
 
+<% include error-modal.html %>
 </body>
 </html>
 
