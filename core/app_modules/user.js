@@ -2,6 +2,8 @@
 
 var db = require('./db');
 var auth = require('./auth');
+var co = require('co');
+var assert = require('assert');
 
 module.exports = {
   // details is a key->value object corresponding
@@ -9,6 +11,7 @@ module.exports = {
   // create_if_null (boolean) will create the user if they don't exist
   update: co.wrap(function*(netid, details, create_if_null) {
     assert(typeof netid === 'string', 'Net ID must be a string.');
+    assert(netid !== '', 'Net ID cannot be empty');
 
     var details_whitelist = [
       'email',
@@ -20,12 +23,15 @@ module.exports = {
 
     details_whitelist.forEach(function(field, index) {
       if(details.hasOwnProperty(field)) {
-        updateQuery = '"' + field + '" = $' + index+1;
+        if(updateQuery) {
+          updateQuery += ', ';
+        }
+        updateQuery += '"' + field + '" = $' + (values.length+1);
         values.push(details[field]);
       }
     });
 
-    if(!yield auth.isUser(netid)) {
+    if(!(yield auth.check_id(netid))) {
       yield client.nonQuery('INSERT INTO users(netid) VALUES($1)', [netid]);
     }
     if(updateQuery === '') {
@@ -40,10 +46,10 @@ module.exports = {
     var fullQuery = 'UPDATE users SET ' + updateQuery +
       ' WHERE netid = $' + (values.length+1) + ';';
 
-    var fullValues = values.push(netid);
-    var recordsAffected = yield client.nonQuery(fullQuery, fullValues);
+    values.push(netid);
+    var recordsAffected = yield client.nonQuery(fullQuery, values);
 
     assert(recordsAffected, 'Could not update information for ' + netid);
     return yield Promise.resolve();
-  });
+  })
 };

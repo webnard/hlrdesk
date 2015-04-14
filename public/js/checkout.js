@@ -43,17 +43,18 @@ window.HLRDESK.init.checkout = function initCheckout() {
 
     for(var i = 0; i<items.length; i++) {
       toSubmit.push({
-        due: items[i].querySelector('input[name=due]').value,
+        due: new Date(items[i].querySelector('input[name=due]').value),
         call: items[i].querySelector('input[name=call]').value,
         copy: items[i].querySelector('input[name=copy]').value
       });
     }
 
     var emitMe = {
-      patron: el.querySelector('input[name=netid]').value,
+      netid: el.querySelector('input[name=netid]').value,
       telephone: el.querySelector('input[name=tel]').value,
       email: el.querySelector('input[name=email]').value,
-      items: toSubmit
+      items: toSubmit,
+      token: window.HLRDESK.token
     };
 
     socket.emit('inv.checkout', emitMe);

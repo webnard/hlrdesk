@@ -100,14 +100,16 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
       var call = item.call;
       var copy = item.copy;
 
-      assert(due > (new Date()), "Due date " + due + " is earlier than now.");
+      assert(new Date(due) > (new Date()), "Due date " + due + " is earlier than now.");
       var checked_out = yield inventory.is_checked_out(call, copy);
       assert(!checked_out, call + " (copy #" + copy + ") is already checked out");
       assert(yield inventory.exists(call), call + " doesn't exist; cannot rent");
 
       var q = 'INSERT INTO checked_out(call, copy, netid, attendant, due)' +
         'VALUES($1, $2, $3, $4, $5)';
-      yield client.nonQuery(q , [call, copy, patron, employee, due]);
+
+      var dueFmt = moment(due).format();
+      yield client.nonQuery(q , [call, copy, patron, employee, dueFmt]);
     };
     client.nonQuery('COMMIT');
   }catch(e) {

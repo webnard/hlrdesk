@@ -32,7 +32,9 @@ describe('socket: inv.checkout', function() {
     var server = app.listen(process.env.PORT);
     var socket = yield client(server, 'prabbit');
 
-    socket.on('inv.checkout.success', done);
+    socket.on('inv.checkout.success', function() {
+      done();
+    });
 
     var due = new Date();
     due = due.setYear(due.getUTCFullYear()+1);
@@ -44,7 +46,8 @@ describe('socket: inv.checkout', function() {
       }],
       netid: 'milo',
       email: 'test@example.com',
-      phone: '0118 999 881 99 9119 7253'
+      phone: '0118 999 881 99 9119 7253',
+      token: socket.__token
     };
     socket.emit('inv.checkout', data);
   });
@@ -52,7 +55,9 @@ describe('socket: inv.checkout', function() {
     var server = app.listen(process.env.PORT);
     var socket = yield client(server, 'prabbit');
 
-    socket.on('error', done);
+    socket.on('error', function() {
+      done();
+    });
 
     var due = new Date();
     // due date is earlier than it should be
@@ -65,7 +70,8 @@ describe('socket: inv.checkout', function() {
       }],
       netid: 'milo',
       email: 'test@example.com',
-      phone: '0118 999 881 99 9119 7253'
+      phone: '0118 999 881 99 9119 7253',
+      token: socket.__token
     };
     socket.emit('inv.checkout', data);
   });
