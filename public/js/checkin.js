@@ -18,4 +18,12 @@ window.HLRDESK.init.checkin = function() {
   $("#checked-out-items tbody tr").click(function(){
     $( this ).toggleClass( "selected" );
   });
+  
+  $("#add").click(function(){
+    $( '#checked-out-items tbody tr:visible' ).addClass( "selected" );
+  });
+  
+  $("#remove").click(function(){
+    $( '#checked-out-items tbody tr:visible' ).removeClass( "selected" );
+  });
 }
