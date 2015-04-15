@@ -22,7 +22,7 @@ module.exports = function(socket, app) {
     auth.isAdmin(that.user).then(function(isAdmin) {
       if(!isAdmin) {
         console.error(that.user + ' attempted to check out items for ' + event.netid);
-        that.emit('error', 'Must be an admin to check items out');
+        that.emit('alert', 'Must be an admin to check items out');
         return;
       }
 
@@ -32,12 +32,12 @@ module.exports = function(socket, app) {
         }).catch(function(e) {
           console.error(e.message);
           console.error(e.stack);
-          that.emit('error', 'Could not check out items.');
+          that.emit('alert', 'Could not check out items.');
         });
       }).catch(function(e) {
         console.error(e.message);
         console.error(e.stack);
-        that.emit('error', 'Could not check out items.');
+        that.emit('alert', 'Could not check out items.');
       });
     });
   });

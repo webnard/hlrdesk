@@ -51,11 +51,11 @@ describe('socket: inv.checkout', function() {
     };
     socket.emit('inv.checkout', data);
   });
-  it('should emit error on error', function*(done) {
+  it('should emit "alert" on error', function*(done) {
     var server = app.listen(process.env.PORT);
     var socket = yield client(server, 'prabbit');
 
-    socket.on('error', function() {
+    socket.on('alert', function() {
       done();
     });
 
