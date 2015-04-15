@@ -20,17 +20,6 @@ inventory.search = co.wrap(function* (text, username, params) {
   var items = [];
   var client = db();
 
-  var exclude_qry = '';
-  var exclude = params && params.exclude || [];
-
-  var offset = 2;
-  if(exclude.length > 0) {
-    exclude_qry = params.exclude.map(function(v, i) {
-      return '$' + (i + offset);
-    }).join(',');
-    exclude_qry = 'inv."call" NOT IN (' + exclude_qry + ') AND';
-  }
-
   // TODO: This has a high cost; it may be beneficial enforce a limit on the
   // subquery that matches text where a large inventory and high volume of searches
   // are concerned
@@ -45,10 +34,10 @@ inventory.search = co.wrap(function* (text, username, params) {
     '   WHERE subq.copies_available NOT IN ' +
     '     ( SELECT copy FROM checked_out WHERE checked_out.call=subq.call) ' +
     ' ) as foo ON foo.call = inv.call ' +
-    ' WHERE TRUE AND ' + exclude_qry + ' (LOWER(inv."call") LIKE LOWER(\'%\' || $1 || \'%\')' +
+    ' WHERE TRUE AND (LOWER(inv."call") LIKE LOWER(\'%\' || $1 || \'%\')' +
     ' OR LOWER("title") LIKE LOWER(\'%\' || $1 || \'%\')) GROUP BY inv.call;';
 
-  var result = yield client.query(query, [text].concat(exclude));
+  var result = yield client.query(query, [text]);
   return yield Promise.resolve(result.rows);
 });
 
