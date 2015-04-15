@@ -3,7 +3,14 @@ window.patternlibrary = {
 	displayModal: function (element) {
 		var modal = document.createElement ("div");
 		modal.classList.add ("modalWindow");
-		modal.innerHTML = element.innerHTML;
+
+		if(element.innerHTML === undefined) { // support for document fragments
+			modal.appendChild(element.cloneNode(true));
+		}
+		else
+		{ // supports passing in container elements (<div><header></header>blah blah</div>)
+			modal.innerHTML = element.innerHTML;
+		}
 		var modalBackground = document.createElement ("div");
 		modalBackground.classList.add ("modalBackground");
 		document.body.classList.toggle ("blur");
@@ -19,8 +26,8 @@ window.patternlibrary = {
 			modal.parentNode.removeChild (modal);
 			modalBackground.parentNode.removeChild (modalBackground);
 			document.body.classList.toggle ("blur");
-		}	
-		return closeModal;	
+		}
+		return closeModal;
 	},
 	displayDropDown: function (element) {
 		var dropDown = document.createElement ("div");
@@ -31,7 +38,7 @@ window.patternlibrary = {
 		dropDownClose.classList.add ("dropDownClose");
 		header.appendChild (dropDownClose);
 		dropDownClose.onclick = closedropDown;
-	
+
 	}
 }
 
@@ -39,10 +46,10 @@ jQuery(document).ready(function() {
     jQuery('#openDropDown').click(function() {
         jQuery('#dropDown').toggleClass('showMe');
     });
-    
+
     jQuery(document).mouseup(function (e) {
         var container = jQuery("#dropDown, #openDropDown"); //defines the "clickable area" as the menu button and both menus
-    
+
         if (!container.is(e.target) // IF the target of the click isn't the "clickable area"...
             && container.has(e.target).length === 0) // ... nor a descendant of the "clickable area"
         {
