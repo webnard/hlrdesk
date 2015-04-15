@@ -52,8 +52,8 @@ window.HLRDESK.init.messages = function() {
     var msg_form = "<div  class='message'><img class='message_image' src='http://www.placecage.com/gif/100/100' alt='New Message' width='100' height='100'>"
       +"<i class='fa fa-times' id='icon_exit' onclick='removeDraft()' ></i>"
       +"<form id='m_form'action=''>"
-      +"<input id='m_title' autocomplete='off' autofocus placeholder='Title' required></input><br>"
-      +"<input id='m_body' autocomplete='off' placeholder='Message' required></input><br>"
+      +"<input id='m_title' autocomplete='off' autofocus placeholder='Title' required class='msg'></input><br>"
+      +"<input id='m_body' autocomplete='off' placeholder='Message' required class='msg'></input><br>"
       +"<button class='greenBtn'>Submit</button><br><br>"
       +"</form></div>";
     document.getElementById("add_message").innerHTML = msg_form;

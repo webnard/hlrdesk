@@ -5,20 +5,13 @@ $green: green;
 $highlight: #b3b1aa;
 $disabledGray: #cac9c9;
 
-body
-{
-  width: 100%;
-  height: 100%;
-}
-
 #calendar
 {
   position: relative;
   text-align: center;
-  width: 800px;
-  height: 600px;
-  min-width: 300px;
-  min-height: 150px;
+  overflow:hidden;
+  width: 98%;
+  height: 93%;
 
 #weekView, #dayView
 {
@@ -36,15 +29,15 @@ body
 }
 
 button {
-  padding: 0.3em;
+  padding: 0.8em;
 }
 
 #popup {
   position: relative;
   padding: 0.2em;
   text-align: left;
-  width: 12em;
-  height: 11.5em;
+  width: 13em;
+  height: 13em;
   padding: 0.3em;
   background-color: rgba(255, 255, 255, 0.9);
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
@@ -55,7 +48,18 @@ button {
     margin-bottom: 0.2em;
   }
 }
-#popup:before {
+#popup.under:before {
+  content:"";
+  position: absolute;
+  right: 5.55em;
+  top: -0.85em;
+  width: 0;
+  height: 0;
+  border-left: 0.9em solid transparent;
+  border-right: 0.9em solid transparent;
+  border-bottom: 0.9em solid rgba(255, 255, 255, 0.9);
+}
+#popup:not(.under):before {
   content:"";
   position: absolute;
   right: 5.55em;
@@ -71,16 +75,39 @@ button {
   text-align: center;
 }
 
+#deleteButton {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 #deleteButton, #saveButton {
   margin: 0.5em;
   margin-top: 0.2em;
   width: 4em;
 }
 
+tr
+{
+  background-color: $bg;
+}
+
+th:hover {
+    background: none;
+}
+
+th {
+    background: none;
+    color: black;
+    transition: none;
+}
+
 table.calendar
 {
-  border-style: hidden;
   border-collapse: collapse;
+  background: $bg;
+  padding: 1em;
+  border: $bg;
+  margin:1em;
 
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -93,17 +120,46 @@ table.calendar
   background-color: $bg;
   width: inherit;
   height: inherit;
+  table-layout: fixed;
+}
+
+th.time, th.blank
+{
+  width: 2.5em;
 }
 
 td
 {
   border: 1px solid black;
+  transition: background 0.3s;
 }
 
-table td:not(.selected):not(.disabled):not(.requested):hover
+table td:not(.selected):not(.disabled):not(.requested):not(.bookedByUser):hover
 {
   background-color: $highlight;
   cursor: pointer;
+}
+
+table td.highlight
+{
+  background-color: $highlight;
+  cursor: pointer;
+}
+
+table td.topBox
+{
+  border-bottom-width: 0px;
+}
+
+table td.middleBox
+{
+  border-top-width: 0px;
+  border-bottom-width: 0px;
+}
+
+table td.bottomBox
+{
+  border-top-width: 0px;
 }
 
 .selected
@@ -116,6 +172,7 @@ table td:not(.selected):not(.disabled):not(.requested):hover
 {
   background-color: $disabledGray;
   cursor: default;
+  border-width: 0px;
 }
 
 .requested
@@ -129,25 +186,20 @@ table td:not(.selected):not(.disabled):not(.requested):hover
   background-color: #0000FF;
   cursor: default;
 }
-
+  
 th
 {
+  &.day, &.room
+  {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+  }
+  &.time
+  {
+    border-right-style: solid;
+    border-right-width: 1px;
+  }
   font-weight: bold;
   vertical-align: middle;
-}
-
-.day
-{
-  width: 16%;
-}
-
-.room
-{
-  width: 16%;
-}
-
-.time
-{
-  width: 4%;
 }
 }

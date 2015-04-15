@@ -1,22 +1,39 @@
 var db = require('./db')
 var co = require('co');
 var auth = require('./auth');
+var assert = require('assert');
 module.exports = {};
 
-module.exports.addCalendarEvent = co.wrap(function*(username, event, reply){
+module.exports.addCalendarEvent = co.wrap(function*(username, event, user){
   var client = db();
   var a = yield auth.isAdmin(username);
-  var user = a ? event.user : reply;
-  client.query('INSERT INTO calendar("user", "time", room, duration, title)VALUES ($1, $2, $3, $4, $5);', [user, event.time, event.room, event.duration, event.title]);
-
-  return yield Promise.resolve(true);
+  if(!a) {
+    assert(username === user);
+  }
+  
+  var isOverlap = false;
+  var allCalendarEvents = yield client.query("SELECT * FROM calendar;");
+  allCalendarEvents = allCalendarEvents.rows;
+  for (var i = 0; i < allCalendarEvents.length; i++) {
+    if ((event.time >= allCalendarEvents[i].time && event.time <= allCalendarEvents[i].time + allCalendarEvents[i].duration) && (event.time+event.duration >= allCalendarEvents[i].time && event.time+event.duration <= allCalendarEvents[i].time+allCalendarEvents[i].duration)) {
+      isOverlap = true;
+    }
+  }
+  if (!isOverlap) {
+    console.log("yo1");
+    console.log(yield client.nonQuery('INSERT INTO calendar("user", "time", room, duration, title)VALUES ($1, $2, $3, $4, $5);', [user, event.time, event.room, event.duration, event.title]));
+    console.log("yo2");
+    return yield Promise.resolve(true);
+  } else {
+    return yield Promise.reject(new Error("Overlap"));
+  }
 });
 
 module.exports.deleteCalendarEvent = co.wrap(function*(username, event){
   var client = db();
   var a = yield auth.isAdmin(username);
   if(event.user == username || a) {
-    client.query('DELETE FROM calendar WHERE room=$1 AND "time"=$2;', [event.room, event.time]);
+    yield client.query('DELETE FROM calendar WHERE room=$1 AND "time"=$2;', [event.room, event.time]);
     return yield Promise.resolve(true);
   }
   
