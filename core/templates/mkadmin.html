@@ -1,6 +1,10 @@
-<form method = "POST">
-<input name ="user" id = 'admin_name' type = 'text'></input>
-      <button name = "delete" type = "submit" id="deleteButton" class="redBtn">Delete</button>
-      <button name = "save" type = "submit" id="saveButton" class="greenBtn">Save</button>
-<input type = "hidden" value = <%=csrf%> name = "csrf" />
-</form>
+<div id="admin_box">
+  <div id="other">
+    <form method = "POST">
+      <input name ="user" id = 'admin_name' type = 'text' placeholder="Admin's NetID"></input>
+        <button name = "delete" type = "submit" id="deleteButton" class="redBtn">Delete</button>
+        <button name = "save" type = "submit" id="saveButton" class="greenBtn">Save</button>
+      <input type = "hidden" value = <%=csrf%> name = "csrf" />
+    </form>
+  </div>
+<div>
