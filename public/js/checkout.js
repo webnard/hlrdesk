@@ -2,22 +2,18 @@ window.HLRDESK = window.HLRDESK || {};
 window.HLRDESK.init = window.HLRDESK.init || {};
 
 window.HLRDESK.init.checkout = function initCheckout() {
-  var searchAvailable = 'onsearch' in document.documentElement;
   var socket = io();
-  var searchEl = document.getElementById('check-out-search');
+  var searchEl = document.getElementById('');
   var searchForm = document.getElementById('check-out-form');
-  var results = document.querySelector('#check-out-search-results ul');
-  var resultsCount = document.querySelector('#check-out-search-results .results-count');
   var selected = document.querySelector('#check-out-search-selection ul');
   var checkOutButton = document.querySelector('#check-out-search-selection .check-out-btn');
-
-  var FIREFOX_SEARCH_DEBOUNCE_TIME = 250;
 
   var selectedItems = {};
 
   var SATCHEL_ANIMATION_DURATION = 250; // MUST MATCH WHAT IS IN CSS
 
-  socket.on('inv.search.results', populateResults);
+  var results = document.getElementById('check-out-search-results');
+
   socket.on('alert', function(data){window.HLRDESK.alert.error(data.message)});
 
   function closeModal(){};
@@ -79,18 +75,6 @@ window.HLRDESK.init.checkout = function initCheckout() {
     });
   };
 
-  if(searchAvailable) {
-    searchEl.addEventListener('search', handleSearchEvt);
-  }
-  else
-  {
-    var changeDebounce = null;
-    searchEl.addEventListener('keyup', function(evt) {
-      window.clearTimeout(changeDebounce);
-      changeDebounce = window.setTimeout(handleSearchEvt, FIREFOX_SEARCH_DEBOUNCE_TIME);
-    });
-  }
-
   function appendInventory(ol) {
     var items = selected.querySelectorAll('li');
     var fragment = document.createDocumentFragment();
@@ -114,77 +98,6 @@ window.HLRDESK.init.checkout = function initCheckout() {
       fragment.appendChild(li);
     }
     ol.appendChild(fragment);
-  }
-
-  function handleSearchEvt() {
-    var text = searchEl.value;
-    if(text === '') {
-      clearResults();
-      return;
-    }
-
-    socket.emit('inv.search', {'text': text, token: window.HLRDESK.token});
-  }
-
-  function clearResults() {
-    results.innerHTML='';
-    resultsCount.innerText = '';
-  };
-
-  function populateResults(items) {
-    clearResults();
-    var fragment = document.createDocumentFragment();
-    var count = items.length;
-    var plural = count !== 1 ? 's':'';
-    resultsCount.innerText = count + ' item' + plural  + ' found';
-
-    var helpText = document.querySelector('#check-out-search-results .help');
-    if(count === 0) {
-      helpText.classList.add('active');
-    }
-    else
-    {
-      helpText.classList.remove('active');
-    }
-
-    items.forEach(function(item) {
-      // don't display stuff that's already here
-      var copies = item.copies_available.filter(function(copy) {
-        if(selectedItems[item.call_number] !== undefined) {
-          if(selectedItems[item.call_number].indexOf(copy) !== -1) {
-            return false;
-          }
-        }
-        return true;
-      });
-      copies.sort();
-      copies.forEach(function(copy) {
-        var tpl = document.getElementById('tpl-satchel-li');
-        var node = document.importNode(tpl.content, true);
-        var li = node.querySelector('li');
-        li.querySelector('.title').textContent = item.title;
-        li.querySelector('.call').textContent = item.call_number;
-
-        if(item.quantity > 1) {
-          // the copy number is redundant if there is only one item of this call
-          li.querySelector('.copy').textContent = copy;
-        }
-
-        li.setAttribute('data-call', item.call_number);
-        li.setAttribute('data-title', item.title);
-        li.setAttribute('data-copy', copy);
-        li.addEventListener('click', function(){
-          if(li.parentNode === results) {
-            swapLocation(li);
-          }
-        });
-        li.querySelector('.closeBtn').addEventListener('click', function() {
-          swapLocation(li);
-        });
-        fragment.appendChild(node);
-      });
-    });
-    results.appendChild(fragment);
   }
 
   function addToCollection(call, copy) {
@@ -217,7 +130,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
       return;
     }
     el.classList.add('outgoing');
-    var intoSatchel = el.parentNode === results ? true : false;
+    var intoSatchel = results.contains(el) ? true : false;
     var opposite = null;
     var call = el.getAttribute('data-call');
     var copy = el.getAttribute('data-copy');
@@ -228,7 +141,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
     }
     else
     {
-      opposite = results;
+      opposite = results.querySelector('ul');
       removeFromCollection(call, copy);
     }
 
@@ -249,4 +162,28 @@ window.HLRDESK.init.checkout = function initCheckout() {
       }
     }, SATCHEL_ANIMATION_DURATION);
   }
+
+  function searchFilter(copy, item) {
+    if(selectedItems[item.call_number] !== undefined) {
+      if(selectedItems[item.call_number].indexOf(copy) !== -1) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  window.HLRDESK.plugins.search({
+    search: '#check-out-search',
+    results: '#check-out-search-results',
+    filter: searchFilter,
+    clickCallback: function() {
+      if(results.contains(this)) {
+        swapLocation(this);
+      }
+    },
+    closeCallback: function() {
+      swapLocation(this);
+    },
+    hideCheckedOut: true
+  });
 };
