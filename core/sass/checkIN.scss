@@ -12,6 +12,13 @@ box-shadow:none;
 cursor: default;
 }
 
+.extend-btn[disabled] {
+background-color:$disabledGrey;
+background:$disabledGrey;
+box-shadow:none;
+cursor: default;
+}
+
 .checkIN {
   padding:1em;
 }

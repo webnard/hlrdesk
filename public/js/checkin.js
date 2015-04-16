@@ -18,14 +18,17 @@ window.HLRDESK.init.checkin = function() {
   $("#checked-out-items tbody tr").click(function(){
     $( this ).toggleClass( "selected" );
     var checkInButton = document.querySelector('.check-in-btn')
-    var selected = document.querySelector('.selected');
+    var selected = document.querySelectorAll('.selected');
+    var extendButton = document.querySelector('.extend-btn')
 
   if(selected.length === 0) {
     checkInButton.setAttribute('disabled','disabled');
+    extendButton.setAttribute('disabled','disabled');
   }
   else
   {
     checkInButton.removeAttribute('disabled');
+    extendButton.removeAttribute('disabled');
   }
   });
 }
