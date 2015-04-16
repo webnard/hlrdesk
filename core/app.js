@@ -181,7 +181,7 @@ fs.readdir(path.join(__dirname, 'sockets'), function (err, files) {
       require(path.join(__dirname, 'sockets', file))(socket, app);
     }
     catch(e) {
-      console.error("Initializing sockets/" + file + " failed.");
+      console.error("Initializing sockets/" + file + " failed.", e);
       throw e;
     }
   });
