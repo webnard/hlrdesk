@@ -17,8 +17,7 @@ describe('calendar', function() {
     });
     it("should not allow overlapping events", function*() {
       var tempPromise = yield cal.addCalendarEvent(username, event, username);
-      console.log(tempPromise);
-      var promise = cal.addCalendarEvent(username, event);
+      var promise = cal.addCalendarEvent(username, event, username);
       return expect(promise).to.eventually.be.rejected;
     });
   });
