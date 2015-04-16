@@ -20,9 +20,7 @@ module.exports.addCalendarEvent = co.wrap(function*(username, event, user){
     }
   }
   if (!isOverlap) {
-    console.log("yo1");
-    console.log(yield client.nonQuery('INSERT INTO calendar("user", "time", room, duration, title)VALUES ($1, $2, $3, $4, $5);', [user, event.time, event.room, event.duration, event.title]));
-    console.log("yo2");
+    yield client.nonQuery('INSERT INTO calendar("user", "time", room, duration, title)VALUES ($1, $2, $3, $4, $5);', [user, event.time, event.room, event.duration, event.title]);
     return yield Promise.resolve(true);
   } else {
     return yield Promise.reject(new Error("Overlap"));
