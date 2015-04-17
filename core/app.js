@@ -114,6 +114,13 @@ app.use(_.get('/check-out', function *() {
   });
 }));
 
+app.use(_.get('/edit-catalog', function *() {
+  yield this.render('catalog/edit-catalog', {
+    title: "Edit Item",
+    layout: this.USE_LAYOUT
+  });
+}));
+
 app.use(_.get("/extras", function *() {
   yield this.render('extras', {layout: this.USE_LAYOUT });
 }));
