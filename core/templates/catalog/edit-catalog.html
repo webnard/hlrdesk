@@ -1,0 +1,69 @@
+<section id=check-out>
+  <form id=check-out-form class=check-out-form>
+    <label class=check-out-main-label for=editCatalog-search>Enter an item or call number</label>
+    <input id=editCatalog-search class=check-out-search autofocus incremental name=search type=search placeholder="The Rock - Starring Nicholas Cage, NOT THE BEES!, ERS-ELI-F14">
+  </form>
+  
+  <div class=check-out-inventory>
+      <div id=editCatalog-search-results>
+        <h2>Results</h2>
+      </div>      
+    </div>
+  </div>
+</section>
+
+<template id=editItem>
+  <header>Edit Item</header>
+  <form>
+
+<table >
+  <tr>
+    <td><label for=callNumber>Call Number</label></td> 
+     <td><input id="callNumber"></td>
+  </tr>
+  <tr>
+    <td><label for=mediaType>Media Type</label></td>
+    <td>
+      <select><!--TODO: pass in options from database-->
+        <option value="Audio Cassette">Audio Cassette</option>
+        <option value="Video Casette">Video Casette</option>
+        <option value="Video Disc">Video Disc</option>
+        <option value="Text">Text</option>
+        <option value="CD">CD</option>
+        <option value="DVD">DVD</option>
+        <option value="Equipment">Equipment</option>
+        <option value="Online Media">Online Media</option>
+        <option value="Kennedy Center Outreach Collection">Kennedy Center Outreach Collection</option>
+        <option value="Flashcards">Flashcards</option>
+      </select>
+    </td> 
+  </tr>
+    <tr>
+    <td><label for=language>Language</label><!--maybe TODO: pass in options from database--></td>
+    <td><input id="language"></td> 
+  </tr>
+    <tr>
+    <td><label for=onReserve>Reserve Item</label> </td>
+    <td><input type=checkbox id="onReserve"></td> 
+  </tr>
+    <tr>
+    <td><label for=duplicatable>Duplicatable</label></td>
+    <td><input type=checkbox id="duplicatable"></td> 
+  </tr>
+    <tr>
+    <td><label for=HLROnline>On Hummedia</label></td>
+    <td><input type=checkbox id="HLROnline"></td> 
+  </tr>
+    <tr>
+    <td><label for=notes>Notes/Alert Field</label></td>
+    <td><input id="notes"></td> 
+  </tr>
+</table>
+   
+      <input type=submit value='Delete Item' class='redBtn'>
+      <input type=submit value='Save' class='mainBtn'>
+    </div>
+  </form>
+</template>
+
+<script>window.HLRDESK.init.editCatalog();</script>

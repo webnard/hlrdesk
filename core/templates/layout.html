@@ -21,7 +21,7 @@
     window.HLRDESK.token = null;
   <% } %>
 </script>
-
+<script src="/socket.io/socket.io.js"></script>
 <script type='text/javascript' src='https://code.jquery.com/jquery-2.1.1.min.js'></script>
 <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.tablesorter.min.js"></script>
@@ -31,7 +31,8 @@
 <script type='text/javascript' src='/js/checkout.js'></script>
 <script type='text/javascript' src='/js/alerts.js'></script>
 <script type='text/javascript' src='/js/search-plugin.js'></script>
-<script src="/socket.io/socket.io.js"></script>
+<script type='text/javascript' src='/js/edit-catalog.js'></script>
+
 
 <link rel="stylesheet" type="text/css" href="/css/admin.css">
 <link rel="stylesheet" type="text/css" href="/css/check-out.css">
@@ -44,7 +45,7 @@
 <div id="logo_container"><img id="logo" alt="Logo" src="/resources/logo.png"/></div>
 <a class="lpanel check-in" href=/check-in data-init=checkin data-title="Check In">Check In</a>
 <a class="lpanel check-out" href=/check-out data-init=checkout data-title="Check Out">Check Out</a>
-<a class="lpanel">Edit Catalog</a>
+<a class="lpanel edit-catalog" href=/edit-catalog data-init=editCatalog data-title="Edit Catalog">Edit Catalog</a>
 <a class="lpanel" href="https://hummedia.byu.edu/api/v2//account/login?r=https://hummedia.byu.edu">Hummedia</a>
 <a class="lpanel" data-title=Messages href="/message">Messaging</a>
 <a class="lpanel calendar" href=/calendar data-title=Calendar>Calendar</a>
