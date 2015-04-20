@@ -31,7 +31,6 @@ describe('socket: inv.search', function() {
     var socket = yield client(server, 'prabbit');
     socket.on('inv.search.results', function(results) {
       var item = results[0];
-      console.log(item);
       expect(item.copies_available.length).to.equal(0);
       done();
     });

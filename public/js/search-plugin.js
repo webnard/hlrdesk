@@ -8,8 +8,9 @@ window.HLRDESK.plugins = window.HLRDESK.plugins || {};
              `this` is bound to the item clicked
  * @property (optional) function removeCallback - what to do when items are removed
  * @property (optional) function filter(item, copy) - a filter functions for searched items
- * @property (optional) boolean hideCheckedOut (default false) whether or not
- *           to hide checked-out items from results
+ * @property (optional) boolean showCopies (default false) whether or not to break down
+ *           items into their individual, non-checked-out copies. If items are checked
+ *           out and this is set to true, those copies will not be returned.
  */
 window.HLRDESK.plugins.search = function(parameters) {
   var FIREFOX_SEARCH_DEBOUNCE_TIME = 250;
@@ -59,6 +60,41 @@ window.HLRDESK.plugins.search = function(parameters) {
       });
     }
   }
+
+  // param copy: integer
+  // if -1, mark the item as unavailable
+  // if 0 (or falsy) don't display the copy
+  function createResultLI(item, copy) {
+    var div = document.createElement('div');
+    div.innerHTML = LI_TEMPLATE;
+    var li = div.querySelector('li');
+    li.querySelector('.title').textContent = item.title;
+    li.querySelector('.call').textContent = item.call_number;
+
+    if(copy === -1) {
+      li.querySelector('.copy').textContent = '[unavailable]'
+      li.classList.add('unavailable');
+      li.dataset.unavailable = true;
+    }
+
+    if(copy >= 1 && item.quantity > 1) {
+      // the copy number is redundant if there is only one item of this call
+      li.querySelector('.copy').textContent = copy;
+    }
+
+    li.setAttribute('data-call', item.call_number);
+    li.setAttribute('data-title', item.title);
+    li.setAttribute('data-copy', copy);
+
+    if(typeof parameters.clickCallback === 'function') {
+      li.addEventListener('click', parameters.clickCallback.bind(li));
+    }
+    if(typeof parameters.closeCallback === 'function') {
+      var btn = li.querySelector('.closeBtn');
+      btn.addEventListener('click', parameters.closeCallback.bind(li));
+    }
+    return li;
+  }
   
   function populateResults(items) {
     clearResults();
@@ -76,39 +112,26 @@ window.HLRDESK.plugins.search = function(parameters) {
     }
 
     items.forEach(function(item) {
+      if(!parameters.showCopies) {
+        fragment.appendChild(createResultLI(item));
+        return;
+      }
+
       var copies = item.copies_available;
+
+      if(!copies.length) {
+        results.appendChild(createResultLI(item, -1));
+        return;
+      }
 
       if(typeof parameters.filter === 'function') {
         copies = item.copies_available.filter(function(copy) {
           return parameters.filter(item, copy);
         });
       }
-
       copies.sort();
       copies.forEach(function(copy) {
-        var div = document.createElement('div');
-        div.innerHTML = LI_TEMPLATE;
-        var li = div.querySelector('li');
-        li.querySelector('.title').textContent = item.title;
-        li.querySelector('.call').textContent = item.call_number;
-
-        if(item.quantity > 1) {
-          // the copy number is redundant if there is only one item of this call
-          li.querySelector('.copy').textContent = copy;
-        }
-
-        li.setAttribute('data-call', item.call_number);
-        li.setAttribute('data-title', item.title);
-        li.setAttribute('data-copy', copy);
-
-        if(typeof parameters.clickCallback === 'function') {
-          li.addEventListener('click', parameters.clickCallback.bind(li));
-        }
-        if(typeof parameters.closeCallback === 'function') {
-          var btn = li.querySelector('.closeBtn');
-          btn.addEventListener('click', parameters.closeCallback.bind(li));
-        }
-        fragment.appendChild(li);
+        fragment.appendChild(createResultLI(item, copy));
       });
     });
     results.appendChild(fragment);
@@ -130,8 +153,7 @@ window.HLRDESK.plugins.search = function(parameters) {
     }
     socket.emit('inv.search', {
       'text': text,
-      token: window.HLRDESK.token,
-      hideCheckedOut: parameters.hideCheckedOut
+      token: window.HLRDESK.token
     });
   }
 

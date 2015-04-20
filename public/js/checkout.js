@@ -31,6 +31,12 @@ window.HLRDESK.init.checkout = function initCheckout() {
     appendInventory(document.querySelector('.modalWindow .check-out-prompt.inventory'));
   });
 
+  function clear() {
+    selected.innerHTML = '';
+    selectedItems = {};
+    checkOutButton.setAttribute('disabled','disabled');
+  }
+
   function submitRequest(evt) {
     // temporarily disable buttons
     var submitBtn = document.querySelector('.modalWindow .check-out-verify input[type=submit]');
@@ -66,11 +72,11 @@ window.HLRDESK.init.checkout = function initCheckout() {
     socket.emit('inv.checkout', emitMe);
     socket.removeAllListeners('inv.checkout.success');
     socket.on('inv.checkout.success', function() {
+      clear();
       socket.removeAllListeners('inv.checkout.success');
       submitBtn.value = 'Success!';
-      setTimeout(function() {
-        closeModal();
-      }, 1000);
+      setTimeout(function() { closeModal();
+      }, 750);
     });
   };
 
@@ -176,6 +182,9 @@ window.HLRDESK.init.checkout = function initCheckout() {
     results: '#check-out-search-results',
     filter: searchFilter,
     clickCallback: function() {
+      if(this.dataset.unavailable) {
+        return;
+      }
       if(results.contains(this)) {
         swapLocation(this);
       }
@@ -183,6 +192,6 @@ window.HLRDESK.init.checkout = function initCheckout() {
     closeCallback: function() {
       swapLocation(this);
     },
-    hideCheckedOut: true
+    showCopies: true
   });
 };

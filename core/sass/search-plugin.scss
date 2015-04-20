@@ -30,8 +30,13 @@ ul.satchel, ol.satchel {
       cursor: pointer;
       display: none;
     }
-  }
-  li:hover {
-    background-color: $mainGreyHL;
+    &.unavailable {
+      cursor: not-allowed;
+      color: grayscale(darken($creme, 20%));
+      background-color: darken(grayscale($mainGrey), 20%);
+    }
+    &:not(.unavailable):hover {
+      background-color: $mainGreyHL;
+    }
   }
 }
