@@ -3,7 +3,6 @@ window.HLRDESK.init = window.HLRDESK.init || {};
 
 window.HLRDESK.init.checkout = function initCheckout() {
   var socket = io();
-  var searchEl = document.getElementById('');
   var searchForm = document.getElementById('check-out-form');
   var selected = document.querySelector('#check-out-search-selection ul');
   var checkOutButton = document.querySelector('#check-out-search-selection .check-out-btn');
@@ -43,7 +42,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
 
     evt.preventDefault();
 
-    var el = evt.srcElement;
+    var el = evt.srcElement || evt.target;
     var items = el.querySelectorAll('.ready-for-checkout');
 
     var toSubmit = [];
