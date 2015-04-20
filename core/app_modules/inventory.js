@@ -38,6 +38,13 @@ inventory.search = co.wrap(function* (text, username, params) {
     ' OR LOWER("title") LIKE LOWER(\'%\' || $1 || \'%\')) GROUP BY inv.call;';
 
   var result = yield client.query(query, [text]);
+
+  // gets rid of null values for copies_available field
+  result.rows.forEach(function(row) {
+    row.copies_available = row.copies_available.filter(function(copy) {
+      return copy !== null;
+    });
+  });
   return yield Promise.resolve(result.rows);
 });
 
