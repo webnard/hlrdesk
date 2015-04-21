@@ -29,7 +29,7 @@ inventory.search = co.wrap(function* (text, username, params) {
     ' inv."call" as "call_number", inv."title", inv."quantity",' +
     '   array_agg(foo.copies_available) as copies_available' +
     ' FROM "inventory" as inv ' +
-    ' JOIN ( SELECT copies_available, subq.call FROM ' +
+    ' LEFT JOIN ( SELECT copies_available, subq.call FROM ' +
     '   ( SELECT call, generate_series(1,quantity) AS copies_available FROM inventory) AS subq ' +
     '   WHERE subq.copies_available NOT IN ' +
     '     ( SELECT copy FROM checked_out WHERE checked_out.call=subq.call) ' +
@@ -38,6 +38,13 @@ inventory.search = co.wrap(function* (text, username, params) {
     ' OR LOWER("title") LIKE LOWER(\'%\' || $1 || \'%\')) GROUP BY inv.call;';
 
   var result = yield client.query(query, [text]);
+
+  // gets rid of null values for copies_available field
+  result.rows.forEach(function(row) {
+    row.copies_available = row.copies_available.filter(function(copy) {
+      return copy !== null;
+    });
+  });
   return yield Promise.resolve(result.rows);
 });
 

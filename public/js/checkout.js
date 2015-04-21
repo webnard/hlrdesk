@@ -3,7 +3,6 @@ window.HLRDESK.init = window.HLRDESK.init || {};
 
 window.HLRDESK.init.checkout = function initCheckout() {
   var socket = io();
-  var searchEl = document.getElementById('');
   var searchForm = document.getElementById('check-out-form');
   var selected = document.querySelector('#check-out-search-selection ul');
   var checkOutButton = document.querySelector('#check-out-search-selection .check-out-btn');
@@ -32,6 +31,12 @@ window.HLRDESK.init.checkout = function initCheckout() {
     appendInventory(document.querySelector('.modalWindow .check-out-prompt.inventory'));
   });
 
+  function clear() {
+    selected.innerHTML = '';
+    selectedItems = {};
+    checkOutButton.setAttribute('disabled','disabled');
+  }
+
   function submitRequest(evt) {
     // temporarily disable buttons
     var submitBtn = document.querySelector('.modalWindow .check-out-verify input[type=submit]');
@@ -43,7 +48,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
 
     evt.preventDefault();
 
-    var el = evt.srcElement;
+    var el = evt.srcElement || evt.target;
     var items = el.querySelectorAll('.ready-for-checkout');
 
     var toSubmit = [];
@@ -67,11 +72,11 @@ window.HLRDESK.init.checkout = function initCheckout() {
     socket.emit('inv.checkout', emitMe);
     socket.removeAllListeners('inv.checkout.success');
     socket.on('inv.checkout.success', function() {
+      clear();
       socket.removeAllListeners('inv.checkout.success');
       submitBtn.value = 'Success!';
-      setTimeout(function() {
-        closeModal();
-      }, 1000);
+      setTimeout(function() { closeModal();
+      }, 750);
     });
   };
 
@@ -177,6 +182,9 @@ window.HLRDESK.init.checkout = function initCheckout() {
     results: '#check-out-search-results',
     filter: searchFilter,
     clickCallback: function() {
+      if(this.dataset.unavailable) {
+        return;
+      }
       if(results.contains(this)) {
         swapLocation(this);
       }
@@ -184,6 +192,6 @@ window.HLRDESK.init.checkout = function initCheckout() {
     closeCallback: function() {
       swapLocation(this);
     },
-    hideCheckedOut: true
+    showCopies: true
   });
 };

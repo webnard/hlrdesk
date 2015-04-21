@@ -197,6 +197,19 @@ describe('inventory', function() {
       expect(checked_out.owner).to.equal(patron);
       expect(checked_out.attendant).to.equal(employee);
     });
+    it('should remove the available item from searches', function* (){
+      var client = require('../core/app_modules/db')(),
+          call = 'BORGESBORGES',
+          patron = 'milo',
+          employee = 'tock';
+
+      var copy = 1;
+      var items = [{call: call, copy: copy, due: TOMORROW}];
+
+      yield inventory.check_out(items, patron, employee);
+      var item = (yield inventory.search(call, employee))[0];
+      expect(item.copies_available.indexOf(copy)).to.equal(-1);
+    });
   });
 
   describe('#check_in(call, patron, attendant)', function() {
