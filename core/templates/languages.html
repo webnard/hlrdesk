@@ -1,0 +1,39 @@
+<section id=languages>
+  <h1>Languages</h1>
+  <input id=lang-search list=langlist type=search placeholder='Search…'>
+  <datalist id=langlist>
+  <% languages.forEach(function(lang) { %>
+    <option data-code="<%= lang.code %>" data-name="<%= lang.name %>" value="<%= lang.name %> [<%= lang.code %>]">
+  <% }); %>
+  </datalist>
+  <form id=lang-edit>
+    <fieldset>
+      <legend>Edit Language</legend>
+      <div class=field-holder>
+        <label for=lang-code-edit>Code</label>
+        <input id=lang-code-edit type=text name=code required title="A 3-letter ISO code" maxsize pattern=".{3}" placeholder=eng>
+      </div>
+      <div class=field-holder>
+        <label for=lang-name-edit>Name</label>
+        <input type=text name=name id=lang-name-edit required placeholder=English>
+      </div>
+      <input id=lang-delete-btn type=submit class=redBtn value='Delete'>
+      <input id=lang-update-btn type=submit class=greenBtn value='Update'>
+    </fieldset>
+  </form>
+  <form id=lang-add>
+    <fieldset>
+      <legend>Add Language</legend>
+      <div class=field-holder>
+        <label for=lang-code>Code</label>
+        <input id=lang-code type=text name=code required maxsize pattern=".{3}" placeholder=eng>
+      </div>
+      <div class=field-holder>
+        <label for=lang-name>Name</label>
+        <input type=text name=name id=lang-name required placeholder=English>
+      </div>
+      <input type=submit class=greenBtn value=Create>
+    </fieldset>
+  </form>
+</section>
+<script>window.HLRDESK.init.languages();</script>
