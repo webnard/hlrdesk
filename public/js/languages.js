@@ -64,6 +64,7 @@ window.HLRDESK.init.languages = function initLanguages() {
 
   socket.on('alert', function(data){window.HLRDESK.alert.error(data)});
   socket.on('lang.itemRemoved', removeLanguageOption);
+  socket.on('lang.itemAdded', function() {} /** TODO **/);
 
   function handleSearch(evt) {
     var el = evt.target || evt.srcElement;

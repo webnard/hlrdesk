@@ -104,3 +104,50 @@ describe('socket: lang.remove', function() {
     socket.emit('lang.remove', data);
   });
 });
+
+describe('socket: lang.add', function() {
+  it('should emit an alert if the user is not an admin', function*(done) {
+    var server = app.listen(process.env.PORT);
+    var socket = yield client(server, 'student');
+    socket.on('alert', function(data) {
+      done();
+      socket.disconnect();
+    });
+    var data = {
+      code: 'yyy',
+      name: 'Parseltongue',
+      token: socket.__token
+    }
+    socket.emit('lang.add', data);
+  });
+  it('should emit an alert if the language exists', function*(done) {
+    var server = app.listen(process.env.PORT);
+    var socket = yield client(server, 'prabbit');
+    socket.on('alert', function(data) {
+      done();
+      socket.disconnect();
+    });
+    var data = {
+      code: 'eng',
+      name: 'Parseltongue',
+      token: socket.__token
+    }
+    socket.emit('lang.add', data);
+  });
+  it('should emit lang.itemAdded on success', function*(done) {
+    var server = app.listen(process.env.PORT);
+    var socket = yield client(server, 'prabbit');
+    var data = {
+      code: 'yyy',
+      name: 'Parseltongue',
+      token: socket.__token
+    }
+    socket.on('lang.itemAdded', function(resp) {
+      expect(resp.code).to.equal(data.code);
+      expect(resp.name).to.equal(data.name);
+      done();
+      socket.disconnect();
+    });
+    socket.emit('lang.add', data);
+  });
+});
