@@ -44,7 +44,7 @@ window.HLRDESK.init.languages = function initLanguages() {
   }
 
   function deleteLangage(code) {
-    socket.emit('lang.delete', {
+    socket.emit('lang.remove', {
       code: code,
       token: window.HLRDESK.token
     });

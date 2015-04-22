@@ -22,5 +22,21 @@ module.exports = function(socket, app) {
         that.emit('alert', 'Error updating language');
       });
     });
+  }); // end lang.update
+
+  socket.on('lang.remove', function(event) {
+    var that = this;
+
+    auth.isAdmin(that.user).then(function(isAdmin) {
+      if(!isAdmin) {
+        console.error(that.user + ' attempted to delete language ' + event.code);
+        that.emit('alert', 'Must be an admin to delete languages');
+        return;
+      }
+      language.remove(event.code).then(function() {
+        app.io.emit('lang.itemRemoved', event.code);
+      });
+    });
+
   });
 };
