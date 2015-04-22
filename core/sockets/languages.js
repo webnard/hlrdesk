@@ -40,6 +40,24 @@ module.exports = function(socket, app) {
         that.emit('alert', 'Could not delete code ' + event.code + '. Does it exist?');
       });
     });
+  });
+  
+  socket.on('lang.create', function(event) {
+    var that = this;
 
+    auth.isAdmin(that.user).then(function(isAdmin) {
+      if(!isAdmin) {
+        console.error(that.user + ' attempted to add language ' + event.code);
+        that.emit('alert', 'Must be an admin to add languages');
+        return;
+      }
+      language.create(event.code, event.name).then(function() {
+        app.io.emit('lang.itemAdded', {code: event.code, name: event.name});
+      }).catch(function(error){
+        console.error(error);
+        that.emit('alert', 'Could not add language ' + event.name + 
+          ' [' + event.code + ']. Does it already exist?');
+      });
+    });
   });
 };

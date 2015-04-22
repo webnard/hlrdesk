@@ -105,7 +105,7 @@ describe('socket: lang.remove', function() {
   });
 });
 
-describe('socket: lang.add', function() {
+describe('socket: lang.create', function() {
   it('should emit an alert if the user is not an admin', function*(done) {
     var server = app.listen(process.env.PORT);
     var socket = yield client(server, 'student');
@@ -118,7 +118,7 @@ describe('socket: lang.add', function() {
       name: 'Parseltongue',
       token: socket.__token
     }
-    socket.emit('lang.add', data);
+    socket.emit('lang.create', data);
   });
   it('should emit an alert if the language exists', function*(done) {
     var server = app.listen(process.env.PORT);
@@ -132,7 +132,7 @@ describe('socket: lang.add', function() {
       name: 'Parseltongue',
       token: socket.__token
     }
-    socket.emit('lang.add', data);
+    socket.emit('lang.create', data);
   });
   it('should emit lang.itemAdded on success', function*(done) {
     var server = app.listen(process.env.PORT);
@@ -148,6 +148,6 @@ describe('socket: lang.add', function() {
       done();
       socket.disconnect();
     });
-    socket.emit('lang.add', data);
+    socket.emit('lang.create', data);
   });
 });
