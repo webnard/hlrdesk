@@ -34,7 +34,7 @@ window.HLRDESK.init.languages = function initLanguages() {
     }
   }
 
-  function updateLangage(oldCode, newCode, newName) {
+  function updateLanguage(oldCode, newCode, newName) {
     socket.emit('lang.update', {
       oldCode: oldCode,
       newCode: newCode,
@@ -49,7 +49,7 @@ window.HLRDESK.init.languages = function initLanguages() {
       token: window.HLRDESK.token
     });
   }
-  
+
   function addLangage(code, name) {
     socket.emit('lang.add', {
       code: code,
@@ -62,14 +62,14 @@ window.HLRDESK.init.languages = function initLanguages() {
 
   langSearch.addEventListener('input', handleSearch);
 
-  socket.on('alert', function(data){window.HLRDESK.alert.error(data.message)});
+  socket.on('alert', function(data){window.HLRDESK.alert.error(data)});
   socket.on('lang.itemRemoved', removeLanguageOption);
 
   function handleSearch(evt) {
     var el = evt.target || evt.srcElement;
     var val = el.value;
     if(!val) {
-      langEdit.classList.remove('active'); 
+      langEdit.classList.remove('active');
       return;
     }
     var sanitizedSearch = val.replace(/"/g,'\\"');
@@ -79,7 +79,7 @@ window.HLRDESK.init.languages = function initLanguages() {
     if(!opt) {
       return;
     }
-    langEdit.classList.add('active'); 
+    langEdit.classList.add('active');
     langEdit.dataset.oldCode = opt.dataset.code;
     document.getElementById('lang-code-edit').value = opt.dataset.code;
     document.getElementById('lang-name-edit').value = opt.dataset.name;
