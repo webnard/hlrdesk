@@ -35,6 +35,9 @@ module.exports = function(socket, app) {
       }
       language.remove(event.code).then(function() {
         app.io.emit('lang.itemRemoved', event.code);
+      }).catch(function(error){
+        console.error(error);
+        that.emit('alert', 'Could not delete code ' + event.code + '. Does it exist?');
       });
     });
 
