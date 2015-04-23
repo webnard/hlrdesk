@@ -1,0 +1,20 @@
+@import 'colors.scss';
+@import 'patternLibrary.scss';
+
+// Don't edit this without also editing FLASH_MESSAGE_FADEOUT_TIME in alerts.js
+$fadeout-time: 0.5s;
+
+.flash-message {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  padding: 0.5em;
+  background-color: $byuBlue;
+  color: $white;
+  transition: opacity $fadeout-time linear;
+  opacity: 1;
+
+  &.fadeout {
+    opacity: 0;
+  }
+}
