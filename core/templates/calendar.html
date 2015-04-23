@@ -1,19 +1,20 @@
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/calendar.css">
 <script>
-  <% var roomsHLRC =  ["Recording Studio", "1141A", "1141B", "1141C", "1141D", "FLAC" ] %> //Should these be passed in from app.js?-->
+  <% var roomsHLRC =  ["Recording Studio", "1141A", "1141B", "1141C", "1141D", "FLAC" ] %>
   <% var roomsHTRSC = ["B160", "B164", "B181", "B013", "B161", "1161", "B003", "1131A", "1133A", "1133B"] %>
   window.rooms = {};
   window.rooms.HLRC = ("<%- (roomsHLRC.toString()) %>").split(",");
   window.rooms.HTRSC = ("<%- roomsHTRSC.toString() %>").split(",");
 </script>
-<script src="http://code.jquery.com/jquery-2.1.4.min.js">//VERY HACKY, but it will have to do for now. Some thrid party is preventing JQuery from loading all the way. Now Jquery is "double added" this is in not good practice. #HammerTime</script>
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <body>
   <section id="calendar">
     <button id="switchView" class = "mainBtn">Change View</button><select id="resourceSelect">
       <option>HLRC</option>
       <option>HTRSC</option>
     </select>
+    <%if (isAdmin) {%> <input type="checkbox" id="displayCheckbox">Show Requests</input> <% } %>
     <div id="weekView">
       <button id="backBtn" disabled=true class = "disabledBtn">Back</button><button id="forwardBtn" class = "mainBtn">Forward</button><select id="displayRoomSelect">
         <% for (var i = 0; i < roomsHLRC.length; i++) { %>
@@ -152,6 +153,12 @@
     </tr>
   <% } } %>
   </table>
+</template>
+<template id="prompt">
+  <header id="promptTitle"></header>
+  <ol id="promptText"></ol>
+  <button id="promptYes" class="greenBtn">Yes</button>
+  <button id="promptNo" class="redBtn">No</button>
 </template>
 <script>
   window.now = <%- date.getTime() %>;

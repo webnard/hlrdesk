@@ -158,8 +158,8 @@ app.use(_.get("/extras", function *() {
 
 app.use(_.get("/calendar", function *() {
   var client = db();
-  var allCalendarEvents = yield client.query("SELECT * FROM calendar;");
   var isAdmin = yield auth.isAdmin(this.session.user);
+  var allCalendarEvents = yield client.query('SELECT * FROM calendar;');
   yield this.render('calendar', {layout: this.USE_LAYOUT, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user, isAdmin:isAdmin});
 }));
 
@@ -273,6 +273,8 @@ socket.use(function*(next){
   this.socket.user = yield auth.getUser(this.data.token);
   yield next;
 });
+
+//console.log(socket);
 
 // Load in all socket files
 fs.readdir(path.join(__dirname, 'sockets'), function (err, files) {

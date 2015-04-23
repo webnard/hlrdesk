@@ -72,6 +72,7 @@ CREATE TABLE calendar (
     room character varying(20) NOT NULL,
     duration integer NOT NULL,
     title character varying(20) NOT NULL,
+    confirmed boolean default false,
     CONSTRAINT calendar_pkey PRIMARY KEY ("time", room)
 );
 
