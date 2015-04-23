@@ -35,16 +35,36 @@ window.HLRDESK.init.languages = function initLanguages() {
       var newName = langEdit.langName.value;
       updateLanguage(oldCode, newCode, newName);
     }
-  };
+  }
 
   function removeLanguageOption(code) {
+    window.HLRDESK.alert.flash('Language deleted!');
     var el = document.querySelector('#langlist option[data-code="' + code + '"]');
     if(el) {
       document.getElementById('langlist').remove(el);
     }
+    setEditFormDisabled(false);
+  }
+
+  function setEditFormDisabled(bool) {
+    langEdit.querySelector('fieldset').disabled = bool;
+    var submit = langEdit.querySelectorAll('input[type=submit');
+    for(var i = 0; i<submit.length; i++) {
+      submit[i].disabled = bool;
+    }
+    langSearch.disabled = bool;
+  }
+
+  function setCreateFormDisabled(bool) {
+    langAdd.querySelector('fieldset').disabled = bool;
+    var submit = langAdd.querySelectorAll('input[type=submit');
+    for(var i = 0; i<submit.length; i++) {
+      submit[i].disabled = bool;
+    }
   }
 
   function updateLanguage(oldCode, newCode, newName) {
+    setEditFormDisabled(true);
     socket.emit('lang.update', {
       oldCode: oldCode,
       newCode: newCode,
@@ -54,6 +74,7 @@ window.HLRDESK.init.languages = function initLanguages() {
   }
 
   function removeLanguage(code) {
+    setEditFormDisabled(true);
     socket.emit('lang.remove', {
       code: code,
       token: window.HLRDESK.token
@@ -61,6 +82,7 @@ window.HLRDESK.init.languages = function initLanguages() {
   }
 
   function createLanguage(code, name) {
+    setCreateFormDisabled(true);
     socket.emit('lang.create', {
       code: code,
       name: name,
@@ -72,9 +94,33 @@ window.HLRDESK.init.languages = function initLanguages() {
 
   langSearch.addEventListener('input', handleSearch);
 
-  socket.on('alert', function(data){window.HLRDESK.alert.error(data)});
+  socket.on('alert', function(data){
+    setEditFormDisabled(false);
+    setCreateFormDisabled(false);
+    window.HLRDESK.alert.error(data);
+  });
   socket.on('lang.itemRemoved', removeLanguageOption);
-  socket.on('lang.itemAdded', function() {} /** TODO **/);
+  socket.on('lang.itemAdded', addLanguageOption);
+  socket.on('lang.updateSuccess', updateLanguageOption);
+
+  function updateLanguageOption(data) {
+    window.HLRDESK.alert.flash('Language updated!');
+    var opt = document.querySelector('#langlist option[data-code=' + data.oldCode + ']');
+    opt.dataset.name = data.newName;
+    opt.dataset.code = data.newCode;
+    opt.value = data.newName + ' [' + data.newCode + ']';
+    setEditFormDisabled(false);
+  }
+
+  function addLanguageOption(data) {
+    window.HLRDESK.alert.flash('Language added!');
+    var opt = document.createElement('option');
+    opt.dataset.code = data.code;
+    opt.dataset.name = data.name;
+    opt.value = data.name + ' [' + data.code + ']';
+    document.getElementById('langlist').appendChild(opt);
+    setCreateFormDisabled(false);
+  }
 
   function handleSearch(evt) {
     var el = evt.target || evt.srcElement;

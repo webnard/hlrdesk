@@ -14,7 +14,11 @@ module.exports = function(socket, app) {
       }
       language.update(event.oldCode, event.newCode, event.newName)
       .then(function() {
-        app.io.emit('lang.updateSuccess', event);
+        that.emit('lang.updateSuccess', {
+          oldCode: event.oldCode,
+          newCode: event.newCode,
+          newName: event.newName
+        });
       })
       .catch(function(e) {
         console.error(e);
@@ -34,7 +38,7 @@ module.exports = function(socket, app) {
         return;
       }
       language.remove(event.code).then(function() {
-        app.io.emit('lang.itemRemoved', event.code);
+        that.emit('lang.itemRemoved', event.code);
       }).catch(function(error){
         console.error(error);
         that.emit('alert', 'Could not delete code ' + event.code + '. Does it exist?');
@@ -52,7 +56,7 @@ module.exports = function(socket, app) {
         return;
       }
       language.create(event.code, event.name).then(function() {
-        app.io.emit('lang.itemAdded', {code: event.code, name: event.name});
+        that.emit('lang.itemAdded', {code: event.code, name: event.name});
       }).catch(function(error){
         console.error(error);
         that.emit('alert', 'Could not add language ' + event.name +
