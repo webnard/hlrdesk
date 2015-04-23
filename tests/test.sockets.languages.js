@@ -24,7 +24,7 @@ describe('socket: lang.update', function() {
     }
     socket.emit('lang.update', data);
   });
-  
+
   it('should respond with lang.updateSuccess on success', function*(done) {
     var server = app.listen(process.env.PORT);
     var socket = yield client(server, 'prabbit');
@@ -40,7 +40,7 @@ describe('socket: lang.update', function() {
     }
     socket.emit('lang.update', data);
   });
-  
+
   it('should respond with alert when updating a nonexistant code', function*(done) {
     var server = app.listen(process.env.PORT);
     var socket = yield client(server, 'prabbit');
@@ -75,7 +75,7 @@ describe('socket: lang.remove', function() {
     }
     socket.emit('lang.remove', data);
   });
-  
+
   it('should emit an alert if the code does not exist', function*(done) {
     var server = app.listen(process.env.PORT);
     var socket = yield client(server, 'prabbit');
@@ -89,7 +89,7 @@ describe('socket: lang.remove', function() {
     }
     socket.emit('lang.remove', data);
   });
-  
+
   it('should emit lang.itemRemoved on success', function*(done) {
     var server = app.listen(process.env.PORT);
     var socket = yield client(server, 'prabbit');
