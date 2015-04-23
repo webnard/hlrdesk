@@ -4,10 +4,20 @@ window.HLRDESK.init = window.HLRDESK.init || {};
 window.HLRDESK.init.languages = function initLanguages() {
   var langSearch = document.getElementById('lang-search');
   var langEdit = document.getElementById('lang-edit');
+  var langAdd = document.getElementById('lang-add');
 
   langEdit.onsubmit = function(evt) {
     evt.preventDefault();
   };
+
+  langAdd.onsubmit = function(evt) {
+    evt.preventDefault();
+    createLanguage(
+      langAdd.code.value,
+      langAdd.langName.value
+    );
+  };
+
   var children = langEdit.querySelectorAll('[type=submit]');
   for(var i = 0; i<children.length; i++) {
     children[i].addEventListener('click', handleEditSubmit);
@@ -17,12 +27,12 @@ window.HLRDESK.init.languages = function initLanguages() {
     var el = evt.target || evt.srcElement;
 
     if(el.id === 'lang-delete-btn') {
-      removeLanguage(document.getElementById('lang-code-edit').value);
+      removeLanguage(langEdit.code.value);
     }
     else if(el.id === 'lang-update-btn') {
-      var newCode = document.getElementById('lang-code-edit').value;
+      var newCode = langEdit.code.value;
       var oldCode = document.getElementById('lang-edit').dataset.oldCode;
-      var newName = document.getElementById('lang-name-edit').value
+      var newName = langEdit.langName.value;
       updateLanguage(oldCode, newCode, newName);
     }
   };
@@ -43,15 +53,15 @@ window.HLRDESK.init.languages = function initLanguages() {
     });
   }
 
-  function deleteLangage(code) {
+  function removeLanguage(code) {
     socket.emit('lang.remove', {
       code: code,
       token: window.HLRDESK.token
     });
   }
 
-  function addLangage(code, name) {
-    socket.emit('lang.add', {
+  function createLanguage(code, name) {
+    socket.emit('lang.create', {
       code: code,
       name: name,
       token: window.HLRDESK.token
@@ -82,7 +92,7 @@ window.HLRDESK.init.languages = function initLanguages() {
     }
     langEdit.classList.add('active');
     langEdit.dataset.oldCode = opt.dataset.code;
-    document.getElementById('lang-code-edit').value = opt.dataset.code;
-    document.getElementById('lang-name-edit').value = opt.dataset.name;
+    langEdit.code.value = opt.dataset.code;
+    langEdit.langName.value = opt.dataset.name;
   }
 };

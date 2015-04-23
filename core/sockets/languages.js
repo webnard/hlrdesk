@@ -41,7 +41,7 @@ module.exports = function(socket, app) {
       });
     });
   });
-  
+
   socket.on('lang.create', function(event) {
     var that = this;
 
@@ -55,7 +55,7 @@ module.exports = function(socket, app) {
         app.io.emit('lang.itemAdded', {code: event.code, name: event.name});
       }).catch(function(error){
         console.error(error);
-        that.emit('alert', 'Could not add language ' + event.name + 
+        that.emit('alert', 'Could not add language ' + event.name +
           ' [' + event.code + ']. Does it already exist?');
       });
     });

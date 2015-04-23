@@ -41,6 +41,31 @@ describe('socket: lang.update', function() {
     socket.emit('lang.update', data);
   });
 
+  it('should not emit "alert" on success', function*(done) {
+    var server = app.listen(process.env.PORT);
+    var socket = yield client(server, 'prabbit');
+    var timeout = null;
+    socket.on('lang.updateSuccess', function(data) {
+      timeout = setTimeout(function() {
+        done();
+        socket.disconnect();
+      },500);
+    });
+    socket.on('alert', function() {
+      socket.disconnect();
+      clearTimeout(timeout);
+      throw new Error("Alert emitted!");
+      done();
+    });
+    var data = {
+      oldCode: 'eng',
+      newCode: 'yyy',
+      newName: 'English 2.0',
+      token: socket.__token
+    }
+    socket.emit('lang.update', data);
+  });
+
   it('should respond with alert when updating a nonexistant code', function*(done) {
     var server = app.listen(process.env.PORT);
     var socket = yield client(server, 'prabbit');
