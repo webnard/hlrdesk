@@ -26,7 +26,6 @@ describe('inventory', function() {
     it('returns an item with appropriate and accurate fields', function* () {
       var user = 'tock';
       var item = (yield inventory.search('ZAMB0N123', user))[0];
-      // TODO: deal with volumes somehow
       expect(item).to.contain.keys(['call_number', 'quantity', 'title']);
       expect(item.call_number).to.equal('ZAMB0N123');
       expect(item.quantity).to.equal(5);
@@ -58,7 +57,7 @@ describe('inventory', function() {
     it('should return expected properties', function* () {
       var items = yield inventory.checked_out;
       var item = items[0];
-      var keys = 'call_number overdue name owner due attendant volume copy extensions'.split(' ');
+      var keys = 'call_number overdue name owner due attendant copy extensions'.split(' ');
       expect(item).to.contain.keys(keys);
     });
   });
