@@ -67,7 +67,7 @@ function updateGrid() {
   
   function markCell(event) {
     var firstFieldOfCellId = (currentView === "week") ? days[new Date(event.time).getDay()] : event.room;
-    if (window.userName === event.user) {
+    if (window.userName === event.user || window.isAdmin === true) {
       markCellAsBookedByUser(document.getElementById(firstFieldOfCellId+" "+new Date(event.time).getHours()), event);
     } else {
       markCellAsRequested(document.getElementById(firstFieldOfCellId+" "+new Date(event.time).getHours()), event);

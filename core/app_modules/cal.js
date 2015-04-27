@@ -31,8 +31,10 @@ module.exports.deleteCalendarEvent = co.wrap(function*(username, event){
   var client = db();
   var a = yield auth.isAdmin(username);
   if(event.user == username || a) {
-    yield client.query('DELETE FROM calendar WHERE room=$1 AND "time"=$2;', [event.room, event.time]);
-    return yield Promise.resolve(true);
+    var deletedRows = yield client.nonQuery('DELETE FROM calendar WHERE room = $1 AND "time" = $2 AND "user" = $3;', [event.room, event.time, username]);
+    if (deletedRows) {
+      return yield Promise.resolve(true);
+    }
   }
   
   return yield Promise.reject(new Error("Nice try."));
