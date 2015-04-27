@@ -7,7 +7,10 @@ module.exports = {
     return yield Promise.resolve(true);
   }),
   update: co.wrap(function*(code, new_code, new_name) {
-    yield db().nonQuery('UPDATE LANGUAGES SET code=$2, name=$3 WHERE code=$1', [code, new_code, new_name]);
+    var rowsAffected = yield db().nonQuery('UPDATE LANGUAGES SET code=$2, name=$3 WHERE code=$1', [code, new_code, new_name]);
+    if(rowsAffected < 1) {
+      return yield Promise.reject('Code ' + code + ' could not be updated. Does it exist?');
+    }
     return yield Promise.resolve(true);
   }),
   // delete is a reserved word, so I'm using 'remove'

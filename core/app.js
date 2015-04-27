@@ -140,6 +140,13 @@ app.use(_.get("/signin", function *(next){
   yield next;
 }));
 
+app.use(_.get("/languages", function*() {
+  yield this.render('languages', {
+    layout: this.USE_LAYOUT,
+    languages: yield require('./app_modules/language').list
+  });
+}));
+
 app.use(_.get("/logout", function *(){
   this.session = null;
   var s = this.request.query.service || null;
