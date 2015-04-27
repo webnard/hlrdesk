@@ -46,7 +46,7 @@ CREATE TABLE messages (
     title character varying(250) NOT NULL,
     username character varying(8) NOT NULL,
     message_body character varying(750),
-    posted date DEFAULT ('now'::text)::date
+    posted timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Table: tasks
@@ -58,7 +58,7 @@ CREATE TABLE tasks
   task_id serial NOT NULL,
   task character varying(150) NOT NULL,
   username character varying(8) NOT NULL,
-  posted date DEFAULT ('now'::text)::date,
+  posted timestamp DEFAULT CURRENT_TIMESTAMP,
   priority int,
   CONSTRAINT tasks_pkey PRIMARY KEY (task_id)
 )
@@ -139,9 +139,13 @@ ALTER TABLE ONLY messages
 CREATE TABLE inventory (
     call character varying(32) NOT NULL,
     quantity integer DEFAULT 1 NOT NULL,
-    volume integer default null,
     title character varying(255),
+    checkout_period int default 1, --in days
     is_reserve BOOLEAN DEFAULT FALSE, -- these are for items left by professors for us to check out
+    is_duplicatable BOOLEAN DEFAULT FALSE,
+    on_hummedia BOOLEAN DEFAULT FALSE,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+    notes character varying(255),
     CONSTRAINT inventory_pkey PRIMARY KEY (call)
 );
 
@@ -157,7 +161,7 @@ CREATE TABLE media (
 CREATE TABLE media_items (
   medium character varying(150) not null,
   call character varying(32) not null,
-  constraint media_items_pkey primary key (medium, call),
+  CONSTRAINT media_items_pkey primary key (medium, call),
   CONSTRAINT media_inventory_call_fkey FOREIGN KEY (call) REFERENCES inventory(call),
   CONSTRAINT medium_fkey FOREIGN KEY (medium) REFERENCES media(medium)
 );
@@ -165,7 +169,7 @@ CREATE TABLE media_items (
 CREATE TABLE languages_items (
   language_code character varying(3) not null,
   inventory_call character varying(32) not null,
-  constraint languages_items_pkey primary key (language_code, inventory_call),
+  CONSTRAINT languages_items_pkey primary key (language_code, inventory_call),
   CONSTRAINT inventory_call_fkey FOREIGN KEY (inventory_call) REFERENCES inventory(call),
   CONSTRAINT language_code_fkey FOREIGN KEY (language_code) REFERENCES languages(code)
 );

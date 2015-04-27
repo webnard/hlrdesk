@@ -118,7 +118,7 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
 Object.defineProperty(inventory, 'checked_out', {
   get: co.wrap(function*() {
     var client = db();
-    var query = 'SELECT c.due, c.attendant, c.netid as owner, c.copy, c.extensions, i.volume, i.title as name, i.call '+
+    var query = 'SELECT c.due, c.attendant, c.netid as owner, c.copy, c.extensions, i.title as name, i.call '+
                 'FROM checked_out c JOIN inventory i ON c.call = i.call';
     var results = (yield client.query(query)).rows;
 
