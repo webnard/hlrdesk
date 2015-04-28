@@ -34,7 +34,7 @@ module.exports = {
     return (port == 443 && host.match(/\.byu\.edu$/) !== null);
   },
 
-  login: function(ctx, obj) {
+  login: co.wrap(function*(ctx, obj) {
     var client = db();
     var redisClient = redis();
     var token = uuid.v4();
@@ -56,12 +56,18 @@ module.exports = {
 
     redisClient.sadd([token, obj.username]);
     redisClient.expire(token, 43200);
-    client.query("INSERT INTO users(netid) VALUES ($1);", [obj.username] );
-  },
+    var is_user = yield check_id(obj.username);
+    if (is_user){
+      client.query("UPDATE users set email = $2 WHERE netid = $1;", [obj.username, obj.attributes.emailAddress]);
+    }
+    else{
+      client.query("INSERT INTO users(netid, email) VALUES ($1, $2);", [obj.username, obj.attributes.emailAddress]);
+    }
+  }),
 
   getUser: co.wrap(function* (token) {
     if(typeof token !== 'string') {
-      return yield Promise.resolve(false); 
+      return yield Promise.resolve(false);
     }
     return new Promise(function(resolve, reject) {
       redis().smembers(token, function(err, reply){
