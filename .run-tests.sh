@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
 
-TEST_DB=hlrdesk_test_db
+TEST_DB_RANDOM=`printf "%x" $RANDOM`
+TEST_DB_PREFIX=hlrdesk_test_db_$TEST_DB_RANDOM
+TEST_DB=$TEST_DB_PREFIX
 TEMPLATE_DB=hlrdesk_test_template_db
 DB_FILES=core/db/*.sql
 CASPER_BIN=$(npm root)/casperjs/bin/casperjs
@@ -11,7 +13,11 @@ MOCHA_BIN=$(npm root)/mocha/bin/_mocha
 export $(./.env.sh)
 
 printf "Creating and populating test database $TEST_DB"
-dropdb $TEMPLATE_DB --if-exists > /dev/null
+dropdb $TEMPLATE_DB --if-exists > /dev/null 2>&1
+printf "."
+dropdb $TEST_DB --if-exists > /dev/null 2>&1
+printf "."
+createdb $TEST_DB > /dev/null
 printf "."
 createdb $TEMPLATE_DB > /dev/null
 printf "."
@@ -25,6 +31,7 @@ printf " Done!\n"
 export NODE_TEST=true
 export PGPOOLSIZE=0
 export PGDATABASE=$TEST_DB
+export TEST_DB_PREFIX=$TEST_DB_PREFIX
 export TEMPLATE_DB=$TEMPLATE_DB
 export PHANTOMJS_EXECUTABLE=$(npm root)/casperjs/node_modules/phantomjs/bin/phantomjs
 
@@ -42,6 +49,17 @@ done
 
 export PORT=$port
 
+function cleanupPostgres {
+  TEST_DBS_TO_DELETE=`psql -Atqc "SELECT datname FROM pg_database WHERE datistemplate IS FALSE AND datname LIKE '${TEST_DB_PREFIX}%';"`
+  echo "Deleting `echo $TEST_DBS_TO_DELETE | wc -w` test databases; this may take some time."
+  for i in $TEST_DBS_TO_DELETE; do
+    dropdb $i
+    printf "."
+  done
+  echo " Done!"
+}
+trap cleanupPostgres EXIT
+
 node --harmony $ISTANBUL_BIN cover $MOCHA_BIN -- --require co-mocha --harmony tests/ "$@"
 
 echo "Starting server in background on port $PORT"
@@ -49,6 +67,7 @@ nohup npm run server -- COME_AND_GET_ME &>nohup.out &
 
 function killserver {
   FAIL=$?
+  cleanupPostgres
   pkill -f COME_AND_GET_ME || :
   if [[ $FAIL -ne  0 ]]; then
     exit $FAIL
