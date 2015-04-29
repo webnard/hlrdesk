@@ -4,6 +4,7 @@ var serve = require('koa-static')
 var render = require('koa-ejs')
 var path = require('path')
 var fs = require('fs');
+var assert = require('assert');
 
 var socket = require('koa-socket');
 
@@ -145,6 +146,39 @@ app.use(_.get("/languages", function*() {
     layout: this.USE_LAYOUT,
     languages: yield require('./app_modules/language').list
   });
+}));
+
+app.use(_.get("/media", function*() {
+  yield this.render('media', {
+    layout: this.USE_LAYOUT,
+    media: yield require('./app_modules/media').list,
+    csrf: this.csrf
+  });
+}));
+
+app.use(_.post('/media', function*() {
+  var media = require('./app_modules/media');
+  var body = yield parse(this); // co-body or something
+
+  try {
+    this.assertCSRF(body.csrf);
+    assert(yield auth.isAdmin(this.session.user));
+  }catch(err) {
+    this.status = 403
+    this.body = {
+      message: 'Unauthorized'
+    };
+    return;
+  }
+
+  if(body['delete']) {
+    yield media.remove(body['delete']);
+  }
+  else if(body['create']) {
+    yield media.add(body['new-media']);
+  }
+
+  this.redirect('/media');
 }));
 
 app.use(_.get("/logout", function *(){

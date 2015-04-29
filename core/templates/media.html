@@ -1,0 +1,15 @@
+<section id=media>
+  <div id=media-bg></div>
+  <div id=media-main>
+    <form id=media-add-form method=post>
+      <input type=text name=new-media placeholder=Elcaset><input class=mainBtn type=submit name=create value="Create Medium">
+      <ul>
+        <% media.forEach(function(medium) { %>
+          <li><button type=submit name=delete value="<%=medium%>" class=closeBtn></button> <%= medium %></li>
+        <% }) %>
+      </ul>
+      <input type=hidden name=csrf value="<%= csrf %>">
+    </form>
+  </div>
+</section>
+<script>window.HLRDESK.init.media();</script>
