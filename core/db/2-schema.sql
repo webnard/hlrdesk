@@ -145,6 +145,8 @@ CREATE TABLE inventory (
     is_duplicatable BOOLEAN DEFAULT FALSE,
     on_hummedia BOOLEAN DEFAULT FALSE,
     date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+    edited_by character varying(8),
+    date_edited timestamp,
     notes character varying(255),
     CONSTRAINT inventory_pkey PRIMARY KEY (call)
 );
