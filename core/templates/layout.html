@@ -33,6 +33,7 @@
 <script type='text/javascript' src='/js/search-plugin.js'></script>
 <script type='text/javascript' src='/js/edit-catalog.js'></script>
 <script type='text/javascript' src='/js/languages.js'></script>
+<script type='text/javascript' src='/js/media.js'></script>
 
 
 <link rel="stylesheet" type="text/css" href="/css/admin.css">
@@ -42,6 +43,7 @@
 <link rel="stylesheet" type="text/css" href="/css/search-plugin.css">
 <link rel="stylesheet" type="text/css" href="/css/languages.css">
 <link rel="stylesheet" type="text/css" href="/css/flash-message.css">
+<link rel="stylesheet" type="text/css" href="/css/media.css">
 </head>
 <body>
 <section id="left_panel">
@@ -53,6 +55,7 @@
 <a class="lpanel" data-title=Messages href="/message">Messaging</a>
 <a class="lpanel calendar" href=/calendar data-title=Calendar>Calendar</a>
 <a class="lpanel" href=/languages data-title=Languages data-init=languages>Languages</a>
+<a class="lpanel" href=/media data-title=Media data-init=media>Media</a>
 <a class="lpanel" href=/extras data-title=Extras>Extras</a>
 <a class="lpanel" id="logout" href="/logout">Sign Out</a>
 </section>
@@ -75,4 +78,3 @@
 <% include error-modal.html %>
 </body>
 </html>
-
