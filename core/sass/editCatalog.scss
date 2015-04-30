@@ -1,0 +1,23 @@
+@import 'admin';
+#helper{
+  font-size: .7em;
+}
+
+
+.container { 
+  border:2px solid #ccc; 
+  width:300px; 
+  height: 100px; 
+  overflow-y: scroll; 
+}
+
+td:hover {
+    background: none;
+    color: $mainGrey;
+}
+
+#newItem{
+  float:right;
+  margin-right: 6em;
+  margin-top: 1.5em;
+}

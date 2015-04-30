@@ -115,9 +115,14 @@ app.use(_.get('/check-out', function *() {
 }));
 
 app.use(_.get('/edit-catalog', function *() {
+  var client = db();
+  var media_types = yield client.query("SELECT * FROM media ORDER BY media ASC;");
+  var lang = yield client.query("SELECT * FROM languages ORDER BY name ASC;");
   yield this.render('catalog/edit-catalog', {
     title: "Edit Item",
-    layout: this.USE_LAYOUT
+    layout: this.USE_LAYOUT,
+    media_types: media_types,
+    lang: lang
   });
 }));
 
