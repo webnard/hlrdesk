@@ -1,0 +1,38 @@
+@import 'admin';
+
+$modalWidth: 70%;
+$leftPad: 14%;
+
+.modalWindow {
+  width: $modalWidth;
+  position:fixed;
+  top: 20%;
+  left: $leftPad;
+}
+
+.modalWindow header {
+  width: $modalWidth+1;
+  left: $leftPad+1; 
+}
+
+.tablePadding{
+  padding-right:4%;
+}
+
+table{
+  cursor: pointer;
+}
+
+.top{
+  background-color:$byuBlue;
+  color:white;
+  &:hover {
+    background-color:$byuBlueHL;
+  }
+}
+
+td{
+    &:hover {
+    background-color:$mainGreyHL;
+  }
+}

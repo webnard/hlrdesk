@@ -1,8 +1,8 @@
 @import 'admin';
+
 #helper{
   font-size: .7em;
 }
-
 
 .container { 
   border:2px solid #ccc; 
@@ -20,4 +20,8 @@ td:hover {
   float:right;
   margin-right: 6em;
   margin-top: 1.5em;
+}
+
+.modalWindow .redBtn:before {
+    content: "Delete Item";
 }
