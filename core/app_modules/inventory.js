@@ -95,7 +95,6 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
       var due = item.due;
       var call = item.call;
       var copy = item.copy;
-
       assert(new Date(due) > (new Date()), "Due date " + due + " is earlier than now.");
       var checked_out = yield inventory.is_checked_out(call, copy);
       assert(!checked_out, call + " (copy #" + copy + ") is already checked out");
@@ -103,6 +102,9 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
 
       var q = 'INSERT INTO checked_out(call, copy, netid, attendant, due)' +
         'VALUES($1, $2, $3, $4, $5)';
+        
+      var notes ='Item checked out by ' + employee + ' due on ' + due.toString().substring(0,10);
+      yield client.nonQuery("INSERT INTO item_history (call_number, type, who, date_changed, notes) VALUES ($1, 'Checkout', $2, CURRENT_TIMESTAMP, $3) ", [call, patron, notes ])
 
       var dueFmt = moment(due).format();
       yield client.nonQuery(q , [call, copy, patron, employee, dueFmt]);

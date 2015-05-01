@@ -52,7 +52,6 @@ app.use(function*(next){
 
 render(app, {
   root: path.join(__dirname, 'templates'),
-  // include when we have a layout to use
   layout: 'layout',
   viewExt: 'html',
   cache: !ENV.HLRDESK_DEV,
@@ -124,6 +123,14 @@ app.use(_.get('/edit-catalog', function *() {
     layout: this.USE_LAYOUT,
     media_types: media_types,
     lang: lang
+  });
+}));
+
+app.use(_.get('/viewHistory', function *() {
+  var client = db();
+  yield this.render('catalog/viewHistory', {
+    title: "Item History",
+    layout: this.USE_LAYOUT,
   });
 }));
 
