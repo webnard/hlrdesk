@@ -31,13 +31,13 @@ document.getElementById("saveButton").addEventListener("click", function() {subm
 document.getElementById("deleteButton").addEventListener("click", function() {cancel();});
 
 function updateGrid() {
-  
+
   //initially marks all cells as enabled
   var cells = document.querySelectorAll(((currentView === "week") ? "#weekView":"#dayView")+" td");
   for (var i = 0; i < cells.length; i++) {
     markCellAsEnabled(cells[i]);
   }
-  
+
   //marks all reserved cells
   if (currentView === "week") {
     for (var i = 0; i < events.length; i++) {
@@ -56,7 +56,7 @@ function updateGrid() {
         markCell(events[i]);
       }
     }
-    
+
     //disables all past cells
     for (var i = 0; i < document.getElementById("displayRoomSelect").options.length; i++) {
       for (var hour = 8; hour <= 20 && (displayedDate === new Date(window.now).toDateString() && hour < window.now.getHours()); hour++) {
@@ -64,7 +64,7 @@ function updateGrid() {
       }
     }
   }
-  
+
   function markCell(event) {
     var firstFieldOfCellId = (currentView === "week") ? days[new Date(event.time).getDay()] : event.room;
     if (window.userName === event.user || window.isAdmin === true) {
@@ -73,7 +73,7 @@ function updateGrid() {
       markCellAsRequested(document.getElementById(firstFieldOfCellId+" "+new Date(event.time).getHours()), event);
     }
   }
-  
+
 }
 updateGrid();
 if (now.getHours() >= 21 && now.getDay() == 6) {changeWeek(1);}
@@ -283,7 +283,7 @@ function selectCells(cell, duration) {
 
 function clickCell(event) { //places the popup box
   var cell = event.target ? event.target : event;
-  
+
   while (!cell.classList.contains("enabled") && !cell.classList.contains("selected")) { //places popup box at latest available time
     if (document.getElementById((currentView === "week" ? days[cell.dataset.day] : cell.dataset.room)+" "+(Number(cell.dataset.time)+1))) {
       cell = document.getElementById((currentView === "week" ? days[cell.dataset.day] : cell.dataset.room)+" "+(Number(cell.dataset.time)+1));
@@ -294,19 +294,19 @@ function clickCell(event) { //places the popup box
       break;
     }
   }
-  
+
   deselectCells();
-  
+
   selectCells(cell, document.getElementById("durationSelect").selectedIndex);
-  
+
   placePopup(cell);
 }
 
 function placePopup(cell) {
-  
+
   document.getElementById("popup").classList.remove("hidden");
   document.getElementById("popup").style.left = 'calc('+(cell.offsetLeft.toString()-((document.getElementById("popup").offsetWidth-cell.offsetWidth)/2))+"px + 1em"+')';
-  
+
   if (document.getElementById("weekView").offsetTop + cell.offsetTop - document.getElementById("popup").offsetHeight >= 0) { //places the popup box either above or beneath the selected cell
     document.getElementById("popup").style.top = 'calc('+(document.getElementById(currentView+"View").offsetTop + cell.offsetTop - document.getElementById("popup").offsetHeight)+"px + 3em"+')';
     document.getElementById("popup").classList.remove("under");
@@ -338,7 +338,7 @@ function placePopup(cell) {
       }
     }
   }
-  
+
 }
 
 function selectCell() { //changes week/day if necessary and selects cell
@@ -448,7 +448,7 @@ function submit() {
   } else {
     var user = window.userName;
   }
-  
+
   socket.emit('calendar event', {"token": window.HLRDESK.token, "user":user, "time":eventTime, "room":selectedRoom, "duration":selectedDuration, "title":eventTitle});
 }
 

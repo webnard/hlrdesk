@@ -196,10 +196,16 @@ app.use(_.get("/logout", function *(){
 app.use(_.post("/mkadmin",function *(){
   var body = yield parse(this) // co-body or something
   try {
-    this.assertCSRF(body.csrf)
-    to_mk=this.request.query.user;
-    auth.mkadmin(this.session.user, to_mk);
-    this.redirect('/mkadmin');
+    this.assertCSRF(body.csrf);
+    to_mk=body.user;
+    override = (body.override=="true");
+    status = yield auth.mkadmin(this.session.user, to_mk, override);
+    if(!status){
+      this.redirect('/mkadmin?status='+status+'&toMk='+to_mk);
+    }
+    else{
+      this.redirect('/mkadmin');
+    }
   }
   catch (err) {
     this.status = 403
@@ -211,7 +217,24 @@ app.use(_.post("/mkadmin",function *(){
 }));
 
 app.use(_.get("/mkadmin",function *(){
-  yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf});
+  var isAdmin = yield auth.isAdmin(this.session.user);
+  var client = db();
+  var allAdmins = yield client.query("SELECT netid FROM users WHERE admin = TRUE;");
+  if (isAdmin){
+    if (this.request.query.status == "false"){
+      yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf, allAdminsFromDB: allAdmins, alert : true, to_mk : this.request.query.toMk});
+    }
+    else{
+      yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf, allAdminsFromDB: allAdmins, alert : false, to_mk : undefined});
+    }
+  }
+  else{
+    this.status = 403
+    this.body = {
+      message: 'Wrong place friend!'
+    }
+    return
+  }
 }));
 
 socket.start(app);

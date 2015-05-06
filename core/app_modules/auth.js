@@ -100,12 +100,19 @@ module.exports = {
 
   check_id: check_id,
 
-  mkadmin: co.wrap(function*(user, netid) {
+  mkadmin: co.wrap(function*(user, netid, override) {
     var client = db();
     var is_user = yield check_id(netid);
-    var user_is_admin = yield check_admin(user);
-    if (is_user && user_is_admin){
-      client.query("UPDATE users SET admin='TRUE' WHERE netid = $1", [netid]);
+    var user_is_admin = yield isAdmin(user);
+    var add_user = is_user || override
+    if (add_user && user_is_admin){
+      if (is_user){
+        client.query("UPDATE users SET admin='TRUE' WHERE netid = $1;", [netid]);
+      }
+      else{
+        client.query("INSERT INTO users (netid) values ($1);",[netid]);
+        client.query("UPDATE users SET admin='TRUE' WHERE netid = $1;", [netid]);
+      }
       return yield Promise.resolve(true);
     }
     else {

@@ -1,10 +1,18 @@
 <div id="admin_box">
   <div id="other">
-    <form method = "POST">
+    <form id = "admin_form" method = "POST">
       <input name ="user" id = 'admin_name' type = 'text' placeholder="Admin's NetID"></input>
         <button name = "delete" type = "submit" id="deleteButton" class="redBtn">Delete</button>
         <button name = "save" type = "submit" id="saveButton" class="greenBtn">Save</button>
-      <input type = "hidden" value = <%=csrf%> name = "csrf" />
+      <input type = "hidden" id = "csrf" value = <%=csrf%> name = "csrf" />
+      <input type = "hidden" id = "override" value = "false" name = "override" />
     </form>
   </div>
-<div>
+<div id="admin_list"></div>
+<script>
+  window.allAdmins = <%- JSON.stringify(allAdminsFromDB.rows) %>;
+  window.toMk = <%- JSON.stringify(to_mk || "") %>;
+  window.notify = <%- JSON.stringify(alert) %>;
+  window.csrf =  "<%=csrf%>"
+</script>
+<script src="/js/mkadmin.js"> </script>
