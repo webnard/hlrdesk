@@ -112,6 +112,7 @@ CREATE TABLE users (
     admin boolean default false,
     email varchar(254) default null,
     telephone varchar(32) default null, -- note: varchar 32 chosen arbitrarily; may be something more sensible
+    name  character varying(255),
     CONSTRAINT users_pkey PRIMARY KEY (netid)
 );
 

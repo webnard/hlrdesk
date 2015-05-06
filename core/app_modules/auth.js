@@ -58,10 +58,10 @@ module.exports = {
     redisClient.expire(token, 43200);
     var is_user = yield check_id(obj.username);
     if (is_user){
-      client.query("UPDATE users set email = $2 WHERE netid = $1;", [obj.username, obj.attributes.emailAddress]);
+      client.query("UPDATE users set email = $2, name = $3 WHERE netid = $1;", [obj.username, obj.attributes.emailAddress, obj.attributes.name]);
     }
     else{
-      client.query("INSERT INTO users(netid, email) VALUES ($1, $2);", [obj.username, obj.attributes.emailAddress]);
+      client.query("INSERT INTO users(netid, email, name) VALUES ($1, $2, $3);", [obj.username, obj.attributes.emailAddress, obj.attributes.name]);
     }
   }),
 

@@ -2,7 +2,14 @@ var db = require('./db')
 var co = require('co');
 var auth = require('./auth');
 var assert = require('assert');
+var email = require('./email');
 module.exports = {};
+
+get_user_info = co.wrap(function*(netid){
+  var client = db();
+  var is_user = yield client.query("SELECT * FROM users WHERE netid = $1", [netid]);
+  return yield Promise.resolve(is_user.rows[0]);
+});
 
 module.exports.addCalendarEvent = co.wrap(function*(username, event, user){
   var client = db();
@@ -10,7 +17,7 @@ module.exports.addCalendarEvent = co.wrap(function*(username, event, user){
   if(!a) {
     assert(username === user);
   }
-  
+
   var isOverlap = false;
   var allCalendarEvents = yield client.query("SELECT * FROM calendar;");
   allCalendarEvents = allCalendarEvents.rows;
@@ -21,6 +28,13 @@ module.exports.addCalendarEvent = co.wrap(function*(username, event, user){
   }
   if (!isOverlap) {
     yield client.nonQuery('INSERT INTO calendar("user", "time", room, duration, title)VALUES ($1, $2, $3, $4, $5);', [user, event.time, event.room, event.duration, event.title]);
+    var user_info = yield get_user_info(user);
+    try {
+      email.roomConfirmation(user_info, event.time, event.room)
+    }
+    catch(err){
+      console.log(err)
+    }
     return yield Promise.resolve(true);
   } else {
     return yield Promise.reject(new Error("Overlap"));
@@ -36,6 +50,7 @@ module.exports.deleteCalendarEvent = co.wrap(function*(username, event){
       return yield Promise.resolve(true);
     }
   }
-  
+
   return yield Promise.reject(new Error("Nice try."));
 });
+
