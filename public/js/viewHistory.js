@@ -24,6 +24,9 @@ window.HLRDESK.init.viewHistory = function() {
       + '<td>' + result.rows[i].notes +'</td>'
       + '</tr>');
     }
+    if (result.rows.length == 0)
+    {$('.list').append("<div style='width:25%;'><img src='http://bit.ly/1KQ3efx'>Item does not have any history</div>");
+    }
   });
 
   window.HLRDESK.plugins.search({

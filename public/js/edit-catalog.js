@@ -68,4 +68,9 @@ window.HLRDESK.init.editCatalog = function() {
       hideCheckedOut: false
     }
   });
+  
+  socket.on('alertMessage', function(alertMsg){
+    alert(alertMsg);
+  });
+  
 }

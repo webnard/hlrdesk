@@ -42,11 +42,11 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE messages (
-  message_id integer NOT NULL,
-  title character varying(250) NOT NULL,
-  username character varying(8) NOT NULL,
-  message_body character varying(750),
-  posted timestamp DEFAULT CURRENT_TIMESTAMP
+    message_id integer NOT NULL,
+    title character varying(250) NOT NULL,
+    username character varying(8) NOT NULL,
+    message_body character varying(750),
+    posted timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Table: tasks
@@ -67,12 +67,12 @@ WITH (
 );
 
 CREATE TABLE calendar (
-  "user" character varying(8) NOT NULL,
-  "time" timestamp NOT NULL,
-  room character varying(20) NOT NULL,
-  duration integer NOT NULL,
-  title character varying(20) NOT NULL,
-  CONSTRAINT calendar_pkey PRIMARY KEY ("time", room)
+    "user" character varying(8) NOT NULL,
+    "time" timestamp NOT NULL,
+    room character varying(20) NOT NULL,
+    duration integer NOT NULL,
+    title character varying(20) NOT NULL,
+    CONSTRAINT calendar_pkey PRIMARY KEY ("time", room)
 );
 
 --
@@ -81,11 +81,11 @@ CREATE TABLE calendar (
 --
 
 CREATE SEQUENCE messages_message_id_seq
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1;
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 
@@ -108,20 +108,11 @@ ALTER SEQUENCE messages_message_id_seq OWNED BY messages.message_id;
 --
 
 CREATE TABLE users (
-<<<<<<< HEAD
-    netid character varying(8),
-    admin boolean default false,
-    email varchar(254) default null,
-    telephone varchar(32) default null, -- note: varchar 32 chosen arbitrarily; may be something more sensible
-    name  character varying(255),
-    CONSTRAINT users_pkey PRIMARY KEY (netid)
-=======
   netid character varying(8),
   admin boolean default false,
   email varchar(254) default null,
   telephone varchar(32) default null, -- note: varchar 32 chosen arbitrarily; may be something more sensible
   CONSTRAINT users_pkey PRIMARY KEY (netid)
->>>>>>> Adding item history for inventory
 );
 
 
@@ -139,7 +130,7 @@ ALTER TABLE ONLY messages ALTER COLUMN message_id SET DEFAULT nextval('messages_
 --
 
 ALTER TABLE ONLY messages
-  ADD CONSTRAINT messages_pkey PRIMARY KEY (message_id);
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (message_id);
 
 --
 -- Name: inventory; Type: TABLE; Schema: public; Owner: -; Tablespace:
@@ -199,15 +190,15 @@ CREATE TABLE languages_items (
 --
 
 CREATE TABLE checked_out (
-  call character varying(32) NOT NULL,
-  copy integer DEFAULT 1 NOT NULL,
-  netid character varying(8) NOT NULL,
-  attendant character varying(8) NOT NULL,
-  extensions integer default 0 not null,
-  due date NOT NULL,
-  CONSTRAINT checked_out_pkey PRIMARY KEY (call, copy),
-  CONSTRAINT checked_out_netid_fkey FOREIGN KEY (netid) REFERENCES users(netid),
-  CONSTRAINT checked_out_call_fkey FOREIGN KEY (call) REFERENCES inventory(call)
+    call character varying(32) NOT NULL,
+    copy integer DEFAULT 1 NOT NULL,
+    netid character varying(8) NOT NULL,
+    attendant character varying(8) NOT NULL,
+    extensions integer default 0 not null,
+    due date NOT NULL,
+    CONSTRAINT checked_out_pkey PRIMARY KEY (call, copy),
+    CONSTRAINT checked_out_netid_fkey FOREIGN KEY (netid) REFERENCES users(netid),
+    CONSTRAINT checked_out_call_fkey FOREIGN KEY (call) REFERENCES inventory(call)
 );
 
 --

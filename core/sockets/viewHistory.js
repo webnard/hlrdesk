@@ -3,6 +3,7 @@ var db = require('../app_modules/db');
 module.exports = function editCatalog(socket, app) {
 
   socket.on('getHistory', function(item){
+  //TODO: add admin check
     var client = db();
     var uID = this.user;
     client.transaction(function*(t) {
