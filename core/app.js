@@ -40,9 +40,15 @@ if(ENV.NODE_TEST === 'true') {
 
 app.use(function*(next){
   const WHITELIST = ['/signin', '/logmein', '/logout'];
+  const GREYLIST = WHITELIST.concat(['/calendar']);
   if (!this.session.user && WHITELIST.indexOf(this.request.path) === -1){
     this.session.login_redirect = this.request.path + this.request.search;
     this.redirect('https://cas.byu.edu/cas/login?service=' + SERVICE);
+    return;
+  }
+  var is_admin = yield auth.isAdmin(this.session.user)
+  if ( this.session.user && !is_admin && GREYLIST.indexOf(this.request.path) === -1){
+    this.redirect('/calendar');
     return;
   }
   else{
@@ -71,7 +77,18 @@ app.use(function *(next) {
   }
   else
   {
-    this.USE_LAYOUT = 'layout';
+    if (this.session){
+      var is_admin = yield auth.isAdmin(this.session.user)
+      if (is_admin){
+        this.USE_LAYOUT = 'layout';
+      }
+      else{
+        this.USE_LAYOUT = 'simple_layout';
+      }
+    }
+    else{
+      this.USE_LAYOUT = 'layout';
+    }
   }
   yield next;
 });
@@ -149,7 +166,12 @@ app.use(_.get("/signin", function *(next){
   ticket=this.request.query.ticket;
   var obj = yield auth.cas_login(ticket, SERVICE);
   auth.login(this, obj);
-  this.redirect('/');
+  if (yield auth.isAdmin(this.session.user)){
+    this.redirect('/');
+  }
+  else {
+    this.redirect('/calendar');
+  }
   yield next;
 }));
 
