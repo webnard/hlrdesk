@@ -39,4 +39,12 @@ window.HLRDESK.init.checkin = function() {
     extendButton.removeAttribute('disabled');
   }
   });
+  
+  $("#add").click(function(){
+    $( '#checked-out-items tbody tr:visible' ).addClass( "selected" );
+  });
+  
+  $("#remove").click(function(){
+    $( '#checked-out-items tbody tr:visible' ).removeClass( "selected" );
+  });
 }

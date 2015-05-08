@@ -6,9 +6,6 @@
   <div class=check-out-inventory>
     <div id=check-out-search-results>
       <h2>Results</h2>
-      <small class=results-count></small>
-      <p class=help>Try a more general search.</p>
-      <ul class=satchel></ul>
     </div>
     <div id=check-out-search-selection>
       <h2><span>Satchel<span></h2>
@@ -20,28 +17,26 @@
 
 <template id=check-out-prompt>
   <header>Check out</header>
-  <table class='inventory check-out-prompt'>
-    <thead><tr><th>Call</th><th>Title</th></thead>
-    <tbody></tbody>
-  </table>
-  <form>
-    <label for=check-out-due>Due Date:</label><input type=date name=due required>
-    <label for=check-out-netid>Patron's Net ID:</label><input type=text name=netid required>
-    <label for=check-out-email>Patron's Email:</label><input type=email name=email>
-    <label for=check-out-phone>Patron's Phone:</label><input type=email name=email>
+  <form class='check-out-verify check-out-prompt' method=POST>
+    <ol class='inventory check-out-prompt'></ol>
+    <div class='check-out-input-container'>
+      <label for=check-out-netid>Patron's Net ID</label><input id=check-out-netid type=text name=netid required>
+      <label for=check-out-email>Patron's Email</label><input id=check-out-email type=email name=email>
+      <label for=check-out-phone>Patron's Phone</label><input id=check-out-phone type=tel name=tel>
+      <button class='redBtn close check-out-prompt'></button>
+      <input type=submit value='Submit' class='mainBtn check-out-prompt submit'>
+    </div>
   </form>
-  <button class='redBtn close check-out-prompt'></button>
-  <button class='mainBtn check-out-prompt submit'>Submit</button>
 </template>
 
-<template id=tpl-satchel-li>
-<li>
-  <button class=closeBtn></button>
-  <div class=details>
-    <span class=title></span>
-    <span class=call></span>
-    <span class=copy></span>
-  </div>
+<template id=tpl-checkout-popup-li>
+<li class=ready-for-checkout>
+  <span class=title></span>
+  <span class=call></span>
+  <span class=copy></span>
+  <span><input class=due type=date title='Due Date' name=due required></span> <!-- TODO: implement min attribute for date -->
+  <input class=input-copy type=hidden name=copy>
+  <input class=input-call type=hidden name=call>
 </li>
 </template>
 

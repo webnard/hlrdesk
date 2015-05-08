@@ -37,6 +37,29 @@ casper.test.begin('check out page', function(test) {
       test.assertElementCount('#check-out-search-selection .satchel li', 1);
     });
   });
+  casper.then(function() {
+    this.click('#check-out-search-selection .check-out-btn');
+    this.wait(250).then(function() {
+      casper.capture(SHOTS + 'checkout-modal-window.png');
+      test.assertExists('.modalWindow form.check-out-verify');
+      var due = new Date();
+      var twoDays = 1.728e8;
+      due.setTime(due.getTime() + twoDays);
+      var el = '.modalWindow form.check-out-verify .due';
+      var dueStr = due.toISOString().substr(0,10);
+      casper.sendKeys(el, dueStr);
+      casper.sendKeys('#check-out-netid', 'prabbit');
+      casper.capture(SHOTS + 'checkout-modal-window-filled.png');
+    });
+  });
+  casper.then(function() {
+    this.click('.check-out-prompt.submit');
+    this.wait(2500).then(function() {
+      casper.capture(SHOTS + 'items-checked-out.png');
+      test.assertDoesntExist('.modalWindow form.check-out-verify');
+      test.assertElementCount('#check-out-search-selection .satchel li', 0);
+    });
+  });
   casper.then(function(){casper.clear(); test.done()})
   casper.run();
 });

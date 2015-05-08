@@ -1,0 +1,148 @@
+<section id=check-out><!--need to change this-->
+<link rel="stylesheet" type="text/css" href="/css/editCatalog.css" />
+  <form id=check-out-form class=check-out-form>
+    <label class=check-out-main-label for=editCatalog-search>Enter an item or call number</label>
+    <input id=editCatalog-search class=check-out-search autofocus incremental name=search type=search placeholder=" The Rock - Starring Nicholas Cage, NOT THE BEES!, ERS-ELI-F14">
+  </form>
+  <button id=newItem onclick="addItem()" class="mainBtn">Add Item</button>
+  <div class=check-out-inventory>
+      <div id=editCatalog-search-results>
+        <h2>Results</h2>
+      </div>      
+    </div>
+  </div>
+</section>
+
+<template id=editItem>
+  <header id='head'><span id=headText>Edit Item</span></header>
+  <form>
+
+<table >
+  <tr>
+    <td><label for=callNumber>Call Number</label></td> 
+     <td><input id="callNumber" required></td>
+  </tr>
+    <tr>
+    <td><label for=title>Title</label></td> 
+     <td><input id="title" required></td>
+  </tr>
+  <tr>
+    <td><label for=mediaType>Media Type <br><span id=helper> (Hold ctrl for multiple)</span></label></td>
+    <td>
+      <select multiple id=media>
+      <% media_types.rows.forEach(function(rows){%>
+      <option value=<%=rows.medium %> %><%=rows.medium %></option><%});%>
+      </select>
+    </td> 
+  </tr>
+    <tr>
+    <td><label for=language>Language <br><span id=helper> (Hold ctrl for multiple) <br>Type in box to search faster</span></label></td>
+    <td>
+      <select multiple id="language">
+      <% lang.rows.forEach(function(rows){%>
+      <option value=<%=rows.code%> ><%=rows.name %></option><%});%>
+      </select>
+    </td> 
+  </tr>  
+    <tr>
+    <td><label for=quantity>Quantity</label></td> 
+     <td><input id="quantity" type=number min=0 max=10000 required></td>
+  </tr>
+  <tr>
+    <td><label for=checkoutLength>Checkout Period <br><span id=helper>In Days</span></label></td>
+    <td><input  id="checkoutLength" type=number min=0 max=366 required ></td> 
+  </tr>
+    <tr>
+    <td><label for=onReserve>Reserve Item</label> </td>
+    <td><input type=checkbox id="onReserve" onchange="reserveAlert()"></td> 
+  </tr>
+    <tr>
+    <td><label for=duplicatable>Duplicatable</label></td>
+    <td><input type=checkbox id="duplicatable"></td> 
+  </tr>
+  <tr>
+    <td><label for=HLROnline>On Hummedia</label></td>
+    <td><input type=checkbox id=HLROnline></td> 
+  </tr>
+  <tr>
+    <td><label for=dateAdded>Date Added</label></td>
+    <td><input type=date id="dateAdded" disabled=disabled></td> 
+  </tr>
+    <tr>
+    <td><label for=editedBy>Last Edited By</label></td>
+    <td><input id="editedBy" disabled=disabled></td> 
+  </tr>
+  <tr>
+    <td><label for=dateEdited>Date Edited</label></td>
+    <td><input id="dateEdited" disabled=disabled></td> 
+  </tr>
+    <tr>
+    <td><label for=notes>Notes/Alert Field</label></td>
+    <td><input id="notes"></td> 
+  </tr>
+</table>
+   
+      <input type=button onclick="deleteItem()" value="Delete Item" class='redBtn'>
+      <button onclick="updateDatabase()" class="mainBtn Item">Save</button>
+    </div>
+  </form>
+</template>
+<script>
+    var origCall;
+    var type;
+    
+    function reserveAlert(){
+    if (document.getElementById('onReserve').checked == true)
+    {
+        alert("Because this is a reserve item, make sure to include the owner of the reserve item in the desctiption and the date to return the item to the owner in the notes section");
+        }
+    }
+    function addItem()
+    {
+      var newItem = document.getElementById('editItem');
+      openModal = window.patternlibrary.displayModal(newItem);
+      type = 'add';
+      $('#quantity').attr('value', 1);
+      $('#quantity').attr('placeholder', 1);
+      document.getElementById('headText').textContent='Add Item';
+      $('#checkoutLength').attr('value', 1);
+      $('#checkoutLength').attr('placeholder', 1);
+    }
+    function deleteItem()
+    {
+      var socket = window.io();
+      socket.emit('deleteItem', origCall);
+    }
+    function updateDatabase(){
+      var newCall = $('#callNumber').val();
+      var title = $('#title').val();
+      var media = $('#mediaType').val();
+      var languages = $('#language').val();
+      var quantity = parseInt($('#quantity').val(),10);
+      var checkLength = parseInt($('#checkoutLength').val(),10);
+      var reserve = document.getElementById('onReserve').checked;
+      var online = document.getElementById('HLROnline').checked;
+      var duplicatable = document.getElementById('duplicatable').checked;
+      var notes = $('#notes').val();
+      var edited = { 
+          origCall, 
+          newCall, 
+          title, 
+          media, 
+          languages, 
+          quantity, 
+          checkLength, 
+          reserve, 
+          online, 
+          duplicatable, 
+          notes, 
+          type, 
+          token: window.HLRDESK.token
+        };
+      var socket = window.io();
+      socket.emit('changeInfo', edited);
+    }
+</script>
+
+
+<script>window.HLRDESK.init.editCatalog();</script>

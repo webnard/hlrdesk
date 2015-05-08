@@ -127,13 +127,13 @@ $result-count-height: 15px;
   &.incoming {
     @include animation('satchel-leave reverse 0.25s');
   }
-  .closeBtn {
-    display: none;
-  }
 }
 #check-out-search-selection ul.satchel li {
   text-align: left;
   cursor: default;
+  .closeBtn {
+    display: inline;
+  }
   &.incoming {
     @include animation('satchel-enter 0.25s');
   }
@@ -141,50 +141,55 @@ $result-count-height: 15px;
     @include animation('satchel-enter reverse 0.25s');
   }
 }
-ul.satchel, ol.satchel {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  li {
-    $li-padding: 0.5em;
-    display: flex;
-    align-items: center;
-    background-color: $mainGrey;
-    color: $creme;
-    padding: $li-padding;
-    cursor: pointer;
-    .details {
-      vertical-align: middle;
-      max-width: calc(100% - 3em);
-    }
-    .title {
-      font-weight: 800;
-      display: block;
-    }
-    .call {
-      font-size: 0.8em;
-      font-variant: small-caps;
-    }
-    button.closeBtn {
-      margin-right: $li-padding;
-      cursor: pointer;
+.modalWindow form.check-out-prompt{
+  ol.inventory {
+    border-bottom: dotted $mainGrey 1px;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    padding-left: 0;
+    width: 100%;
+    input {
+      display: inline;
+      margin-left: auto;
+      margin-bottom: auto;
     }
   }
-  li:hover {
-    background-color: $mainGreyHL;
-  }
-}
-#check-out-prompt {
-  display: none;
-}
-table.check-out-prompt.inventory {
-  height: auto;
-  th {
-    background: none;
-    color: #1c305d;
-    font-size: 1.3em;
+  label {
+    display: block;
     font-weight: bold;
-    text-transform: uppercase;
-
+    text-align: left;
+  }
+  input:not([type=submit]) {
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0.5em;
+    border: solid $mainGrey 1px;
+  }
+  .check-out-input-container {
+    display: block;
+    float: right;
+    text-align: right;
+  }
+}
+.modalWindow ol.inventory.check-out-prompt {
+  display: table;
+  li {
+    display: table-row;
+    &>span {
+      display: table-cell;
+      padding: 0.2rem;
+      &:last-of-type {
+        text-align: right;
+      }
+    }
+    span.copy {
+      &:before {
+        content: '(#';
+      }
+      &:after {
+        content: ')';
+      }
+    }
   }
 }

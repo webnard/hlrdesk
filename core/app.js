@@ -4,6 +4,7 @@ var serve = require('koa-static')
 var render = require('koa-ejs')
 var path = require('path')
 var fs = require('fs');
+var assert = require('assert');
 
 var socket = require('koa-socket');
 
@@ -114,6 +115,18 @@ app.use(_.get('/check-out', function *() {
   });
 }));
 
+app.use(_.get('/edit-catalog', function *() {
+  var client = db();
+  var media_types = yield client.query("SELECT * FROM media ORDER BY media ASC;");
+  var lang = yield client.query("SELECT * FROM languages ORDER BY name ASC;");
+  yield this.render('catalog/edit-catalog', {
+    title: "Edit Item",
+    layout: this.USE_LAYOUT,
+    media_types: media_types,
+    lang: lang
+  });
+}));
+
 app.use(_.get("/extras", function *() {
   yield this.render('extras', {layout: this.USE_LAYOUT });
 }));
@@ -133,6 +146,46 @@ app.use(_.get("/signin", function *(next){
   yield next;
 }));
 
+app.use(_.get("/languages", function*() {
+  yield this.render('languages', {
+    layout: this.USE_LAYOUT,
+    languages: yield require('./app_modules/language').list
+  });
+}));
+
+app.use(_.get("/media", function*() {
+  yield this.render('media', {
+    layout: this.USE_LAYOUT,
+    media: yield require('./app_modules/media').list,
+    csrf: this.csrf
+  });
+}));
+
+app.use(_.post('/media', function*() {
+  var media = require('./app_modules/media');
+  var body = yield parse(this); // co-body or something
+
+  try {
+    this.assertCSRF(body.csrf);
+    assert(yield auth.isAdmin(this.session.user));
+  }catch(err) {
+    this.status = 403
+    this.body = {
+      message: 'Unauthorized'
+    };
+    return;
+  }
+
+  if(body['delete']) {
+    yield media.remove(body['delete']);
+  }
+  else if(body['create']) {
+    yield media.add(body['new-media']);
+  }
+
+  this.redirect('/media');
+}));
+
 app.use(_.get("/logout", function *(){
   this.session = null;
   var s = this.request.query.service || null;
@@ -143,10 +196,16 @@ app.use(_.get("/logout", function *(){
 app.use(_.post("/mkadmin",function *(){
   var body = yield parse(this) // co-body or something
   try {
-    this.assertCSRF(body.csrf)
-    to_mk=this.request.query.user;
-    auth.mkadmin(this.session.user, to_mk);
-    this.redirect('/mkadmin');
+    this.assertCSRF(body.csrf);
+    to_mk=body.user;
+    override = (body.override=="true");
+    status = yield auth.mkadmin(this.session.user, to_mk, override);
+    if(!status){
+      this.redirect('/mkadmin?status='+status+'&toMk='+to_mk);
+    }
+    else{
+      this.redirect('/mkadmin');
+    }
   }
   catch (err) {
     this.status = 403
@@ -158,7 +217,24 @@ app.use(_.post("/mkadmin",function *(){
 }));
 
 app.use(_.get("/mkadmin",function *(){
-  yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf});
+  var isAdmin = yield auth.isAdmin(this.session.user);
+  var client = db();
+  var allAdmins = yield client.query("SELECT netid FROM users WHERE admin = TRUE;");
+  if (isAdmin){
+    if (this.request.query.status == "false"){
+      yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf, allAdminsFromDB: allAdmins, alert : true, to_mk : this.request.query.toMk});
+    }
+    else{
+      yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf, allAdminsFromDB: allAdmins, alert : false, to_mk : undefined});
+    }
+  }
+  else{
+    this.status = 403
+    this.body = {
+      message: 'Wrong place friend!'
+    }
+    return
+  }
 }));
 
 socket.start(app);
@@ -181,7 +257,7 @@ fs.readdir(path.join(__dirname, 'sockets'), function (err, files) {
       require(path.join(__dirname, 'sockets', file))(socket, app);
     }
     catch(e) {
-      console.error("Initializing sockets/" + file + " failed.");
+      console.error("Initializing sockets/" + file + " failed.", e);
       throw e;
     }
   });

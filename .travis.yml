@@ -75,9 +75,5 @@ after_script:
   - echo "See build screenshots on https://byu-odh.github.io/hlrdesk"
 
 
-# TODO: Travis won't let us conditionally use this in after_success
-#addons:
-#  ssh_known_hosts:
-#  - hlrdesk.hlrdev.byu.edu
-#  - hlrdesk-staging.byu.edu
-#  - hlrdesk-prod.byu.edu
+addons:
+  postgresql: "9.3"

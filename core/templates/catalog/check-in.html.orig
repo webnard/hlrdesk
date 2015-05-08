@@ -1,0 +1,43 @@
+<link rel="stylesheet" type="text/css" href="/css/checkIN.css" />
+<section id="checkIn">
+<form id="live-search" action="" class="keepTop" method="">
+    <fieldset>
+        <input type="text" class="text-input" id="filter" value="" placeholder="Search"/>
+        <span id="filter-count"></span>
+<<<<<<< HEAD
+        <button class="greenBtn check-in-btn" disabled=disabled>Check In</button>
+        <button class="redBtn extend-btn" disabled=disabled>Extend</button>
+        <button class="secondaryBtn">Select All</button><!--Add toggle that goes to select none-->
+=======
+        <button class="mainBtn">Check In</button>
+        <button class="mainBtn">Extend</button>
+        <button class="mainBtn" type="button" action="" id="add"">Select All</button>
+        <button class="mainBtn" type="button" action="" id="remove"">Select None</button>
+>>>>>>> master
+    </fieldset>
+</form>
+<table id=checked-out-items class="checkIN tablesorter">
+  <thead>
+    <tr>
+      <th scope=col><i class="fa fa-sort"></i> Call Number</th>
+      <th scope=col><i class="fa fa-sort"></i> Name</th>
+      <th scope=col class="colWidth"><i class="fa fa-sort"></i> Net ID</th>
+      <th scope=col class="colWidth col-due"><i class="fa fa-sort"></i> Due</th>
+      <th scope=col>More</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% items.forEach(function(item, index) { %>
+      <tr class='<%= item.overdue? "overdue" : "" %>'>
+        <td><%= item.call_number %></td>
+        <td><%= item.name %></td>
+        <td><%= item.owner %></td>
+        <td data-date="<%=item.due.getTime()%>"><%= moment(item.due).format("MMM D") %></td>
+        <td ><i class="fa fa-plus-square-o"></i></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+<script>window.HLRDESK.init.checkin();</script>
+</section>
+

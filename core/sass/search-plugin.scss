@@ -1,0 +1,42 @@
+@import 'colors.scss';
+@import 'patternLibrary.scss';
+
+ul.satchel, ol.satchel {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  li {
+    $li-padding: 0.5em;
+    display: flex;
+    align-items: center;
+    background-color: $mainGrey;
+    color: $creme;
+    padding: $li-padding;
+    cursor: pointer;
+    .details {
+      vertical-align: middle;
+      max-width: calc(100% - 3em);
+    }
+    .title {
+      font-weight: 800;
+      display: block;
+    }
+    .call {
+      font-size: 0.8em;
+      font-variant: small-caps;
+    }
+    button.closeBtn {
+      margin-right: $li-padding;
+      cursor: pointer;
+      display: none;
+    }
+    &.unavailable {
+      cursor: not-allowed;
+      color: grayscale(darken($creme, 20%));
+      background-color: darken(grayscale($mainGrey), 20%);
+    }
+    &:not(.unavailable):hover {
+      background-color: $mainGreyHL;
+    }
+  }
+}

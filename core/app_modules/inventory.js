@@ -20,17 +20,6 @@ inventory.search = co.wrap(function* (text, username, params) {
   var items = [];
   var client = db();
 
-  var exclude_qry = '';
-  var exclude = params && params.exclude || [];
-
-  var offset = 2;
-  if(exclude.length > 0) {
-    exclude_qry = params.exclude.map(function(v, i) {
-      return '$' + (i + offset);
-    }).join(',');
-    exclude_qry = 'inv."call" NOT IN (' + exclude_qry + ') AND';
-  }
-
   // TODO: This has a high cost; it may be beneficial enforce a limit on the
   // subquery that matches text where a large inventory and high volume of searches
   // are concerned
@@ -40,15 +29,22 @@ inventory.search = co.wrap(function* (text, username, params) {
     ' inv."call" as "call_number", inv."title", inv."quantity",' +
     '   array_agg(foo.copies_available) as copies_available' +
     ' FROM "inventory" as inv ' +
-    ' JOIN ( SELECT copies_available, subq.call FROM ' +
+    ' LEFT JOIN ( SELECT copies_available, subq.call FROM ' +
     '   ( SELECT call, generate_series(1,quantity) AS copies_available FROM inventory) AS subq ' +
     '   WHERE subq.copies_available NOT IN ' +
     '     ( SELECT copy FROM checked_out WHERE checked_out.call=subq.call) ' +
     ' ) as foo ON foo.call = inv.call ' +
-    ' WHERE TRUE AND ' + exclude_qry + ' (LOWER(inv."call") LIKE LOWER(\'%\' || $1 || \'%\')' +
+    ' WHERE TRUE AND (LOWER(inv."call") LIKE LOWER(\'%\' || $1 || \'%\')' +
     ' OR LOWER("title") LIKE LOWER(\'%\' || $1 || \'%\')) GROUP BY inv.call;';
 
-  var result = yield client.query(query, [text].concat(exclude));
+  var result = yield client.query(query, [text]);
+
+  // gets rid of null values for copies_available field
+  result.rows.forEach(function(row) {
+    row.copies_available = row.copies_available.filter(function(copy) {
+      return copy !== null;
+    });
+  });
   return yield Promise.resolve(result.rows);
 });
 
@@ -79,28 +75,50 @@ inventory.check_in = co.wrap(function*(call, patron, employee) {
   return yield Promise.resolve(true);
 });
 
-inventory.check_out = co.wrap(function*(call, patron, employee, due) {
+inventory.is_checked_out = co.wrap(function*(call, copy) {
+  var query = 'SELECT COUNT(*) c FROM checked_out WHERE "call" = $1 AND ' +
+    '"copy" = $2 LIMIT 1';
+  var client = db();
+  var result = yield client.query(query, [call, copy]);
+  return yield Promise.resolve(Number(result.rows[0].c) >= 1);
+});
 
-  assert(due > (new Date()), "Due date " + due + " is earlier than now.");
+inventory.check_out = co.wrap(function*(items, patron, employee) {
   assert(yield auth.isAdmin(employee), employee + " is not an admin.");
   assert(yield auth.check_id(patron), patron + " is not a valid user.");
-  assert(yield inventory.exists(call), call + " doesn't exist; cannot rent");
 
   var client = db();
-  var copy = (yield client.query('SELECT COUNT(*)+1 c FROM checked_out WHERE call = $1',
-    [call])).rows[0].c;
+  try{
+    client.nonQuery('BEGIN TRANSACTION');
+    for(var i = 0; i<items.length; i++) {
+      var item = items[i];
+      var due = item.due;
+      var call = item.call;
+      var copy = item.copy;
 
-  var q = 'INSERT INTO checked_out(call, copy, netid, attendant, due)' +
-    'VALUES($1, $2, $3, $4, $5)';
-  yield client.query(q , [call, copy, patron, employee, due]);
+      assert(new Date(due) > (new Date()), "Due date " + due + " is earlier than now.");
+      var checked_out = yield inventory.is_checked_out(call, copy);
+      assert(!checked_out, call + " (copy #" + copy + ") is already checked out");
+      assert(yield inventory.exists(call), call + " doesn't exist; cannot rent");
 
+      var q = 'INSERT INTO checked_out(call, copy, netid, attendant, due)' +
+        'VALUES($1, $2, $3, $4, $5)';
+
+      var dueFmt = moment(due).format();
+      yield client.nonQuery(q , [call, copy, patron, employee, dueFmt]);
+    };
+    client.nonQuery('COMMIT');
+  }catch(e) {
+    client.nonQuery('ROLLBACK');
+    throw e;
+  }
   return yield Promise.resolve(true);
 });
 
 Object.defineProperty(inventory, 'checked_out', {
   get: co.wrap(function*() {
     var client = db();
-    var query = 'SELECT c.due, c.attendant, c.netid as owner, c.copy, c.extensions, i.volume, i.title as name, i.call '+
+    var query = 'SELECT c.due, c.attendant, c.netid as owner, c.copy, c.extensions, i.title as name, i.call '+
                 'FROM checked_out c JOIN inventory i ON c.call = i.call';
     var results = (yield client.query(query)).rows;
 

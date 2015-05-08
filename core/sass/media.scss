@@ -1,0 +1,37 @@
+@import 'colors.scss';
+@import 'animation.scss';
+@import 'patternLibrary.scss';
+
+@include keyframes(vhs-frenzy) {
+  from {
+    transform: translateX(0%) translateY(0%);
+  }
+  to {
+    transform: translateX(10%) translateY(10%);
+  }
+}
+
+section#media {
+  background-color: $creme;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 1em;
+  input[type=submit] {
+    margin-left: 1em;
+  }
+}
+#media-main {
+  z-index: 1;
+  position: relative;
+}
+#media-bg {
+  @include animation('vhs-frenzy infinite 2s alternate');
+  opacity: 0.1;
+  -webkit-filter: blur(2px);
+  z-index: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-image: url('/img/vhs.png');
+}

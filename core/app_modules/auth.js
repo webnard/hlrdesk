@@ -7,22 +7,22 @@ var redis = require('./redis');
 
 check_id = co.wrap(function*(netid){
   var client = db();
-  var is_user = yield client.query("SELECT CASE WHEN EXISTS (SELECT * FROM users WHERE netid = $1) THEN 'TRUE' ELSE 'FALSE' end;", [netid])
+  var is_user = yield client.query("SELECT CASE WHEN EXISTS (SELECT * FROM users WHERE netid = $1) THEN 'TRUE' ELSE 'FALSE' end;", [netid]);
   return yield Promise.resolve(is_user.rows[0].case == "TRUE");
-})
+});
 
 check_admin = co.wrap(function*(user){
   var client = db();
-  var is_user = yield client.query("SELECT CASE WHEN EXISTS (SELECT * FROM users WHERE netid = $1 AND admin = 't') THEN 'TRUE' ELSE 'FALSE' end;", [user])
+  var is_user = yield client.query("SELECT CASE WHEN EXISTS (SELECT * FROM users WHERE netid = $1 AND admin = 't') THEN 'TRUE' ELSE 'FALSE' end;", [user]);
   console.warn("The function 'check_admin' is deprecated. Use 'isAdmin' instead.");
   return yield Promise.resolve(is_user.rows[0].case == "TRUE");
-})
+});
 
 isAdmin = co.wrap(function*(user){
   var client = db();
-  var is_user = yield client.query("SELECT CASE WHEN EXISTS (SELECT * FROM users WHERE netid = $1 AND admin = 't') THEN 'TRUE' ELSE 'FALSE' end;", [user])
+  var is_user = yield client.query("SELECT CASE WHEN EXISTS (SELECT * FROM users WHERE netid = $1 AND admin = 't') THEN 'TRUE' ELSE 'FALSE' end;", [user]);
   return yield Promise.resolve(is_user.rows[0].case == "TRUE");
-})
+});
 
 module.exports = {
   cas_login: function(ticket, service) {
@@ -34,7 +34,7 @@ module.exports = {
     return (port == 443 && host.match(/\.byu\.edu$/) !== null);
   },
 
-  login: function(ctx, obj) {
+  login: co.wrap(function*(ctx, obj) {
     var client = db();
     var redisClient = redis();
     var token = uuid.v4();
@@ -56,12 +56,18 @@ module.exports = {
 
     redisClient.sadd([token, obj.username]);
     redisClient.expire(token, 43200);
-    client.query("INSERT INTO users(netid) VALUES ($1);", [obj.username] )
-  },
+    var is_user = yield check_id(obj.username);
+    if (is_user){
+      client.query("UPDATE users set email = $2, name = $3 WHERE netid = $1;", [obj.username, obj.attributes.emailAddress, obj.attributes.name]);
+    }
+    else{
+      client.query("INSERT INTO users(netid, email, name) VALUES ($1, $2, $3);", [obj.username, obj.attributes.emailAddress, obj.attributes.name]);
+    }
+  }),
 
   getUser: co.wrap(function* (token) {
     if(typeof token !== 'string') {
-      return yield Promise.resolve(false); 
+      return yield Promise.resolve(false);
     }
     return new Promise(function(resolve, reject) {
       redis().smembers(token, function(err, reply){
@@ -94,12 +100,19 @@ module.exports = {
 
   check_id: check_id,
 
-  mkadmin: co.wrap(function*(user, netid) {
+  mkadmin: co.wrap(function*(user, netid, override) {
     var client = db();
     var is_user = yield check_id(netid);
-    var user_is_admin = yield check_admin(user);
-    if (is_user && user_is_admin){
-      client.query("UPDATE users SET admin='TRUE' WHERE netid = $1", [netid])
+    var user_is_admin = yield isAdmin(user);
+    var add_user = is_user || override
+    if (add_user && user_is_admin){
+      if (is_user){
+        client.query("UPDATE users SET admin='TRUE' WHERE netid = $1;", [netid]);
+      }
+      else{
+        client.query("INSERT INTO users (netid) values ($1);",[netid]);
+        client.query("UPDATE users SET admin='TRUE' WHERE netid = $1;", [netid]);
+      }
       return yield Promise.resolve(true);
     }
     else {
