@@ -1,3 +1,27 @@
+(function(){
+  var socket = io();
+
+  var employee = window.patron
+  console.log(employee)
+  socket.on('checkin event', function(event){
+  })
+
+  window.checkin = function() {
+    var num_selected = $(".selected").length
+    var call_list = []
+    var patron_list = []
+    for (i=0; i < num_selected; i++){
+      call_number = $(".selected").eq(i).children(":first").text()
+      patron = $(".selected").eq(i).children(":first").next().next().text()
+      call_list.push(call_number);
+      patron_list.push(patron);
+    }
+    for (i=0; i<call_list.length; i++){
+      socket.emit('checkin event', {"call" : call_list[i], "patron" : patron_list[i], 'employee' : employee});
+    }
+  }
+})();
+
 window.HLRDESK.init.checkin = function() {
   $("#filter").keyup(function(){
     var filter = $(this).val(), count = 0;
