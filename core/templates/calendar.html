@@ -8,7 +8,6 @@
   window.rooms.HLRC = ("<%- (roomsHLRC.toString()) %>").split(",");
   window.rooms.HTRSC = ("<%- roomsHTRSC.toString() %>").split(",");
 </script>
-<script src="http://code.jquery.com/jquery-2.1.4.min.js">//VERY HACKY, but it will have to do for now. Some thrid party is preventing JQuery from loading all the way. Now Jquery is "double added" this is in not good practice. #HammerTime</script>
 <body>
   <section id="calendar">
     <button id="switchView" class = "mainBtn">Change View</button><select id="resourceSelect">
@@ -100,7 +99,7 @@
       </select><br>
       Event Name: <input id=nameInput maxlength="20"></input><br>
       <div id="popupButtons">
-        <button id="deleteButton" class="redBtn">Cancel</button><button id="saveButton" class="greenBtn">Save</button>
+        <button id = "requestButton" class = "greenBtn">Request</button><button id="deleteButton" class="redBtn">Cancel</button><button id="saveButton" class="greenBtn">Save</button>
       </div>
     </div>
   </section>

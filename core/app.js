@@ -118,6 +118,7 @@ app.use(_.get('/check-in', function *() {
 
   yield this.render('catalog/check-in', {
     items: items,
+    admin: this.session.user,
     moment: require('moment'),
     title: "Check In",
     layout: this.USE_LAYOUT
