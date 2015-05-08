@@ -21,7 +21,6 @@ if (window.isAdmin){
 }
 else{
   $("#saveButton").hide();
-  $("#deleteButton").hide();
 }
 
 document.getElementById("resourceSelect").addEventListener("change", function() {changeResource()});
