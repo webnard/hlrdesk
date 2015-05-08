@@ -1,8 +1,7 @@
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/calendar.css">
-
 <script>
-  <% var roomsHLRC =  ["Recording Studio", "1141A", "1141B", "1141C", "1141D"] %> //Should these be passed in from app.js?-->
+  <% var roomsHLRC =  ["Recording Studio", "1141A", "1141B", "1141C", "1141D"] %> <!--Should these be passed in from app.js?-->
   <% var roomsHTRSC = ["B160", "B164", "B181", "B013", "B161", "1161", "B003", "1131A", "1133A", "1133B"] %>
   window.rooms = {};
   window.rooms.HLRC = ("<%- (roomsHLRC.toString()) %>").split(",");
