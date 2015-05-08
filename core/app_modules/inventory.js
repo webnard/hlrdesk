@@ -102,7 +102,7 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
 
       var q = 'INSERT INTO checked_out(call, copy, netid, attendant, due)' +
         'VALUES($1, $2, $3, $4, $5)';
-        
+
       var notes ='Item checked out by ' + employee + ' due on ' + due.toString().substring(0,10);
       yield client.nonQuery("INSERT INTO item_history (call_number, type, who, date_changed, notes) VALUES ($1, 'Checkout', $2, CURRENT_TIMESTAMP, $3) ", [call, patron, notes ])
 
