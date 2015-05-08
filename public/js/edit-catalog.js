@@ -44,17 +44,20 @@ window.HLRDESK.init.editCatalog = function() {
    
     $('#notes').attr('value', result.notes);
     $('#notes').attr('placeholder', result.notes);
-
-    //$(".Item").click(updateDatabase);        
-
-
-
+    oldItem = 
+    {
+      quant: result.quantity,
+      titl: result.title,
+      reserv: result.is_reserve,
+      dup: result.is_duplicatable,
+      hum: result.on_hummedia,
+      notes: result.notes
+    };
   });
   
   window.HLRDESK.plugins.search({
     search: '#editCatalog-search',
     results: '#editCatalog-search-results',
-    
     clickCallback: function()
     {
       var item = this;
@@ -65,5 +68,9 @@ window.HLRDESK.init.editCatalog = function() {
       hideCheckedOut: false
     }
   });
-
+  
+  socket.on('alertMessage', function(alertMsg){
+    alert(alertMsg);
+  });
+  
 }

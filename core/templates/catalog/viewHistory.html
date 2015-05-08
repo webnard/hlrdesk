@@ -1,0 +1,24 @@
+<section id=check-out><!--need to change this-->
+<link rel="stylesheet" type="text/css" href="/css/viewHistory.css" />
+  <form id=check-out-form class=check-out-form>
+    <label class=check-out-main-label for=editCatalog-search>Enter an item or call number</label>
+    <input id=editCatalog-search class=check-out-search autofocus incremental name=search type=search placeholder=" The Rock - Starring Nicholas Cage, NOT THE BEES!, ERS-ELI-F14">
+  </form>
+  <div class=check-out-inventory>
+      <div id=editCatalog-search-results>
+        <h2>Results</h2>
+      </div>      
+    </div>
+  </div>
+</section>
+
+<template id="editItem" class=histMod>
+  <header id='head'><span id=headText>History</span></header>
+  <div class=tablePadding>
+      <table id=hist_table>
+        <tr class=list >
+        </tr>  
+    </table>
+  </div> 
+</template>
+<script>window.HLRDESK.init.viewHistory();</script>

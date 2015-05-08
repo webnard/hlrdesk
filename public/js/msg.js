@@ -117,6 +117,10 @@ window.HLRDESK.init.messages = function() {
     socket.emit('delete task', del_task);
   }
 
+  socket.on('alertMessage', function(alertMsg){
+    alert(alertMsg);
+  });
+  
   //Reorder Tasks
   socket.on('reorder tasks', function(newTaskOrder){
     newTaskOrder.order.forEach(function (a,b){

@@ -81,21 +81,23 @@
     <td><input id="notes"></td> 
   </tr>
 </table>
-   
-      <input type=button onclick="deleteItem()" value="Delete Item" class='redBtn'>
+      <button class=redBtn onclick="deleteItem()" ></button>
       <button onclick="updateDatabase()" class="mainBtn Item">Save</button>
+
     </div>
   </form>
 </template>
 <script>
     var origCall;
+    var oldItem;
     var type;
     
     function reserveAlert(){
-    if (document.getElementById('onReserve').checked == true)
-    {
+      if (document.getElementById('onReserve').checked == true)
+      {
         alert("Because this is a reserve item, make sure to include the owner of the reserve item in the desctiption and the date to return the item to the owner in the notes section");
-        }
+        $('#notes').attr('required', 'required');
+      }
     }
     function addItem()
     {
@@ -111,7 +113,8 @@
     function deleteItem()
     {
       var socket = window.io();
-      socket.emit('deleteItem', origCall);
+      var delInfo = {origCall, token: window.HLRDESK.token}
+      socket.emit('deleteItem', delInfo);
     }
     function updateDatabase(){
       var newCall = $('#callNumber').val();
@@ -137,6 +140,7 @@
           duplicatable, 
           notes, 
           type, 
+          oldItem,
           token: window.HLRDESK.token
         };
       var socket = window.io();

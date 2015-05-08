@@ -108,12 +108,11 @@ ALTER SEQUENCE messages_message_id_seq OWNED BY messages.message_id;
 --
 
 CREATE TABLE users (
-    netid character varying(8),
-    admin boolean default false,
-    email varchar(254) default null,
-    telephone varchar(32) default null, -- note: varchar 32 chosen arbitrarily; may be something more sensible
-    name  character varying(255),
-    CONSTRAINT users_pkey PRIMARY KEY (netid)
+  netid character varying(8),
+  admin boolean default false,
+  email varchar(254) default null,
+  telephone varchar(32) default null, -- note: varchar 32 chosen arbitrarily; may be something more sensible
+  CONSTRAINT users_pkey PRIMARY KEY (netid)
 );
 
 
@@ -138,18 +137,27 @@ ALTER TABLE ONLY messages
 --
 
 CREATE TABLE inventory (
-    call character varying(32) NOT NULL,
-    quantity integer DEFAULT 1 NOT NULL,
-    title character varying(255),
-    checkout_period int default 1, --in days
-    is_reserve BOOLEAN DEFAULT FALSE, -- these are for items left by professors for us to check out
-    is_duplicatable BOOLEAN DEFAULT FALSE,
-    on_hummedia BOOLEAN DEFAULT FALSE,
-    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
-    edited_by character varying(8),
-    date_edited timestamp,
-    notes character varying(255),
-    CONSTRAINT inventory_pkey PRIMARY KEY (call)
+  call character varying(32) NOT NULL,
+  quantity integer DEFAULT 1 NOT NULL,
+  title character varying(255),
+  checkout_period int default 1, --in days
+  is_reserve BOOLEAN DEFAULT FALSE, -- these are for items left by professors for us to check out
+  is_duplicatable BOOLEAN DEFAULT FALSE,
+  on_hummedia BOOLEAN DEFAULT FALSE,
+  date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+  edited_by character varying(8),
+  date_edited timestamp,
+  notes character varying(255),
+  CONSTRAINT inventory_pkey PRIMARY KEY (call)
+);
+
+CREATE TABLE item_history (
+  call_number character varying(32) NOT NULL,
+  type character varying(32) NOT NULL,
+  who character varying(8) NOT NULL,
+  title character varying(255),
+  date_changed timestamp DEFAULT CURRENT_TIMESTAMP,
+  notes character varying(255)
 );
 
 CREATE TABLE languages (
