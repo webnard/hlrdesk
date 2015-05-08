@@ -5,14 +5,27 @@ button{
   float:right;  
 }
 
+.check-in-btn[disabled] {
+background-color:$disabledGrey;
+background:$disabledGrey;
+box-shadow:none;
+cursor: default;
+}
+
+.extend-btn[disabled] {
+background-color:$disabledGrey;
+background:$disabledGrey;
+box-shadow:none;
+cursor: default;
+}
+
 .checkIN {
   padding:1em;
 }
-
 .checkIN th {
   padding:1em;
   font-family:arial;
-  font-size:1.2em;
+  font-size:1em;
   background-color:#1c305d;
   color:white;
 }
@@ -53,6 +66,7 @@ table{
   border-collapse:collapse;
   height: 6em;
   margin:0;
+  cursor:pointer;
 }
 
 th{
@@ -67,16 +81,18 @@ tr {
     background-color: $creme;
   }  
   &:hover {
-    background-color: $mainGreyHL;
+    background-color: $byuBlueHL;
+    color:white;
   }
 }
 
 
 tr.overdue {
-  background-color:$red;
-  color:white;
+  color:$red;
+  font-weight:bold;
   &:hover {
     background-color: $redHL;
+    color:white;
   }
 }
 
@@ -87,13 +103,11 @@ body {
 }
 
 tr.selected{
-  background-color: $byuBlue;
+  background-color: $mainBlueHL;
   color:white;
     &:hover {
     background-color: $byuBlueHL;
   }
-  font-weight:bold;
-  font-size:1.1em;
 }
 
 }

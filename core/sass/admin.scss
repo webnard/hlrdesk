@@ -32,7 +32,7 @@ section,table,thead
 }
 
 #left_panel {
-  @include basic_panel(20%,$byu-blue,#FFFFFF);
+  @include basic_panel(20%,$mainBlue,#FFFFFF);
   min-width: 150px;
   max-width: 250px;
   position: relative;
@@ -69,12 +69,12 @@ button{
   color: #FFFFFF;
   margin:0px;
   align:right;
-  background-color: #2b3044;
+  background-color: $mainBlue;
   border: 0px;
   font-size:1em;
   outline:none !important;
   &:hover {
-    background-color: #8c8686;
+    background-color: $mainBlueHL;
   }
 }
 

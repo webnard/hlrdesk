@@ -23,10 +23,11 @@
   }
   .check-out-search {
     width: $search-width;
-    font-size: 2em;
+    font-size: 1em;
     height: $search-height;
     line-height: $search-height;
     border: solid $mainGreyHL 1px;
+
   }
   .check-out-inventory {
     width: $search-width;
@@ -56,7 +57,7 @@
     }
   }
   .check-out-btn {
-    font-size: 1.2em;
+    font-size: 1em;
     cursor: pointer;
     // TODO: this is hacky; include in pattern library
     &[disabled], &[disabled]:hover {
@@ -113,6 +114,8 @@ $result-count-height: 15px;
   }
 }
 #check-out-search-selection {
+ background-image: url("/resources/satchel.jpg");
+    background-size: contain;
   ul {
     margin-top: $result-count-height;
   }
