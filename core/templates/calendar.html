@@ -1,6 +1,5 @@
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/calendar.css">
-
 <script>
   <% var roomsHLRC =  ["Recording Studio", "1141A", "1141B", "1141C", "1141D", "FLAC" ] %> //Should these be passed in from app.js?-->
   <% var roomsHTRSC = ["B160", "B164", "B181", "B013", "B161", "1161", "B003", "1131A", "1133A", "1133B"] %>
@@ -8,6 +7,7 @@
   window.rooms.HLRC = ("<%- (roomsHLRC.toString()) %>").split(",");
   window.rooms.HTRSC = ("<%- roomsHTRSC.toString() %>").split(",");
 </script>
+<script src="http://code.jquery.com/jquery-2.1.4.min.js">//VERY HACKY, but it will have to do for now. Some thrid party is preventing JQuery from loading all the way. Now Jquery is "double added" this is in not good practice. #HammerTime</script>
 <body>
   <section id="calendar">
     <button id="switchView" class = "mainBtn">Change View</button><select id="resourceSelect">
@@ -69,7 +69,13 @@
     </div>
     <div id="popup" style="position: absolute;" class="hidden">
       <%if (isAdmin) { %> User: <input id=userInput maxlength=8 size=8 value=<%=user%>></input><br> <% }; %>
-      Room: <select id="roomSelect"></select><br>
+      Room: <select id="roomSelect">
+        <option>Recording Studio</option>
+        <option>1141A</option>
+        <option>1141B</option>
+        <option>1141C</option>
+        <option>1141D</option>
+      </select><br>
       Date: <select id="dateSelect">
         <% for (var i = 0; i <= 14+(6-date.getDay()); i++) { %>
           <% var newDate =  new Date(date.getTime()+86400000*i) %>
@@ -93,7 +99,8 @@
       </select><br>
       Event Name: <input id=nameInput maxlength="20"></input><br>
       <div id="popupButtons">
-        <button id = "requestButton" class = "greenBtn">Request</button><button id="deleteButton" class="redBtn">Cancel</button><button id="saveButton" class="greenBtn">Save</button>
+        <button id = "requestButton" class = "greenBtn">Request</button>
+        <button id="deleteButton" class="redBtn">Cancel</button><button id="saveButton" class="greenBtn">Save</button>
       </div>
     </div>
   </section>
