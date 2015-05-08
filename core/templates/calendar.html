@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="/css/calendar.css">
 
 <script>
-  <% var roomsHLRC =  ["Recording Studio", "1141A", "1141B", "1141C", "1141D"] %> //Should these be passed in from app.js?-->
+  <% var roomsHLRC =  ["Recording Studio", "1141A", "1141B", "1141C", "1141D", "FLAC" ] %> //Should these be passed in from app.js?-->
   <% var roomsHTRSC = ["B160", "B164", "B181", "B013", "B161", "1161", "B003", "1131A", "1133A", "1133B"] %>
   window.rooms = {};
   window.rooms.HLRC = ("<%- (roomsHLRC.toString()) %>").split(",");
@@ -69,13 +69,7 @@
     </div>
     <div id="popup" style="position: absolute;" class="hidden">
       <%if (isAdmin) { %> User: <input id=userInput maxlength=8 size=8 value=<%=user%>></input><br> <% }; %>
-      Room: <select id="roomSelect">
-        <option>Recording Studio</option>
-        <option>1141A</option>
-        <option>1141B</option>
-        <option>1141C</option>
-        <option>1141D</option>
-      </select><br>
+      Room: <select id="roomSelect"></select><br>
       Date: <select id="dateSelect">
         <% for (var i = 0; i <= 14+(6-date.getDay()); i++) { %>
           <% var newDate =  new Date(date.getTime()+86400000*i) %>
