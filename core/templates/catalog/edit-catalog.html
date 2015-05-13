@@ -31,7 +31,7 @@
     <td>
       <select multiple id=media>
       <% media_types.rows.forEach(function(rows){%>
-      <option value=<%=rows.medium %> %><%=rows.medium %></option><%});%>
+      <option value="<%=rows.medium %>"><%=rows.medium %></option><%});%>
       </select>
     </td> 
   </tr>
@@ -40,7 +40,7 @@
     <td>
       <select multiple id="language">
       <% lang.rows.forEach(function(rows){%>
-      <option value=<%=rows.code%> ><%=rows.name %></option><%});%>
+      <option value="<%=rows.code%>"><%=rows.name %></option><%});%>
       </select>
     </td> 
   </tr>  
