@@ -7,6 +7,22 @@ describe('inventory', function() {
   beforeEach(require('./resetdb'));
   var inventory  = require ('../core/app_modules/inventory');
 
+  describe('#get(call)', function() {
+    it('should return null if the call does not exist', function*() {
+      expect(yield inventory.get('I-DO-NOT-EXIST')).to.be.null;
+    });
+    it('should include an array of media types', function*() {
+      var results = yield inventory.get('HELLO');
+      expect(results.media).to.be.an.instanceof(Array);
+      expect(results.media).to.contain('COMPACT DISC (CD)');
+    });
+    it('should include an array of languages', function*() {
+      var results = yield inventory.get('HELLO');
+      expect(results.languages).to.be.an.instanceof(Array);
+      expect(results.languages).to.contain('eng');
+    });
+  });
+
   describe('#search(value, user, params)', function () {
     it('should return an array when items are found', function* () {
       var user = 'tock';

@@ -15,6 +15,23 @@ inventory.exists = co.wrap(function*(call) {
   return yield Promise.resolve(result.rows.length > 0);
 });
 
+inventory.get = co.wrap(function*(call) {
+  var client = db();
+  var query = 'SELECT inv.*,' +
+    'array_agg(mi.medium) as media, array_agg(li.language_code) as languages ' +
+    'FROM inventory inv ' +
+    'LEFT JOIN languages_items li on li.inventory_call = inv.call ' +
+    'LEFT JOIN media_items mi on mi.call = inv.call ' +
+    'WHERE inv.call = $1 ' +
+    'GROUP BY inv.call;';
+
+  var results = yield client.query(query, [call]);
+  if(results.rows.length === 0) {
+    return yield Promise.resolve(null);
+  }
+  return yield Promise.resolve(results.rows[0]);
+});
+
 inventory.search = co.wrap(function* (text, username, params) {
   assert(yield auth.isAdmin(username), 'Only admins can search the database. No searching for ' + username);
   var items = [];
