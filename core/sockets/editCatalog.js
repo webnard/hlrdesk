@@ -23,13 +23,8 @@ module.exports = function editCatalog(socket, app) {
       var errMessage = ' attempted to get info of ' + item.callNum;
       checkMe(this, errMessage, function success()
       {
-        var client = db();
-        //var uID = that.user;
-        client.transaction(function*(t) {
-          var query = "SELECT * FROM inventory WHERE call = $1";
-          var result = yield t.queryOne(query, [item.callNum]);
-          app.io.emit('getInfo', result);
-        }).catch(console.error);
+        var result = yield t.queryOne(query, [item.callNum]);
+        app.io.emit('getInfo', result);
       })
     });
 

@@ -30,7 +30,13 @@ inventory.get = co.wrap(function*(call) {
   if(results.rows.length === 0) {
     return yield Promise.resolve(null);
   }
-  var data = [];
+  var result = results.rows[0];
+  result.languages = result.languages.filter(function(a) {
+    return a !== null;
+  });
+  result.media = result.media.filter(function(a) {
+    return a !== null;
+  });
   return yield Promise.resolve(results.rows[0]);
 });
 
