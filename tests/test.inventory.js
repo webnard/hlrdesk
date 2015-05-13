@@ -23,6 +23,22 @@ describe('inventory', function() {
     });
   });
 
+  describe('#update', function() {
+    it('should throw an error if a non-admin tries to update an item', function() {
+      expect(inventory.update('notadm', 'DEADBEEF', {})).to.eventually.be.rejected;
+    });
+
+    it('should throw an error if an admin attempts to edit non-whitelisted property', function() {
+      var props = {'edited_by': 'prabbit'};
+      expect(inventory.update('tock', 'DEADBEEF', props)).to.eventually.be.rejected;
+    });
+
+    it("should throw an error if I try to replace an item's call number with another's", function() {
+      var props = {'call': 'HELLO'};
+      expect(inventory.update('tock', 'DEADBEEF', props)).to.eventually.be.rejected;
+    });
+  });
+
   describe('#search(value, user, params)', function () {
     it('should return an array when items are found', function* () {
       var user = 'tock';

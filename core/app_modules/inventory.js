@@ -5,6 +5,7 @@ var db = require('./db');
 var co = require('co');
 var auth = require('./auth');
 var assert = require('assert');
+var itemHistory = require('./item-history');
 
 var inventory = {};
 
@@ -66,60 +67,49 @@ inventory.search = co.wrap(function* (text, username, params) {
 });
 
 inventory.update = co.wrap(function*(user, call, details) {
-  assert(yield auth.isAdmin(user), "User must be an administrator to update products.");
+  assert(yield auth.isAdmin(user), "Must be an admin to update.");
+  assert(details === 'object');
+  assert(yield inventory.exists(call), "Item does not exist.");
+
   var client = db();
-  
-  yield client.query("UPDATE inventory SET (call, quantity, title, checkout_period, is_reserve, is_duplicatable, on_hummedia, edited_by, date_edited, notes) = ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP, $9) WHERE  call = $10;", 
-  [details.newCall, details.quantity, details.title, details.checkLength, details.reserve, details.duplicatable, details.online, that.user, details.notes, details.origCall]);
 
-  var amount;
-  var title;
-  var res;
-  var dup;
-  var hum;
-  var allNotes = '';
+  var whitelist = [
+    'call',
+    'quantity',
+    'title',
+    'checkout_period',
+    'is_reserve',
+    'is_duplicatable',
+    'on_hummedia',
+    'notes'
+  ];
 
-  if(edited.origCall !== edited.newCall) {
-    allNotes= "UPDATED CALL NUMBER = ["+ edited.newCall + "]. Previous call number was " + edited.origCall + ".";
-  }
-  if (edited.oldItem.quant != edited.quantity)
-  {
-    allNotes +="New quantity = ["+edited.quantity + "] was [" + edited.oldItem.quant + "] ";
-    amount = edited.quantity;
-  }
-  if (edited.oldItem.titl != edited.title)
-  {
-    allNotes +="New title = ["+edited.title + "] was [" + edited.oldItem.titl + "] ";
-    title = edited.title;
-  }
-  if (edited.oldItem.reserv != edited.reserve)
-  {
-    allNotes +="Reserve is now ["+edited.reserve + "] ";
-    res = edited.reserve;
-  }
-  if (edited.oldItem.dup != edited.duplicatable)
-  {
-    allNotes +="Duplicatable is now [" + edited.duplicatable + "] ";
-    dup = edited.duplicatable;
-  }
-  if (edited.oldItem.hum != edited.online)
-  {
-    allNotes += "'Is on Hummedia' option is now ["+edited.online + "]";
-    hum = edited.online;
-  }
-  var c = edited.oldItem.notes;
-  if (edited.oldItem.notes == null){c = '';}
-  if (edited.notes != c)
-  {
-    allNotes +="Notes = ["+edited.notes + "] was [" + edited.oldItem.notes + "] ";
-  }
+  var columns = 'edited_by, date_edited';
+  var valStr = '$1, CURRENT_TIMESTAMP';
+  var vals = [user];
 
-  if (allNotes){//if nothing but call is changed, do nothing, otherwise will update
-    // don't yield, because if this fails, well, eh, not a big deal.
-    client.query("INSERT INTO item_history (call_number, type, who, title, date_changed, notes) VALUES ($1, 'Edit', $2, $3, CURRENT_TIMESTAMP, $4) ",
-    [edited.newCall, that.user, edited.title, allNotes ])
-  }
+  Object.keys(details).forEach(function(key) {
+    assert(whitelist.indexOf(key) !== -1, 'Unknown property "' + key + '"');
 
+    if(columns.length) {
+      columns += ', ';
+    }
+    if(valStr.length) {
+      columns += ', ';
+    }
+
+    columns += key;
+    vals.push(details[key]);
+    valStr += '$' + vals.length;
+  });
+
+  vals.push(call);
+
+  yield client.query("UPDATE inventory SET (" + columns + ") = " +
+                     "(" + valStr + ") WHERE call = $" + (vals.length) +";",
+                     vals);
+
+  itemHistory.update(call, details);
 });
 
 inventory.check_in = co.wrap(function*(call, patron, employee) {
@@ -176,7 +166,7 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
 
       var q = 'INSERT INTO checked_out(call, copy, netid, attendant, due)' +
         'VALUES($1, $2, $3, $4, $5)';
-        
+
       var notes ='Item checked out by ' + employee + ' due on ' + due.toString().substring(0,10);
       yield client.nonQuery("INSERT INTO item_history (call_number, type, who, date_changed, notes) VALUES ($1, 'Checkout', $2, CURRENT_TIMESTAMP, $3) ", [call, patron, notes ])
 
