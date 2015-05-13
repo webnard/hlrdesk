@@ -173,16 +173,16 @@ CREATE TABLE media_items (
   medium character varying(150) not null,
   call character varying(32) not null,
   CONSTRAINT media_items_pkey primary key (medium, call),
-  CONSTRAINT media_inventory_call_fkey FOREIGN KEY (call) REFERENCES inventory(call),
-  CONSTRAINT medium_fkey FOREIGN KEY (medium) REFERENCES media(medium)
+  CONSTRAINT media_inventory_call_fkey FOREIGN KEY (call) REFERENCES inventory(call) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT medium_fkey FOREIGN KEY (medium) REFERENCES media(medium) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE languages_items (
   language_code character varying(3) not null,
   inventory_call character varying(32) not null,
   CONSTRAINT languages_items_pkey primary key (language_code, inventory_call),
-  CONSTRAINT inventory_call_fkey FOREIGN KEY (inventory_call) REFERENCES inventory(call),
-  CONSTRAINT language_code_fkey FOREIGN KEY (language_code) REFERENCES languages(code)
+  CONSTRAINT inventory_call_fkey FOREIGN KEY (inventory_call) REFERENCES inventory(call) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT language_code_fkey FOREIGN KEY (language_code) REFERENCES languages(code) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 --
