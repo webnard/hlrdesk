@@ -16,6 +16,13 @@ var displayedDate = window.now.toDateString();
 var days = ["", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 var currentView = "week";
 
+if (window.isAdmin){
+  $("#requestButton" ).hide();
+}
+else{
+  $("#saveButton").hide();
+}
+
 document.getElementById("resourceSelect").addEventListener("change", function() {changeResource()});
 document.getElementById("displayRoomSelect").addEventListener("change", function(event) {updateGrid();});
 document.getElementById("dateSelect").addEventListener("change", function(event) {selectCell();});
@@ -29,6 +36,7 @@ document.getElementById("previousDay").addEventListener("click", function() {cha
 document.getElementById("nextDay").addEventListener("click", function() {changeDay(1);});
 document.getElementById("saveButton").addEventListener("click", function() {submit();});
 document.getElementById("deleteButton").addEventListener("click", function() {cancel();});
+document.getElementById("requestButton").addEventListener("click", function() {submit();});
 
 function updateGrid() {
 
