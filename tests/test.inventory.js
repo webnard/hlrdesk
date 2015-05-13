@@ -37,6 +37,14 @@ describe('inventory', function() {
       var props = {'call': 'HELLO'};
       expect(inventory.update('tock', 'DEADBEEF', props)).to.eventually.be.rejected;
     });
+
+    it("should update whatever I pass in", function*() {
+      var props = {'title': 'Hello, Friend'};
+      yield inventory.update('tock', 'DEADBEEF', props);
+      var result = yield inventory.get('DEADBEEF');
+      console.log(result);
+      expect(result.title).to.equal(props.title);
+    });
   });
 
   describe('#search(value, user, params)', function () {

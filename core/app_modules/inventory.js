@@ -30,6 +30,7 @@ inventory.get = co.wrap(function*(call) {
   if(results.rows.length === 0) {
     return yield Promise.resolve(null);
   }
+  var data = [];
   return yield Promise.resolve(results.rows[0]);
 });
 
@@ -66,11 +67,7 @@ inventory.search = co.wrap(function* (text, username, params) {
   return yield Promise.resolve(result.rows);
 });
 
-inventory.update = co.wrap(function*(user, call, details) {
-  assert(yield auth.isAdmin(user), "Must be an admin to update.");
-  assert(details === 'object');
-  assert(yield inventory.exists(call), "Item does not exist.");
-
+var upsert = co.wrap(function*(call, user, details, update) {
   var client = db();
 
   var whitelist = [
@@ -95,7 +92,7 @@ inventory.update = co.wrap(function*(user, call, details) {
       columns += ', ';
     }
     if(valStr.length) {
-      columns += ', ';
+      valStr += ', ';
     }
 
     columns += key;
@@ -103,13 +100,42 @@ inventory.update = co.wrap(function*(user, call, details) {
     valStr += '$' + vals.length;
   });
 
-  vals.push(call);
+  var prefix = update ? 'UPDATE' : 'INSERT INTO';
 
-  yield client.query("UPDATE inventory SET (" + columns + ") = " +
-                     "(" + valStr + ") WHERE call = $" + (vals.length) +";",
-                     vals);
+  var query = prefix + " inventory SET (" + columns + ") = " +
+            "(" + valStr + ")";
 
-  itemHistory.update(call, details);
+  if(!update)  {
+    vals.push(call);
+    query += " WHERE call = $" + (vals.length);
+  }
+
+  console.log(query);
+
+  yield client.query(query, vals);
+
+  if(update) {
+    itemHistory.update(call, details);
+  }
+  else
+  {
+    // TODO
+  }
+});
+
+inventory.insert = co.wrap(function*(user, call, details) {
+  assert(yield auth.isAdmin(user), "Must be an admin to update.");
+  assert(typeof details === 'object', "Details must be an object, was " + (typeof details));
+
+  yield upsert(call, user, details, false);
+});
+
+inventory.update = co.wrap(function*(user, call, details) {
+  assert(yield auth.isAdmin(user), "Must be an admin to update.");
+  assert(typeof details === 'object', "Details must be an object, was " + (typeof details));
+  assert(yield inventory.exists(call), "Item does not exist.");
+
+  yield upsert(call, user, details, true);
 });
 
 inventory.check_in = co.wrap(function*(call, patron, employee) {
