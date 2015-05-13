@@ -23,8 +23,9 @@ module.exports = function editCatalog(socket, app) {
       var errMessage = ' attempted to get info of ' + item.callNum;
       checkMe(this, errMessage, function success()
       {
-        var result = yield t.queryOne(query, [item.callNum]);
-        app.io.emit('getInfo', result);
+        inv.get(item.callNum).then(function(result) {
+          app.io.emit('getInfo', result);
+        });
       })
     });
 
