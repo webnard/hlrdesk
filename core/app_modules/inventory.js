@@ -85,6 +85,10 @@ var upsert = co.wrap(function*(call, user, details, update) {
   var valStr = '$1, CURRENT_TIMESTAMP';
   var vals = [user];
 
+  if(!update) {
+    details.call = call;
+  }
+
   Object.keys(details).forEach(function(key) {
     assert(whitelist.indexOf(key) !== -1, 'Unknown property "' + key + '"');
 
@@ -101,11 +105,13 @@ var upsert = co.wrap(function*(call, user, details, update) {
   });
 
   var prefix = update ? 'UPDATE' : 'INSERT INTO';
+  var set = (update ? "SET" : "");
+  var eq = (update ? "=" : "VALUES");
 
-  var query = prefix + " inventory SET (" + columns + ") = " +
-            "(" + valStr + ")";
+  var query = prefix + " inventory " + set + "(" + columns + ") " +
+            eq + " (" + valStr + ")";
 
-  if(!update)  {
+  if(update)  {
     vals.push(call);
     query += " WHERE call = $" + (vals.length);
   }
@@ -123,7 +129,7 @@ var upsert = co.wrap(function*(call, user, details, update) {
   }
 });
 
-inventory.insert = co.wrap(function*(user, call, details) {
+inventory.create = co.wrap(function*(user, call, details) {
   assert(yield auth.isAdmin(user), "Must be an admin to update.");
   assert(typeof details === 'object', "Details must be an object, was " + (typeof details));
 

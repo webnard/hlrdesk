@@ -23,6 +23,18 @@ describe('inventory', function() {
     });
   });
 
+  describe('#create', function() {
+    it('should throw an error if a non-admin tries to create an item', function() {
+      expect(inventory.create('notadm', 'I-DO-NOT-EXIST', {})).to.eventually.be.rejected;
+    });
+
+    it('should create the item with the given call', function*() {
+      var call = 'I-DO-NOT-EXIST';
+      yield inventory.create('prabbit', call, {});
+      expect(yield inventory.get(call)).to.not.be.null;
+    });
+  });
+
   describe('#update', function() {
     it('should throw an error if a non-admin tries to update an item', function() {
       expect(inventory.update('notadm', 'DEADBEEF', {})).to.eventually.be.rejected;
