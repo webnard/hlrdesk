@@ -6,16 +6,12 @@ window.HLRDESK.init.editCatalog = function() {
     type = 'update';
     origCall = result.call;
     $('#callNumber').attr('value', result.call);
-    $('#callNumber').attr('placeholder', result.call);
 
     $('#quantity').attr('value', result.quantity);
-    $('#quantity').attr('placeholder', result.quantity);
 
     $('#title').attr('value', result.title);
-    $('#title').attr('placeholder', result.title);
 
     $('#checkoutLength').attr('value', result.checkout_period);
-    $('#checkoutLength').attr('placeholder', result.checkout_period);
 
     $('#onReserve').attr('checked', result.is_reserve);
 
@@ -46,7 +42,6 @@ window.HLRDESK.init.editCatalog = function() {
      }
 
     $('#notes').attr('value', result.notes);
-    $('#notes').attr('placeholder', result.notes);
     oldItem =
     {
       quant: result.quantity,

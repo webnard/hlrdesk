@@ -61,14 +61,14 @@ describe('inventory', function() {
       var props = {'languages': ['deu']};
       yield inventory.update('tock', 'DEADBEEF', props);
       var result = yield inventory.get('DEADBEEF');
-      expect(result.languages).to.deepEqual(props.languages);
+      expect(result.languages).to.deep.equal(props.languages);
     });
 
     it("should allow me to update media", function*() {
       var props = {'media': ['AUDIO CASSETTE']};
       yield inventory.update('tock', 'DEADBEEF', props);
       var result = yield inventory.get('DEADBEEF');
-      expect(result.languages).to.deepEqual(props.media);
+      expect(result.media).to.deep.equal(props.media);
     });
   });
 

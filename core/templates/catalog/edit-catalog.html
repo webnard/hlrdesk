@@ -20,7 +20,7 @@
 <table >
   <tr>
     <td><label for=callNumber>Call Number</label></td> 
-     <td><input id="callNumber" required></td>
+     <td><input id="callNumber" required disabled=disabled></td>
   </tr>
     <tr>
     <td><label for=title>Title</label></td> 
@@ -89,7 +89,6 @@
 </template>
 <script>
     var origCall;
-    var oldItem;
     var type;
     
     function reserveAlert(){
@@ -105,46 +104,33 @@
       openModal = window.patternlibrary.displayModal(newItem);
       type = 'add';
       $('#quantity').attr('value', 1);
-      $('#quantity').attr('placeholder', 1);
       document.getElementById('headText').textContent='Add Item';
       $('#checkoutLength').attr('value', 1);
-      $('#checkoutLength').attr('placeholder', 1);
     }
-    function deleteItem()
+    function deleteItem(evt)
     {
       var socket = window.io();
       var delInfo = {origCall, token: window.HLRDESK.token}
       socket.emit('deleteItem', delInfo);
     }
     function updateDatabase(){
-      var newCall = $('#callNumber').val();
-      var title = $('#title').val();
-      var media = $('#mediaType').val();
-      var languages = $('#language').val();
-      var quantity = parseInt($('#quantity').val(),10);
-      var checkLength = parseInt($('#checkoutLength').val(),10);
-      var reserve = document.getElementById('onReserve').checked;
-      var online = document.getElementById('HLROnline').checked;
-      var duplicatable = document.getElementById('duplicatable').checked;
-      var notes = $('#notes').val();
-      var edited = { 
-          origCall, 
-          newCall, 
-          title, 
-          media, 
-          languages, 
-          quantity, 
-          checkLength, 
-          reserve, 
-          online, 
-          duplicatable, 
-          notes, 
-          type, 
-          oldItem,
-          token: window.HLRDESK.token
-        };
       var socket = window.io();
-      socket.emit('changeInfo', edited);
+
+      socket.emit('changeInfo', { 
+        origCall: origCall, 
+        'call': $('#callNumber').val(), 
+        title: $('#title').val(), 
+        media: $('#media').val(), 
+        languages: $('#language').val(), 
+        quantity: parseInt($('#quantity').val(),10), 
+        checkout_period: parseInt($('#checkoutLength').val(),10), 
+        is_reserve: document.getElementById('onReserve').checked, 
+        on_hummedia: document.getElementById('HLROnline').checked, 
+        is_duplicatable: document.getElementById('duplicatable').checked, 
+        notes: $('#notes').val(), 
+        type: type, 
+        token: window.HLRDESK.token
+      });
     }
 </script>
 

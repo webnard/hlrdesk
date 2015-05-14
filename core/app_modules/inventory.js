@@ -84,8 +84,13 @@ var upsert = co.wrap(function*(call, user, details, update) {
     'is_reserve',
     'is_duplicatable',
     'on_hummedia',
-    'notes'
+    'notes',
   ];
+
+  var specialKeys = ['languages','media'];
+
+  // TODO: remove the need for this (the socket passes these up)
+  var ignore = ['origCall', 'type'];
 
   var columns = 'edited_by, date_edited';
   var valStr = '$1, CURRENT_TIMESTAMP';
@@ -94,8 +99,15 @@ var upsert = co.wrap(function*(call, user, details, update) {
   if(!update) {
     details.call = call;
   }
+  else
+  {
+    ignore.push('call'); // don't want to deal with updating call nums right now
+  }
 
   Object.keys(details).forEach(function(key) {
+    if(ignore.indexOf(key) !== -1 || specialKeys.indexOf(key) !== -1) {
+      return;
+    }
     assert(whitelist.indexOf(key) !== -1, 'Unknown property "' + key + '"');
 
     if(columns.length) {
@@ -122,9 +134,29 @@ var upsert = co.wrap(function*(call, user, details, update) {
     query += " WHERE call = $" + (vals.length);
   }
 
-  console.log(query);
+  yield client.transaction(function*(t) {
+    yield t.nonQuery(query, vals);
 
-  yield client.query(query, vals);
+    if(details.languages !== undefined) {
+      yield t.nonQuery('DELETE FROM languages_items WHERE inventory_call = $1', [call]);
+      // can't yield within Array.forEach
+      for(let i = 0; i<details.languages.length; i++) {
+        yield t.nonQuery('INSERT INTO languages_items' +
+          '(language_code, inventory_call) VALUES ($1, $2)',
+          [details.languages[i], call]);
+      }
+    }
+
+    if(details.media !== undefined) {
+      yield t.nonQuery('DELETE FROM media_items WHERE call = $1', [call]);
+      // can't yield within Array.forEach
+      for(let i = 0; i<details.media.length; i++) {
+        yield t.nonQuery('INSERT INTO media_items' +
+          '(medium, call) VALUES ($1, $2)',
+          [details.media[i], call]);
+      }
+    }
+  });
 
   if(update) {
     itemHistory.update(call, details);

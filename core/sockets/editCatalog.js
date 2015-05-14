@@ -48,13 +48,15 @@ module.exports = function editCatalog(socket, app) {
       var client = db();
       if (edited.type == "update")
       {
-        inv.update(this.user, edited.newCall, edited).catch(function() {
+        inv.update(this.user, edited.origCall, edited).catch(function(err) {
+          console.error(err);
           that.emit('alertMessage', 'There was an error updating the database.');
         });
       }
       else
       {
-        inv.create(this.user, edited.newCall, edited).catch(function() {
+        inv.create(this.user, edited.call, edited).catch(function(err) {
+          console.error(err);
           that.emit('alertMessage', 'There was an error updating the database.');
         });
       }

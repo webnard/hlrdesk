@@ -248,6 +248,7 @@ socket.start(app);
 
 socket.use(function*(next){
   this.socket.user = yield auth.getUser(this.data.token);
+  delete this.data.token;
   yield next;
 });
 
