@@ -50,12 +50,25 @@ describe('inventory', function() {
       expect(inventory.update('tock', 'DEADBEEF', props)).to.eventually.be.rejected;
     });
 
-    it("should update whatever I pass in", function*() {
+    it("should allow me to update the title of an item", function*() {
       var props = {'title': 'Hello, Friend'};
       yield inventory.update('tock', 'DEADBEEF', props);
       var result = yield inventory.get('DEADBEEF');
-      console.log(result);
       expect(result.title).to.equal(props.title);
+    });
+
+    it("should allow me to update languages", function*() {
+      var props = {'languages': ['deu']};
+      yield inventory.update('tock', 'DEADBEEF', props);
+      var result = yield inventory.get('DEADBEEF');
+      expect(result.languages).to.deepEqual(props.languages);
+    });
+
+    it("should allow me to update media", function*() {
+      var props = {'media': ['AUDIO CASSETTE']};
+      yield inventory.update('tock', 'DEADBEEF', props);
+      var result = yield inventory.get('DEADBEEF');
+      expect(result.languages).to.deepEqual(props.media);
     });
   });
 
