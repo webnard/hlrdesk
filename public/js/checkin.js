@@ -1,28 +1,27 @@
-(function(){
+window.HLRDESK.init.checkin = function() {
   var socket = io();
 
   var employee = window.patron
-  console.log(employee)
-  socket.on('checkin event', function(event){
-  })
+  socket.on('checkin event', clearItems);
 
-  window.checkin = function() {
-    var num_selected = $(".selected").length
-    var call_list = []
-    var patron_list = []
-    for (i=0; i < num_selected; i++){
-      call_number = $(".selected").eq(i).children(":first").text()
-      patron = $(".selected").eq(i).children(":first").next().next().text()
-      call_list.push(call_number);
-      patron_list.push(patron);
-    }
-    for (i=0; i<call_list.length; i++){
-      socket.emit('checkin event', {"call" : call_list[i], "patron" : patron_list[i], 'employee' : employee});
-    }
+  function checkin() {
+    $(".selected").each(function() {
+
+      socket.emit('checkin event', {
+        call: $(this).data('call'),
+        patron: $(this).data('patron'),
+        domid: this.id, // add so we know what to clear from client's table
+        token: window.HLRDESK.token
+      });
+    });
   }
-})();
 
-window.HLRDESK.init.checkin = function() {
+  function clearItems(data){
+    var selected = document.getElementById(data.domid);
+    selected.parentNode.removeChild(selected);
+    toggleDisabledButtons();
+  }
+
   $("#filter").keyup(function(){
     var filter = $(this).val(), count = 0;
     $("tbody tr").each(function(){
@@ -38,36 +37,33 @@ window.HLRDESK.init.checkin = function() {
     return $(node).data("date")||$(node).text()
   }
   $(".checkIN").tablesorter( {textExtraction: myTextExtraction} );
-  function checkInItems(evt){
-    evt.preventDefault();
-    var selected = document.querySelectorAll('.selected');
-    for(var i = 0; i<selected.length; i++){
-      selected[i].parentNode.removeChild(selected[i]);
-    };
-  }
-  document.querySelector('.check-in-btn').addEventListener ("click", checkInItems);
+  document.querySelector('.check-in-btn').addEventListener ("click", checkin);
 
-  $("#checked-out-items tbody tr").click(function(){
-    $( this ).toggleClass( "selected" );
+  function toggleDisabledButtons() {
     var checkInButton = document.querySelector('.check-in-btn')
     var selected = document.querySelectorAll('.selected');
     var extendButton = document.querySelector('.extend-btn')
 
-  if(selected.length === 0) {
-    checkInButton.setAttribute('disabled','disabled');
-    extendButton.setAttribute('disabled','disabled');
+    if(selected.length === 0) {
+      checkInButton.setAttribute('disabled','disabled');
+      extendButton.setAttribute('disabled','disabled');
+    }
+    else
+    {
+      checkInButton.removeAttribute('disabled');
+      extendButton.removeAttribute('disabled');
+    }
   }
-  else
-  {
-    checkInButton.removeAttribute('disabled');
-    extendButton.removeAttribute('disabled');
-  }
+
+  $("#checked-out-items tbody tr").click(function(){
+    $( this ).toggleClass( "selected" );
+    toggleDisabledButtons();
   });
-  
+
   $("#add").click(function(){
     $( '#checked-out-items tbody tr:visible' ).addClass( "selected" );
   });
-  
+
   $("#remove").click(function(){
     $( '#checked-out-items tbody tr:visible' ).removeClass( "selected" );
   });
