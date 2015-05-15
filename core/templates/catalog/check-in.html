@@ -1,15 +1,14 @@
-<link rel="stylesheet" type="text/css" href="/css/checkIN.css" />
 <section id="checkIn">
-<form id="live-search" action="" class="keepTop" method="">
+<div id="live-search" class="keepTop">
     <fieldset>
         <input type="text" class="text-input" id="filter" value="" placeholder="Search"/>
         <span id="filter-count"></span>
-        <button class="mainBtn" onclick="window.checkin()">Check In</button>
-        <button class="mainBtn">Extend</button>
-        <button class="mainBtn" type="button" action="" id="add"">Select All</button>
-        <button class="mainBtn" type="button" action="" id="remove"">Select None</button>
+        <button class="mainBtn check-in-btn" disabled>Check In</button>
+        <button class="mainBtn extend-btn" disabled>Extend</button>
+        <button class="mainBtn" id="add">Select All</button>
+        <button class="mainBtn" id="remove">Select None</button>
     </fieldset>
-</form>
+</div>
 <table id=checked-out-items class="checkIN tablesorter">
   <thead>
     <tr>
@@ -22,7 +21,14 @@
   </thead>
   <tbody>
     <% items.forEach(function(item, index) { %>
-      <tr class='<%= item.overdue? "overdue" : "" %>'>
+      <tr
+        id='<%= (item.due + item.call + item.owner + item.copy).replace(/\s+/g,'') %>'
+        data-due='<%= item.due %>'
+        data-call='<%= item.call %>'
+        data-patron='<%= item.owner %>'
+        data-copy='<%= item.copy %>'
+        class='<%= item.overdue? "overdue" : "" %>'
+      >
         <td><%= item.call_number %></td>
         <td><%= item.name %></td>
         <td><%= item.owner %></td>
