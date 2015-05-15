@@ -156,11 +156,16 @@ app.use(_.get("/extras", function *() {
   yield this.render('extras', {layout: this.USE_LAYOUT });
 }));
 
-app.use(_.get("/calendar", function *() {
-  var client = db();
-  var isAdmin = yield auth.isAdmin(this.session.user);
-  var allCalendarEvents = yield client.query('SELECT * FROM calendar;');
-  yield this.render('calendar', {layout: this.USE_LAYOUT, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user, isAdmin:isAdmin});
+app.use(_.get("/calendar", function *(next) {
+  // temporary redirect so we can spend time integrating
+  // the desktop application
+  this.redirect('https://hlr.byu.edu/schedule/');
+  yield next;
+
+  //var client = db();
+  //var isAdmin = yield auth.isAdmin(this.session.user);
+  //var allCalendarEvents = yield client.query('SELECT * FROM calendar;');
+  //yield this.render('calendar', {layout: this.USE_LAYOUT, date: new Date(), allCalendarEvents: allCalendarEvents, user: this.session.user, isAdmin:isAdmin});
 }));
 
 app.use(_.get("/signin", function *(next){
