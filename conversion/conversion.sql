@@ -36,6 +36,7 @@ CREATE VIEW checked_out AS
 
 DROP VIEW IF EXISTS inventory;
 
+-- TODO: are volumes applicable here at all?
 CREATE VIEW inventory AS
   -- TITLES TABLE
   SELECT
@@ -74,5 +75,7 @@ CREATE VIEW inventory AS
   ;
 
 DROP VIEW IF EXISTS media_items;
+
 CREATE VIEW media_items
-  SELECT
+  SELECT description `medium`, call_number `call`
+  FROM titles JOIN media ON media.code = titles.media;
