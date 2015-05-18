@@ -118,5 +118,19 @@ module.exports = {
     else {
       return yield Promise.resolve(false);
     }
+  }),
+  
+  deladmin: co.wrap(function*(user, netid, override) {
+    var client = db();
+    var is_user = yield check_id(netid);
+    var is_admin = yield isAdmin(netid);
+    var user_is_admin = yield isAdmin(user);
+    if (is_user && is_admin && user_is_admin){
+      client.query("UPDATE users SET admin='FALSE' WHERE netid = $1;", [netid]);
+      return yield Promise.resolve(true);
+    }
+    else {
+      return yield Promise.resolve(false);
+    }
   })
 };

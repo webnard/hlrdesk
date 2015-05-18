@@ -16,10 +16,10 @@ if (notify){
 }
 
 
-var admins_string = "<ol>"
+var admins_string = "<p>Current Admins</p><ol>"
 
 for (var i = 0; i < admins.length; i++){
-  admins_string += "<li>"+admins[i].netid + "</li>"
+  admins_string += "<li><form method='POST'><body>"+admins[i].netid + "</body><button type='submit' class='redBtn' style='padding: 0.2em'>Remove</button><input type = 'hidden' name='user' value = "+admins[i].netid+"><input type='hidden' value='remove' name='action' /><input type = 'hidden' id = 'csrf' value = '"+window.csrf+"' name = 'csrf' /></form></li>"
 }
 
 admins_string += "</ol>"
