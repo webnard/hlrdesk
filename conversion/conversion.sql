@@ -1,16 +1,38 @@
-DROP VIEW IF EXISTS checked_out;
-
-CREATE VIEW checked_out AS
-  SELECT `COPY` `copy`, `callnumber` `call`, `NETID` `netid`, `DUEDATETIME` `due`,
-  '::ROBO::' `attendant` -- the attendants aren't listed, so make an obviously fake one
-  FROM `checkout` JOIN
-  titles ON titles.AQNO = checkout.AQNO;
-  -- TODO: union the reserveout table
-
 DROP VIEW IF EXISTS users;
 
 CREATE VIEW users AS
-  SELECT NetID netid, TRUE admin FROM employee;
+  SELECT * FROM (
+    SELECT NetID netid, TRUE admin FROM employee
+    UNION ALL
+    SELECT NetID netid, netid IN(SELECT NetID FROM employee) admin FROM reserveout
+    UNION ALL
+    SELECT NetID netid, netid IN(SELECT NetID FROM employee) admin FROM checkout
+  ) all_users GROUP BY netid
+  ;
+
+DROP VIEW IF EXISTS checked_out;
+
+CREATE VIEW checked_out AS
+  SELECT
+  `COPY` `copy`,
+  `callnumber` `call`,
+  `NETID` `netid`,
+  `DUEDATETIME` `due`,
+  '::ROBO::' `attendant` -- the attendants aren't listed, so make an obviously fake one
+  FROM `checkout` JOIN
+  titles ON titles.AQNO = checkout.AQNO
+
+  UNION ALL
+
+  SELECT
+  `COPY` `copy`
+  `callnumber` `call`,
+  `NETID` `netid`,
+  `DUEDATETIME` `due`,
+  '::ROBO::' `attendant` -- the attendants aren't listed, so make an obviously fake one
+  FROM `reserveout` JOIN
+  titles ON titles.AQNO = reserveout.AQNO
+  ;
 
 DROP VIEW IF EXISTS inventory;
 
@@ -51,3 +73,6 @@ CREATE VIEW inventory AS
   FROM reserveitems
   ;
 
+DROP VIEW IF EXISTS media_items;
+CREATE VIEW media_items
+  SELECT
