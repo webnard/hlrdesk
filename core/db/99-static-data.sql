@@ -1,7 +1,7 @@
 ---
 --- This file is reserved for data that shouldn't be hard-coded,
 --- but which is relatively unchanging and irrespective of environment.
---- 
+---
 --- When modifying, please make sure that duplicates are ignored
 ---
 --- Thanks to EoghanM and Bill Karwin for duplication handling code.
@@ -28,18 +28,18 @@ INSERT INTO media(medium) VALUES
 DROP RULE "media_on_duplicate_ignore" ON "media";
 
 CREATE RULE "languages_on_duplicate_ignore" AS ON INSERT TO "languages"
-  WHERE EXISTS(SELECT 1 FROM languages 
+  WHERE EXISTS(SELECT 1 FROM languages
                 WHERE (code)=(NEW.code))
   DO INSTEAD NOTHING;
 
 INSERT INTO languages(code, name) values
-('hye','Armenian'),
 ('afr','Afrikaans'),
 ('ara','Arabic'),
 ('bul','Bulgarian'),
 ('ceb','Cebuano'),
 ('ces','Czech'),
 ('cmn','Chinese (Mandarin)'),
+('cym','Welsh')
 ('dan','Danish'),
 ('deu','German'),
 ('ell','Greek (Modern)'),
@@ -54,6 +54,7 @@ INSERT INTO languages(code, name) values
 ('heb','Hebrew'),
 ('hmn','Hmong'),
 ('hun','Hungarian'),
+('hye','Armenian'),
 ('ind','Indonesian'),
 ('isl','Icelandic'),
 ('ita','Italian'),
@@ -83,6 +84,10 @@ INSERT INTO languages(code, name) values
 ('tgl','Tagalog'),
 ('tha','Thai'),
 ('ton','Tongan'),
+('tur','Turkish'),
+('urd','Urdu'),
+('uzb','Uzbek'),
+('vie','Vietnamese'),
 ('yue','Chinese (Yue/Cantonese)');
 
 DROP RULE "languages_on_duplicate_ignore" ON "languages";
