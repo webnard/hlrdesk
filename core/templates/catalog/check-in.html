@@ -17,7 +17,7 @@
       <th scope=col class="colWidth"><i class="fa fa-sort"></i> Net ID</th>
       <th scope=col class="colWidth"><i class="fa fa-sort"></i> Notes</th>
       <th scope=col class="colWidth col-due"><i class="fa fa-sort"></i> Due</th>
-      <th scope=col>More</th>
+      <!--<th scope=col>More</th>-->
     </tr>
   </thead>
   <tbody>
@@ -35,7 +35,7 @@
         <td><%= item.owner %></td>
         <td><%= item.notes || "" %></td>
         <td data-date="<%=item.due.getTime()%>"><%= moment(item.due).format("MMM D") %></td>
-        <td ><i class="fa fa-plus-square-o"></i></td>
+        <!--<td ><i class="fa fa-plus-square-o"></i></td>-->
       </tr>
     <% }); %>
   </tbody>
