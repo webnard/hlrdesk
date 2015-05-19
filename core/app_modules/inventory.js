@@ -124,7 +124,9 @@ Object.defineProperty(inventory, 'checked_out', {
                 'c.extensions, i.notes,i.title as name, i.call, ' +
                 '( SELECT array_agg(l.name) as languages FROM languages l ' +
                 'JOIN languages_items li ON li.language_code = l.code AND ' +
-                'li.inventory_call = i.call ) ' +
+                'li.inventory_call = i.call ), ' +
+                '( SELECT array_agg(m.medium) as media FROM media_items m ' +
+                'WHERE m.call = i.call ) ' +
                 'FROM checked_out c JOIN inventory i ON c.call = i.call;';
 
     var results = (yield client.query(query)).rows;
