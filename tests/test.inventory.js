@@ -57,7 +57,7 @@ describe('inventory', function() {
     it('should return expected properties', function* () {
       var items = yield inventory.checked_out;
       var item = items[0];
-      var keys = 'call_number overdue name owner due attendant copy extensions'.split(' ');
+      var keys = 'call_number overdue name owner due attendant copy extensions media languages notes'.split(' ');
       expect(item).to.contain.keys(keys);
     });
   });
