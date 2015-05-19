@@ -229,25 +229,47 @@ app.use(_.get("/logout", function *(){
 }));
 
 app.use(_.post("/mkadmin",function *(){
+  var client = db();
   var body = yield parse(this) // co-body or something
-  try {
-    this.assertCSRF(body.csrf);
-    to_mk=body.user;
-    override = (body.override=="true");
-    status = yield auth.mkadmin(this.session.user, to_mk, override);
-    if(!status){
-      this.redirect('/mkadmin?status='+status+'&toMk='+to_mk);
+  this.assertCSRF(body.csrf);
+  if (body.action == "add") {
+    try {
+      to_mk=body.user;
+      override = (body.override=="true");
+      status = yield auth.mkadmin(this.session.user, to_mk, override);
+      if(!status){
+        this.redirect('/mkadmin?status='+status+'&toMk='+to_mk);
+      }
+      else{
+        this.redirect('/mkadmin');
+      }
     }
-    else{
-      this.redirect('/mkadmin');
+    catch (err) {
+      this.status = 403
+      this.body = {
+        message: 'This CSRF token is invalid!'
+      }
+      return
     }
-  }
-  catch (err) {
-    this.status = 403
-    this.body = {
-      message: 'This CSRF token is invalid!'
+  } else if (body.action == "remove") {
+    try {
+      to_del=body.user;
+      override = (body.override=="true");
+      status = yield auth.deladmin(this.session.user, to_del, override);
+      if(!status){
+        this.redirect('/mkadmin?status='+status+'&toDel='+to_del);
+      }
+      else{
+        this.redirect('/mkadmin');
+      }
     }
-    return
+    catch (err) {
+      this.status = 403
+      this.body = {
+        message: 'This CSRF token is invalid!'
+      }
+      return
+    }
   }
 }));
 
