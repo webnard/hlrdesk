@@ -83,6 +83,18 @@ inventory.is_checked_out = co.wrap(function*(call, copy) {
   return yield Promise.resolve(Number(result.rows[0].c) >= 1);
 });
 
+inventory.change_due = co.wrap(function*(call, copy, due, employee) {
+  assert(yield inventory.is_checked_out(call, copy), "Item isn't checked out.");
+  assert(new Date(due) >= (new Date()), "Due date " + due + " cannot be in the past");
+  assert(yield auth.isAdmin(employee), employee + ' is not an admin and cannot change due dates');
+
+  var dueFmt = moment(due).format();
+
+  var client = db();
+  yield client.nonQuery('UPDATE checked_out SET due = $1 ' +
+                        'WHERE call = $2 AND copy = $3', [dueFmt, call, copy]);
+});
+
 inventory.check_out = co.wrap(function*(items, patron, employee) {
   assert(yield auth.isAdmin(employee), employee + " is not an admin.");
   assert(yield auth.check_id(patron), patron + " is not a valid user.");

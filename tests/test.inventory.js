@@ -71,6 +71,16 @@ describe('inventory', function() {
     });
   });
 
+  describe('#change_due(call, copy, due, employee)', function() {
+    var moment = require('moment');
+    const TOMORROW = moment().add(1, 'day').toDate();
+    const YESTERDAY = moment().subtract(1, 'day').toDate();
+
+    it('should throw an error if the item is not checked out', function() {
+      expect(inventory.change_due('M347FEST',1,TOMORROW,'prabbit')).to.eventually.be.rejected;
+    });
+  });
+
   describe('#check_out([{call:..., copy:..., due:...},...], patron, employee)', function() {
     var moment = require('moment');
     const TOMORROW = moment().add(1, 'day').toDate();
