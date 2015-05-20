@@ -42,20 +42,21 @@ window.HLRDESK.init.checkin = function() {
   function toggleDisabledButtons() {
     var checkInButton = document.querySelector('.check-in-btn')
     var selected = document.querySelectorAll('.selected');
-    var extendButton = document.querySelector('.extend-btn')
 
     if(selected.length === 0) {
       checkInButton.setAttribute('disabled','disabled');
-      extendButton.setAttribute('disabled','disabled');
     }
     else
     {
       checkInButton.removeAttribute('disabled');
-      extendButton.removeAttribute('disabled');
     }
   }
 
-  $("#checked-out-items tbody tr").click(function(){
+  $("#checked-out-items tbody tr").click(function(evt){
+    if( (evt.target || evt.srcElement).classList.contains('due-extend') ) {
+      $(this).find('input[type=date]').toggleClass('active');
+      return;
+    }
     $( this ).toggleClass( "selected" );
     toggleDisabledButtons();
   });

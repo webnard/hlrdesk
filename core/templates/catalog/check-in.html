@@ -4,7 +4,6 @@
         <input type="text" class="text-input" id="filter" value="" placeholder="Search"/>
         <span id="filter-count"></span>
         <button class="mainBtn check-in-btn" disabled>Check In</button>
-        <button class="mainBtn extend-btn" disabled>Extend</button>
         <button class="mainBtn" id="add">Select All</button>
         <button class="mainBtn" id="remove">Select None</button>
     </fieldset>
@@ -34,7 +33,14 @@
         <td><%= item.name %></td>
         <td><%= item.owner %></td>
         <td><%= item.notes || "" %></td>
-        <td data-date="<%=item.due.getTime()%>"><%= moment(item.due).format("MMM D") %></td>
+        <td data-date="<%=item.due.getTime()%>">
+        <button class="due-extend fa fa-calendar" title=Extend></button>
+        <input type=date value="<%= moment(item.due).format("YYYY-MM-DD")%>" min="<%=
+          moment().format("YYYY-MM-DD")
+        %>">
+        <span class="date-truncated"><%= moment(item.due).format("MMM D") %></span>
+        </span>
+        </td>
         <!--<td ><i class="fa fa-plus-square-o"></i></td>-->
       </tr>
     <% }); %>
@@ -42,4 +48,3 @@
 </table>
 <script>window.HLRDESK.init.checkin();</script>
 </section>
-
