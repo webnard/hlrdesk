@@ -122,8 +122,6 @@ var upsert = co.wrap(function*(call, user, details, update) {
     query += " WHERE call = $" + (vals.length);
   }
 
-  console.log(query);
-
   yield client.query(query, vals);
 
   if(update) {
