@@ -39,7 +39,7 @@ INSERT INTO languages(code, name) values
 ('ceb','Cebuano'),
 ('ces','Czech'),
 ('cmn','Chinese (Mandarin)'),
-('cym','Welsh')
+('cym','Welsh'),
 ('dan','Danish'),
 ('deu','German'),
 ('ell','Greek (Modern)'),
