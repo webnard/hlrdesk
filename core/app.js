@@ -228,23 +228,23 @@ app.use(_.get("/logout", function *(){
   this.redirect(url);
 }));
 
-app.use(_.post("/mkadmin",function *(){
+app.use(_.post("/employees",function *(){
   var client = db();
   var body = yield parse(this) // co-body or something
   this.assertCSRF(body.csrf);
   if (body.action == "add") {
     try {
-      to_mk=body.user;
-      override = (body.override=="true");
-      status = yield auth.mkadmin(this.session.user, to_mk, override);
+      var to_mk=body.user;
+      var status = yield auth.mkadmin(this.session.user, to_mk, true);
       if(!status){
-        this.redirect('/mkadmin?status='+status+'&toMk='+to_mk);
+        this.redirect('/employees?status='+status+'&toMk='+to_mk);
       }
       else{
-        this.redirect('/mkadmin');
+        this.redirect('/employees');
       }
     }
     catch (err) {
+      console.error(err);
       this.status = 403
       this.body = {
         message: 'This CSRF token is invalid!'
@@ -257,10 +257,10 @@ app.use(_.post("/mkadmin",function *(){
       override = (body.override=="true");
       status = yield auth.deladmin(this.session.user, to_del, override);
       if(!status){
-        this.redirect('/mkadmin?status='+status+'&toDel='+to_del);
+        this.redirect('/employees?status='+status+'&toDel='+to_del);
       }
       else{
-        this.redirect('/mkadmin');
+        this.redirect('/employees');
       }
     }
     catch (err) {
@@ -271,9 +271,16 @@ app.use(_.post("/mkadmin",function *(){
       return
     }
   }
+  else
+  {
+    this.status = 400;
+    this.body = {
+      message: 'Invalid data'
+    }
+  }
 }));
 
-app.use(_.get("/mkadmin",function *(){
+app.use(_.get("/employees",function *(){
   var isAdmin = yield auth.isAdmin(this.session.user);
   var client = db();
   var allAdmins = yield client.query("SELECT netid FROM users WHERE admin = TRUE;");

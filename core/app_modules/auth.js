@@ -107,11 +107,11 @@ module.exports = {
     var add_user = is_user || override
     if (add_user && user_is_admin){
       if (is_user){
-        client.query("UPDATE users SET admin='TRUE' WHERE netid = $1;", [netid]);
+        yield client.nonQuery("UPDATE users SET admin='TRUE' WHERE netid = $1;", [netid]);
       }
       else{
-        client.query("INSERT INTO users (netid) values ($1);",[netid]);
-        client.query("UPDATE users SET admin='TRUE' WHERE netid = $1;", [netid]);
+        yield client.nonQuery("INSERT INTO users (netid) values ($1);",[netid]);
+        yield client.nonQuery("UPDATE users SET admin='TRUE' WHERE netid = $1;", [netid]);
       }
       return yield Promise.resolve(true);
     }
@@ -119,7 +119,7 @@ module.exports = {
       return yield Promise.resolve(false);
     }
   }),
-  
+
   deladmin: co.wrap(function*(user, netid, override) {
     var client = db();
     var is_user = yield check_id(netid);
