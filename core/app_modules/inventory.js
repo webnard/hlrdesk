@@ -83,6 +83,19 @@ inventory.is_checked_out = co.wrap(function*(call, copy) {
   return yield Promise.resolve(Number(result.rows[0].c) >= 1);
 });
 
+inventory.change_due = co.wrap(function*(call, copy, due, employee) {
+  assert(yield inventory.is_checked_out(call, copy), "Item isn't checked out.");
+  assert(new Date(due) >= (new Date()), "Due date " + due + " cannot be in the past");
+  assert(yield auth.isAdmin(employee), employee + ' is not an admin and cannot change due dates');
+
+  var dueFmt = moment(due).format();
+
+  var client = db();
+  yield client.nonQuery('UPDATE checked_out SET due = $1 ' +
+                        'WHERE call = $2 AND copy = $3', [dueFmt, call, copy]);
+  return yield Promise.resolve(true);
+});
+
 inventory.check_out = co.wrap(function*(items, patron, employee) {
   assert(yield auth.isAdmin(employee), employee + " is not an admin.");
   assert(yield auth.check_id(patron), patron + " is not a valid user.");
@@ -120,8 +133,15 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
 Object.defineProperty(inventory, 'checked_out', {
   get: co.wrap(function*() {
     var client = db();
-    var query = 'SELECT c.due, c.attendant, c.netid as owner, c.copy, c.extensions, i.title as name, i.call '+
-                'FROM checked_out c JOIN inventory i ON c.call = i.call';
+    var query = 'SELECT c.due, c.attendant, c.netid as owner, c.copy, ' +
+                'c.extensions, i.notes,i.title as name, i.call, ' +
+                '( SELECT array_agg(l.name) as languages FROM languages l ' +
+                'JOIN languages_items li ON li.language_code = l.code AND ' +
+                'li.inventory_call = i.call ), ' +
+                '( SELECT array_agg(m.medium) as media FROM media_items m ' +
+                'WHERE m.call = i.call ) ' +
+                'FROM checked_out c JOIN inventory i ON c.call = i.call;';
+
     var results = (yield client.query(query)).rows;
 
     var formatted = results.map(function(a) {

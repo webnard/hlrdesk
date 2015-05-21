@@ -57,7 +57,7 @@ describe('inventory', function() {
     it('should return expected properties', function* () {
       var items = yield inventory.checked_out;
       var item = items[0];
-      var keys = 'call_number overdue name owner due attendant copy extensions'.split(' ');
+      var keys = 'call_number overdue name owner due attendant copy extensions media languages notes'.split(' ');
       expect(item).to.contain.keys(keys);
     });
   });
@@ -68,6 +68,16 @@ describe('inventory', function() {
     });
     it('should resolve false when not checked out', function *() {
       expect(yield inventory.is_checked_out('M347FEST',1)).to.be.false;
+    });
+  });
+
+  describe('#change_due(call, copy, due, employee)', function() {
+    var moment = require('moment');
+    const TOMORROW = moment().add(1, 'day').toDate();
+    const YESTERDAY = moment().subtract(1, 'day').toDate();
+
+    it('should throw an error if the item is not checked out', function() {
+      expect(inventory.change_due('M347FEST',1,TOMORROW,'prabbit')).to.eventually.be.rejected;
     });
   });
 

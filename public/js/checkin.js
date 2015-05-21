@@ -3,6 +3,22 @@ window.HLRDESK.init.checkin = function() {
 
   var employee = window.patron
   socket.on('checkin event', clearItems);
+  socket.on('extend success', itemExtended);
+  socket.on('extend error', itemError);
+
+  function itemError(data) {
+    var el = document.getElementById(data.id);
+    $(el).find('button, input').removeAttr('disabled');
+    alert("There was an error extending the item.");
+  };
+
+  function itemExtended(data) {
+    var el = $(document.getElementById(data.id));
+    var td = el.find('td.due');
+    td.find('button, input').removeAttr('disabled');
+    td.removeClass('editing');
+    td.find('.date-truncated').text(data.formattedDate);
+  }
 
   function checkin() {
     $(".selected").each(function() {
@@ -42,20 +58,40 @@ window.HLRDESK.init.checkin = function() {
   function toggleDisabledButtons() {
     var checkInButton = document.querySelector('.check-in-btn')
     var selected = document.querySelectorAll('.selected');
-    var extendButton = document.querySelector('.extend-btn')
 
     if(selected.length === 0) {
       checkInButton.setAttribute('disabled','disabled');
-      extendButton.setAttribute('disabled','disabled');
     }
     else
     {
       checkInButton.removeAttribute('disabled');
-      extendButton.removeAttribute('disabled');
     }
   }
 
-  $("#checked-out-items tbody tr").click(function(){
+  $("#checked-out-items tbody tr").click(function(evt){
+    var el = (evt.target || evt.srcElement);
+
+    // TODO: refactor
+    if( el.classList.contains('edit') ) {
+      return;
+    }
+
+    if( el.classList.contains('save') ) {
+      $(el).parents('td').find('button, input').attr('disabled','disabled');
+      var data = $(el).parents('tr')[0].dataset;
+      socket.emit('extend', {
+        call: data.call,
+        copy: data.copy,
+        due: $(el).parents('td').find('input[type=date]').val(),
+        id: $(el).parents('tr')[0].id,
+        token: window.HLRDESK.token
+      });
+      return;
+    }
+    if( el.classList.contains('due-extend') ) {
+      $(el).parents('td').toggleClass('editing');
+      return;
+    }
     $( this ).toggleClass( "selected" );
     toggleDisabledButtons();
   });

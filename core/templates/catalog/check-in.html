@@ -4,7 +4,6 @@
         <input type="text" class="text-input" id="filter" value="" placeholder="Search"/>
         <span id="filter-count"></span>
         <button class="mainBtn check-in-btn" disabled>Check In</button>
-        <button class="mainBtn extend-btn" disabled>Extend</button>
         <button class="mainBtn" id="add">Select All</button>
         <button class="mainBtn" id="remove">Select None</button>
     </fieldset>
@@ -15,8 +14,9 @@
       <th scope=col><i class="fa fa-sort"></i> Call Number</th>
       <th scope=col><i class="fa fa-sort"></i> Name</th>
       <th scope=col class="colWidth"><i class="fa fa-sort"></i> Net ID</th>
+      <th scope=col class="colWidth"><i class="fa fa-sort"></i> Notes</th>
       <th scope=col class="colWidth col-due"><i class="fa fa-sort"></i> Due</th>
-      <th scope=col>More</th>
+      <!--<th scope=col>More</th>-->
     </tr>
   </thead>
   <tbody>
@@ -32,12 +32,21 @@
         <td><%= item.call_number %></td>
         <td><%= item.name %></td>
         <td><%= item.owner %></td>
-        <td data-date="<%=item.due.getTime()%>"><%= moment(item.due).format("MMM D") %></td>
-        <td ><i class="fa fa-plus-square-o"></i></td>
+        <td><%= item.notes || "" %></td>
+        <td class=due data-date="<%=item.due.getTime()%>">
+          <button class="due-extend begin fa fa-calendar" title=Extend></button>
+          <button class="due-extend cancel">Cancel</button>
+          <button class="due-extend save">Save</button>
+          <input class='edit' type=date value="<%= moment(item.due).format("YYYY-MM-DD")%>" min="<%=
+            moment().format("YYYY-MM-DD")
+          %>">
+          <span class="date-truncated"><%= moment(item.due).format("MMM D") %></span>
+          </span>
+        </td>
+        <!--<td ><i class="fa fa-plus-square-o"></i></td>-->
       </tr>
     <% }); %>
   </tbody>
 </table>
 <script>window.HLRDESK.init.checkin();</script>
 </section>
-
