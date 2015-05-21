@@ -7,15 +7,15 @@ CREATE VIEW users_no_from_subquery_in_views AS
   SELECT NetID netid, netid IN(SELECT NetID FROM employee) admin FROM checkout
   ;
 
-DROP VIEW IF EXISTS users;
+DROP TABLE IF EXISTS users;
 
-CREATE VIEW users AS
+CREATE TABLE users AS
   SELECT * FROM users_no_from_subquery_in_views GROUP BY netid;
   ;
 
-DROP VIEW IF EXISTS checked_out;
+DROP TABLE IF EXISTS checked_out;
 
-CREATE VIEW checked_out AS
+CREATE TABLE checked_out AS
   SELECT
   `COPY` `copy`,
   `callnumber` `call`,
@@ -37,10 +37,10 @@ CREATE VIEW checked_out AS
   titles ON titles.AQNO = reserveout.AQNO
   ;
 
-DROP VIEW IF EXISTS inventory;
+DROP TABLE IF EXISTS inventory;
 
 -- TODO: are volumes applicable here at all?
-CREATE VIEW inventory AS
+CREATE TABLE inventory AS
   -- TITLES TABLE
   SELECT
   callnumber `call`,
@@ -77,15 +77,15 @@ CREATE VIEW inventory AS
   FROM reserveitems
   ;
 
-DROP VIEW IF EXISTS media_items;
+DROP TABLE IF EXISTS media_items;
 
-CREATE VIEW media_items AS
+CREATE TABLE media_items AS
   SELECT description `medium`, callnumber `call`
   FROM titles JOIN media ON media.code = titles.media;
 
-DROP VIEW IF EXISTS languages_items;
+DROP TABLE IF EXISTS languages_items;
 
-CREATE VIEW languages_items AS
+CREATE TABLE languages_items AS
   SELECT
     CASE code
       WHEN 'AF' THEN 'afr'
