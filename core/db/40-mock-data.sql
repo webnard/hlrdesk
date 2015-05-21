@@ -94,3 +94,9 @@ INSERT INTO messages(title, username, message_body) VALUES
   ('Message FIVE', 'trevren1' ,'5 and everything will be ok and we will start on CLIPS...'),
   ('Message that has a really long title that should not be this long but just in case somebody decides to have a really long title then we will know if it looks good', 'trevren1' ,'This is a really long text body to see if it will work with the length as well, the limit is 500 characters. The rest is filler and not quite the limit Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nisl arcu, efficitur ac felis vitae, commodo vulputate urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sit amet nibh convallis ligula posuere ornare et sit amet nulla. Aenean lobortis lobortis quam at cursus. Ut iaculis, ligula ut cursus condimentum, orci elit cursus lectus, et iaculis eros sapien vel dui. Mauris eu cursus erat. Integer non viverra velit. Aliquam posuere orci volutpat.');
   
+
+INSERT INTO media_items(call, medium) VALUES
+  ('HELLO', 'COMPACT DISC (CD)');
+
+INSERT INTO languages_items(inventory_call, language_code) VALUES
+  ('HELLO', 'eng');

@@ -7,6 +7,58 @@ describe('inventory', function() {
   beforeEach(require('./resetdb'));
   var inventory  = require ('../core/app_modules/inventory');
 
+  describe('#get(call)', function() {
+    it('should return null if the call does not exist', function*() {
+      expect(yield inventory.get('I-DO-NOT-EXIST')).to.be.null;
+    });
+    it('should include an array of media types', function*() {
+      var results = yield inventory.get('HELLO');
+      expect(results.media).to.be.an.instanceof(Array);
+      expect(results.media).to.contain('COMPACT DISC (CD)');
+    });
+    it('should include an array of languages', function*() {
+      var results = yield inventory.get('HELLO');
+      expect(results.languages).to.be.an.instanceof(Array);
+      expect(results.languages).to.contain('eng');
+    });
+  });
+
+  describe('#create', function() {
+    it('should throw an error if a non-admin tries to create an item', function() {
+      expect(inventory.create('notadm', 'I-DO-NOT-EXIST', {})).to.eventually.be.rejected;
+    });
+
+    it('should create the item with the given call', function*() {
+      var call = 'I-DO-NOT-EXIST';
+      yield inventory.create('prabbit', call, {});
+      expect(yield inventory.get(call)).to.not.be.null;
+    });
+  });
+
+  describe('#update', function() {
+    it('should throw an error if a non-admin tries to update an item', function() {
+      expect(inventory.update('notadm', 'DEADBEEF', {})).to.eventually.be.rejected;
+    });
+
+    it('should throw an error if an admin attempts to edit non-whitelisted property', function() {
+      var props = {'edited_by': 'prabbit'};
+      expect(inventory.update('tock', 'DEADBEEF', props)).to.eventually.be.rejected;
+    });
+
+    it("should throw an error if I try to replace an item's call number with another's", function() {
+      var props = {'call': 'HELLO'};
+      expect(inventory.update('tock', 'DEADBEEF', props)).to.eventually.be.rejected;
+    });
+
+    it("should update whatever I pass in", function*() {
+      var props = {'title': 'Hello, Friend'};
+      yield inventory.update('tock', 'DEADBEEF', props);
+      var result = yield inventory.get('DEADBEEF');
+      console.log(result);
+      expect(result.title).to.equal(props.title);
+    });
+  });
+
   describe('#search(value, user, params)', function () {
     it('should return an array when items are found', function* () {
       var user = 'tock';

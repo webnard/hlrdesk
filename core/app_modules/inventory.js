@@ -5,6 +5,7 @@ var db = require('./db');
 var co = require('co');
 var auth = require('./auth');
 var assert = require('assert');
+var itemHistory = require('./item-history');
 
 var inventory = {};
 
@@ -13,6 +14,30 @@ inventory.exists = co.wrap(function*(call) {
   var count = 'SELECT call FROM inventory WHERE call = $1 LIMIT 1';
   var result = yield client.query(count, [call]);
   return yield Promise.resolve(result.rows.length > 0);
+});
+
+inventory.get = co.wrap(function*(call) {
+  var client = db();
+  var query = 'SELECT inv.*,' +
+    'array_agg(mi.medium) as media, array_agg(li.language_code) as languages ' +
+    'FROM inventory inv ' +
+    'LEFT JOIN languages_items li on li.inventory_call = inv.call ' +
+    'LEFT JOIN media_items mi on mi.call = inv.call ' +
+    'WHERE inv.call = $1 ' +
+    'GROUP BY inv.call;';
+
+  var results = yield client.query(query, [call]);
+  if(results.rows.length === 0) {
+    return yield Promise.resolve(null);
+  }
+  var result = results.rows[0];
+  result.languages = result.languages.filter(function(a) {
+    return a !== null;
+  });
+  result.media = result.media.filter(function(a) {
+    return a !== null;
+  });
+  return yield Promise.resolve(results.rows[0]);
 });
 
 inventory.search = co.wrap(function* (text, username, params) {
@@ -46,6 +71,83 @@ inventory.search = co.wrap(function* (text, username, params) {
     });
   });
   return yield Promise.resolve(result.rows);
+});
+
+var upsert = co.wrap(function*(call, user, details, update) {
+  var client = db();
+
+  var whitelist = [
+    'call',
+    'quantity',
+    'title',
+    'checkout_period',
+    'is_reserve',
+    'is_duplicatable',
+    'on_hummedia',
+    'notes'
+  ];
+
+  var columns = 'edited_by, date_edited';
+  var valStr = '$1, CURRENT_TIMESTAMP';
+  var vals = [user];
+
+  if(!update) {
+    details.call = call;
+  }
+
+  Object.keys(details).forEach(function(key) {
+    assert(whitelist.indexOf(key) !== -1, 'Unknown property "' + key + '"');
+
+    if(columns.length) {
+      columns += ', ';
+    }
+    if(valStr.length) {
+      valStr += ', ';
+    }
+
+    columns += key;
+    vals.push(details[key]);
+    valStr += '$' + vals.length;
+  });
+
+  var prefix = update ? 'UPDATE' : 'INSERT INTO';
+  var set = (update ? "SET" : "");
+  var eq = (update ? "=" : "VALUES");
+
+  var query = prefix + " inventory " + set + "(" + columns + ") " +
+            eq + " (" + valStr + ")";
+
+  if(update)  {
+    vals.push(call);
+    query += " WHERE call = $" + (vals.length);
+  }
+
+  console.log(query);
+
+  yield client.query(query, vals);
+
+  if(update) {
+    itemHistory.update(call, details);
+  }
+  else
+  {
+    // TODO
+  }
+});
+
+inventory.create = co.wrap(function*(user, call, details) {
+  assert(yield auth.isAdmin(user), "Must be an admin to update.");
+  assert(typeof details === 'object', "Details must be an object, was " + (typeof details));
+
+  yield upsert(call, user, details, false);
+});
+
+inventory.update = co.wrap(function*(user, call, details) {
+  assert(yield auth.isAdmin(user), "Must be an admin to update.");
+  assert(typeof details === 'object', "Details must be an object, was " + (typeof details));
+  assert(yield inventory.exists(call), "Item does not exist.");
+
+  yield upsert(call, user, details, true);
 });
 
 inventory.check_in = co.wrap(function*(call, patron, employee) {
