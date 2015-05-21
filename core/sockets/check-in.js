@@ -15,9 +15,10 @@ module.exports = function(socket, app) {
     inventory.change_due(event.call, event.copy, event.due, this.user).then(function() {
       _this.emit("extend success", {
         id: event.id,
-        formattedDate: moment(event.due).format("YYYY-MM-DD")
+        formattedDate: moment(event.due).format("MMM D")
       });
-    }).catch(function() {
+    }).catch(function(e) {
+      console.error(e);
       _this.emit("extend error", {id: event.id});
     });
   });

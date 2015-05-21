@@ -33,13 +33,15 @@
         <td><%= item.name %></td>
         <td><%= item.owner %></td>
         <td><%= item.notes || "" %></td>
-        <td data-date="<%=item.due.getTime()%>">
-        <button class="due-extend fa fa-calendar" title=Extend></button>
-        <input type=date value="<%= moment(item.due).format("YYYY-MM-DD")%>" min="<%=
-          moment().format("YYYY-MM-DD")
-        %>">
-        <span class="date-truncated"><%= moment(item.due).format("MMM D") %></span>
-        </span>
+        <td class=due data-date="<%=item.due.getTime()%>">
+          <button class="due-extend begin fa fa-calendar" title=Extend></button>
+          <button class="due-extend cancel">Cancel</button>
+          <button class="due-extend save">Save</button>
+          <input class='edit' type=date value="<%= moment(item.due).format("YYYY-MM-DD")%>" min="<%=
+            moment().format("YYYY-MM-DD")
+          %>">
+          <span class="date-truncated"><%= moment(item.due).format("MMM D") %></span>
+          </span>
         </td>
         <!--<td ><i class="fa fa-plus-square-o"></i></td>-->
       </tr>

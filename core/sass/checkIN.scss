@@ -2,7 +2,7 @@
 
 #checkIn{
 button{
-  float:right;  
+  float:right;
 }
 
 .check-in-btn[disabled] {
@@ -12,15 +12,25 @@ box-shadow:none;
 cursor: default;
 }
 
-tr input[type=date]:not(.active) {
-  display: none;
+tr td.due {
+  &:not(.editing) {
+    input[type=date], .due-extend.cancel, .due-extend.save {
+      display: none;
+    }
+  }
+  &.editing .due-extend.begin {
+    display: none;
+  }
 }
-tr input[type=date].active + .date-truncated {
+tr td.due.editing .date-truncated {
   display: none;
 }
 
 tr:hover .due-extend {
   visibility: visible;
+  &:hover {
+    text-shadow: black 1px 1px 0px;
+  }
 }
 
 .date-truncated {
@@ -75,9 +85,9 @@ fieldset{
 
 td {
   word-wrap: break-word;
-  min-width:3.5em; 
+  min-width:3.5em;
   padding: 1em;
-  margin:none; 
+  margin:none;
 }
 
 td:hover{
@@ -100,9 +110,9 @@ th{
 tr {
   //border: 1px solid #D9E4E6;
   max-height:3em;
-  &:nth-child(odd) { 
+  &:nth-child(odd) {
     background-color: $creme;
-  }  
+  }
   &:hover {
     background-color: $byuBlueHL;
     color:white;

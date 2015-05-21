@@ -93,6 +93,7 @@ inventory.change_due = co.wrap(function*(call, copy, due, employee) {
   var client = db();
   yield client.nonQuery('UPDATE checked_out SET due = $1 ' +
                         'WHERE call = $2 AND copy = $3', [dueFmt, call, copy]);
+  return yield Promise.resolve(true);
 });
 
 inventory.check_out = co.wrap(function*(items, patron, employee) {
