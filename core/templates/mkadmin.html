@@ -1,22 +1,21 @@
-<div id="admin_box">
-  <div id="other">
-    <form id="admin_form" method="POST">
-      <input name="user" id='admin_name' type='text' placeholder="Admin's NetID"></input>
-      <button name="save" type="submit" id="saveButton" class="greenBtn">Save</button>
-      <input type="hidden" id="csrf" value="<%=csrf%>" name="csrf">
-      <input type="hidden" value="add" name="action">
-    </form>
-  </div>
+<section id="admin_box">
+  <form id="admin_form" method="POST">
+    <input name="user" id='admin_name' type='text' placeholder="Admin's NetID"></input>
+    <button name="save" type="submit" id="saveButton" class="greenBtn">Save</button>
+    <input type="hidden" id="csrf" value="<%=csrf%>" name="csrf">
+    <input type="hidden" value="add" name="action">
+  </form>
 
-<ul id="admin_list">
-  <% allAdminsFromDB.rows.forEach(function(admin) { %>
-    <li><form method=post>
-      <%= admin.netid %>
-      <button type='submit' class='redBtn' style='padding: 0.2em'>Remove</button>
-      <input type='hidden' name='user' value="<%=admin.netid%>">
-      <input type='hidden' value='remove' name='action'>
-      <input type='hidden' id = 'csrf' value='<%=csrf%>' name='csrf'>
-    </form></li>
-  <% }); %>
-</ul>
+  <ul id="admin_list">
+    <% allAdminsFromDB.rows.forEach(function(admin) { %>
+      <li><form method=post>
+        <%= admin.netid %>
+        <button type='submit' class='redBtn' style='padding: 0.2em'>Remove</button>
+        <input type='hidden' name='user' value="<%=admin.netid%>">
+        <input type='hidden' value='remove' name='action'>
+        <input type='hidden' id = 'csrf' value='<%=csrf%>' name='csrf'>
+      </form></li>
+    <% }); %>
+  </ul>
+</section>
 <script>window.HLRDESK.init.mkadmin();</script>

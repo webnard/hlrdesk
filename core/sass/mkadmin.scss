@@ -1,23 +1,10 @@
 @import 'admin';
 
 #admin_box{
-  width: 50%;
-  height: 50%;
-  background-color: $mainBlue;
-
-  position: absolute;
-  top:0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  margin: auto;
-}
-
-#other{
-  margin: 2em;
+  background-color: $creme;
+  padding: 2em;
 }
 
 #admin_list{
-  color: $mainGreyHL
+  color: $mainBlue;
 }
