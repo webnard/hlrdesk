@@ -21,18 +21,18 @@ module.exports = function editCatalog(socket, app) {
     socket.on('getInfo', function(item){
       var that = this;
       var errMessage = ' attempted to get info of ' + item.callNum;
-      checkMe(this, errMessage, function success()
+      checkMe(that, errMessage, function success()
       {
-        var result = yield t.queryOne(query, [item.callNum]);
-        app.io.emit('getInfo', result);
+        db().queryOne(query, [item.callNum]).then(function(result) {
+          that.emit('getInfo', result)
+        });
       })
     });
 
     socket.on('deleteItem', function(delInfo)
     {
-      var that = this;
       var errMessage = ' attempted to get delete item ' + delInfo.origCall;
-      checkMe(that, errMessage, function success()
+      checkMe(this, errMessage, function success()
       {
         var client = db();
         client.query("DELETE FROM inventory WHERE call = $1;", [delInfo.origCall]);
@@ -45,6 +45,7 @@ module.exports = function editCatalog(socket, app) {
     socket.on('changeInfo', function(edited)
     {
       var client = db();
+      var that = this;
       if (edited.type == "update")
       {
         inv.update(this.user, edited.newCall, edited).catch(function() {

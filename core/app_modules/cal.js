@@ -10,7 +10,7 @@ module.exports.addCalendarEvent = co.wrap(function*(username, event, user){
   if(!a) {
     assert(username === user);
   }
-  
+
   var isOverlap = false;
   var allCalendarEvents = yield client.query("SELECT * FROM calendar;");
   allCalendarEvents = allCalendarEvents.rows;
@@ -24,7 +24,7 @@ module.exports.addCalendarEvent = co.wrap(function*(username, event, user){
     var exists = yield client.query('SELECT * FROM calendar WHERE "time" = $1 AND room = $2 AND "user" = $3;', [event.time, event.room, user]);
     if (exists.rowCount !== 0) {
       yield client.query('UPDATE calendar SET confirmed = $4 WHERE ("user" = $1 AND time = $2 AND room = $3);', [user, event.time, event.room, true]);
-     } else {
+    } else {
       yield client.nonQuery('INSERT INTO calendar("user", "time", room, duration, title, confirmed)VALUES ($1, $2, $3, $4, $5, $6);', [user, event.time, event.room, event.duration, event.title, a]);
     }
     if (a) {
@@ -57,6 +57,6 @@ module.exports.deleteCalendarEvent = co.wrap(function*(username, event){
       return yield events.rows;
     }
   }
-  
+
   return yield Promise.reject(new Error("Nice try."));
 });
