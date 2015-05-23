@@ -23,6 +23,7 @@ INSERT INTO media(medium) VALUES
 ('EQUIPMENT'),
 ('ONLINE MEDIA'),
 ('Kennedy Center Intercultural Outreach Collection'),
+('Video Game Media'),
 ('Flash Cards');
 
 DROP RULE "media_on_duplicate_ignore" ON "media";
