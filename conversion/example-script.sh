@@ -4,6 +4,13 @@ mysqldump hlrdesk_old -u root --skip-comments --skip-opt --complete-insert --no-
 
 # converts MySQL syntax to Postgres for these results
 perl -pe 's/`/"/g' -i to-psql.sql
-perl -pe 's/("users".*?)0/$1FALSE/g' -i to-psql.sql
-perl -pe 's/("users".*?)1/$1TRUE/g' -i to-psql.sql
+perl -pe 's/("users".*?,)0/$1FALSE/g' -i to-psql.sql
+perl -pe 's/("users".*?,)1/$1TRUE/g' -i to-psql.sql
+perl -pe 's/(INSERT INTO "inventory".*?)1(?=\);$)/$1TRUE/g' -i to-psql.sql
+perl -pe 's/(INSERT INTO "inventory".*?)0(?=\);$)/$1FALSE/g' -i to-psql.sql
+perl -pe 's/(INSERT INTO "inventory".*?)0(?=,(TRUE|FALSE))/$1FALSE/g' -i to-psql.sql
+perl -pe 's/(INSERT INTO "inventory".*?)1(?=,(TRUE|FALSE))/$1TRUE/g' -i to-psql.sql
+perl -pe 's/(INSERT INTO "inventory".*?)0(?=,'\''.*?'\'',(TRUE|FALSE))/$1FALSE/g' -i to-psql.sql
+perl -pe 's/(INSERT INTO "inventory".*?)0(?=,'\''.*?'\'',(TRUE|FALSE))/$1TRUE/g' -i to-psql.sql
+perl -pe "s/\\\'/''/g" -i to-psql.sql
 perl -pe "s/'0000-00-00'/NULL/g" -i to-psql.sql
