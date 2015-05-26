@@ -3,6 +3,7 @@ var pg = require('postgres-gen');
 
 var defaults = {};
 defaults.user = process.env.PGUSER;
+defaults.database = process.env.PGDATABASE;
 defaults.password = process.env.PGPASS;
 defaults.host = process.env.PGHOST;
 defaults.port = process.env.PGPORT;
