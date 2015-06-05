@@ -22,7 +22,7 @@
     <div class='check-out-input-container'>
       <label for=check-out-netid>Patron's Net ID</label><input id=check-out-netid type=text name=netid required>
       <label for=check-out-email>Patron's Email</label><input id=check-out-email type=email name=email>
-      <label for=check-out-phone>Patron's Phone</label><input id=check-out-phone type=tel name=tel>
+      <label for=check-out-phone>Patron's Phone</label><input id=check-out-phone placeholder="801-555-1234" type=tel name=tel>
       <button class='redBtn close check-out-prompt'></button>
       <input type=submit value='Submit' class='mainBtn check-out-prompt submit'>
     </div>
@@ -34,7 +34,7 @@
   <span class=title></span>
   <span class=call></span>
   <span class=copy></span>
-  <span><input class=due type=date title='Due Date' name=due required></span> <!-- TODO: implement min attribute for date -->
+  <span><input class=due type=date title='Date Due: YYYY-MM-DD' placeholder='YYYY-MM-DD' name=due required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"></span> <!-- TODO: implement min attribute for date -->
   <input class=input-copy type=hidden name=copy>
   <input class=input-call type=hidden name=call>
 </li>
