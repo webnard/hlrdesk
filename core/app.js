@@ -101,7 +101,7 @@ app.use(_.get("/", function *(next) {
     yield next;
     return;
   }
-  yield this.render('layout', {layout: false, body:""});
+  yield this.render('layout', {layout: false, body:"", captionClass: "behindAll"});
   yield next;
 }));
 

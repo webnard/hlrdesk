@@ -48,7 +48,6 @@ section,table,thead
   }
 }
 
-
 body
 {
   background-size: cover;
@@ -56,6 +55,21 @@ body
   background-image:  url('/resources/background.jpg') ;
   background-repeat:none;
   background-color: black;
+  #caption {
+    a {
+      color: white;
+    }
+    text-align: right;
+    color: white;
+    font-size: 0.5em;
+    position:absolute;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+  .behindAll {
+    z-index: 0;
+  }
 }
 
 @mixin panel-button {

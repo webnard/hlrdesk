@@ -27,7 +27,7 @@ window.HLRDESK.init.checkout = function initCheckout() {
     var checkOutPromptClose = document.querySelector('.modalWindow .close.check-out-prompt');
 
     document.querySelector('.modalWindow .check-out-verify').onsubmit = submitRequest;
-    checkOutPromptClose.onclick = close;
+    checkOutPromptClose.addEventListener("click", function() {closeModal();});
     appendInventory(document.querySelector('.modalWindow .check-out-prompt.inventory'));
   });
 

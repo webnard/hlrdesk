@@ -48,7 +48,7 @@ window.HLRDESK.init.languages = function initLanguages() {
 
   function setEditFormDisabled(bool) {
     langEdit.querySelector('fieldset').disabled = bool;
-    var submit = langEdit.querySelectorAll('input[type=submit');
+    var submit = langEdit.querySelectorAll('input[type=submit]');
     for(var i = 0; i<submit.length; i++) {
       submit[i].disabled = bool;
     }
@@ -57,7 +57,7 @@ window.HLRDESK.init.languages = function initLanguages() {
 
   function setCreateFormDisabled(bool) {
     langAdd.querySelector('fieldset').disabled = bool;
-    var submit = langAdd.querySelectorAll('input[type=submit');
+    var submit = langAdd.querySelectorAll('input[type=submit]');
     for(var i = 0; i<submit.length; i++) {
       submit[i].disabled = bool;
     }

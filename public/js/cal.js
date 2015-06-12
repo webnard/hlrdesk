@@ -449,7 +449,7 @@ socket.on("calendar overlap", function(event){
 function deleteCell(event, bypassPrompt) {
   if (!bypassPrompt) {
     closeModal = window.patternlibrary.displayModal(document.getElementById("prompt"));
-    document.getElementById("promptTitle").innerHTML = "Confrim Deletion";
+    document.getElementById("promptTitle").innerHTML = "Confirm Deletion";
     document.getElementById("promptText").innerHTML = "Are you sure you wish to delete this "+(event.target.classList.contains("requested") ? "request?" : "reservation?");
     document.getElementById("promptYes").innerHTML = "Yes";
     document.getElementById("promptNo").innerHTML = "No";
@@ -484,7 +484,7 @@ function deleteCell(event, bypassPrompt) {
 function processRequest(event) {
   closeModal = window.patternlibrary.displayModal(document.getElementById("prompt"));
   document.getElementById("promptTitle").innerHTML = "Confirm Request";
-  document.getElementById("promptText").innerHTML = "Do you wish to confrim or delete this request?";
+  document.getElementById("promptText").innerHTML = "Do you wish to confirm or delete this request?";
   document.getElementById("promptYes").innerHTML = "Confirm";
   document.getElementById("promptNo").innerHTML = "Delete";
   document.getElementById("promptYes").addEventListener("click", function yes() {

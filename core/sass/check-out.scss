@@ -98,6 +98,9 @@
 $check-out-h2-margin-bottom: 1em;
 $check-out-result-count-margin-bottom: 8px;
 $result-count-height: 15px;
+#check-out-search-results {
+  border-bottom: dotted $mainGrey 1px;
+}
 #check-out-search-results, #check-out-search-selection {
   overflow-x: hidden;
   h2 {
@@ -114,9 +117,8 @@ $result-count-height: 15px;
   }
 }
 #check-out-search-selection {
- background-image: url("/resources/satchel.jpg");
-    background-size: contain;
   ul {
+  border-top: dotted $mainGrey 1px;
     margin-top: $result-count-height;
   }
 }
