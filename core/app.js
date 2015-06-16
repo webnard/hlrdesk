@@ -102,8 +102,7 @@ app.use(_.get("/", function *(next) {
     yield next;
     return;
   }
-  captionClass = "aboveLoader";
-  yield this.render('layout', {layout: false, body:""});
+  yield this.render('layout', {layout: false, body:"", captionClass: "aboveLoader"});
   yield next;
 }));
 
