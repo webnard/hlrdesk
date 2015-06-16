@@ -43,7 +43,7 @@
     "node": "0.12.x"
   },
   "scripts": {
-    "pretest": "$(npm root)/jscs/bin/jscs core --esnext --config=./.jscs.json; npm run compile-sass",
+    "pretest": "$(npm root)/jscs/bin/jscs core --esnext --config=./.jscs.json",
     "test": "./.run-tests.sh",
     "server": "node --harmony core/runserver.js",
     "start": "(export $(./.env.sh) && npm run server)",

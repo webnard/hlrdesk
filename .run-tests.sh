@@ -86,6 +86,7 @@ do
 done
 printf "\n"
 
+npm run compile-sass
 echo "Running CasperJS tests."
 echo "Screenshots saved to tests/screenshots/"
 

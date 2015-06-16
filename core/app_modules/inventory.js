@@ -76,61 +76,109 @@ inventory.search = co.wrap(function* (text, username, params) {
 var upsert = co.wrap(function*(call, user, details, update) {
   var client = db();
 
-  var whitelist = [
-    'call',
-    'quantity',
-    'title',
-    'checkout_period',
-    'is_reserve',
-    'is_duplicatable',
-    'on_hummedia',
-    'notes'
-  ];
+  return yield client.transaction(function*(t) {
+    var whitelist = [
+      'call',
+      'quantity',
+      'title',
+      'checkout_period',
+      'is_reserve',
+      'is_duplicatable',
+      'on_hummedia',
+      'notes'
+    ];
 
-  var columns = 'edited_by, date_edited';
-  var valStr = '$1, CURRENT_TIMESTAMP';
-  var vals = [user];
+    var ignore = [
+      'origCall',
+      'newCall'
+    ];
 
-  if(!update) {
-    details.call = call;
-  }
+    var special = [
+      'languages',
+      'media'
+    ];
 
-  Object.keys(details).forEach(function(key) {
-    assert(whitelist.indexOf(key) !== -1, 'Unknown property "' + key + '"');
+    var columns = 'edited_by, date_edited';
+    var valStr = '$1, CURRENT_TIMESTAMP';
+    var vals = [user];
+    var keyCount = 0;
 
-    if(columns.length) {
-      columns += ', ';
+    if(!update) {
+      details.call = call;
     }
-    if(valStr.length) {
-      valStr += ', ';
+
+    var fk = {};
+
+    Object.keys(details).forEach(function(key) {
+      if(ignore.indexOf(key) !== -1) {
+        return;
+      };
+      if(special.indexOf(key) !== -1) {
+        fk[key] = details[key];
+        return;
+      };
+      keyCount++;
+
+      assert(whitelist.indexOf(key) !== -1, 'Unknown property "' + key + '"');
+
+      if(columns.length) {
+        columns += ', ';
+      }
+      if(valStr.length) {
+        valStr += ', ';
+      }
+
+      columns += key;
+      vals.push(details[key]);
+      valStr += '$' + vals.length;
+    });
+
+    var prefix = update ? 'UPDATE' : 'INSERT INTO';
+    var set = (update ? "SET" : "");
+    var eq = (update ? "=" : "VALUES");
+
+    var query = prefix + " inventory " + set + "(" + columns + ") " +
+              eq + " (" + valStr + ")";
+
+    if(update)  {
+      vals.push(call);
+      query += " WHERE call = $" + (vals.length);
     }
 
-    columns += key;
-    vals.push(details[key]);
-    valStr += '$' + vals.length;
-  });
+    function makeValStr(a) {
+      return a.reduce(function(prev, cur, index) {
+        return ( (prev && prev + ',') || '') + '($' + (index+2) + ', $' + 1 + ')';
+      }, null);
+    }
 
-  var prefix = update ? 'UPDATE' : 'INSERT INTO';
-  var set = (update ? "SET" : "");
-  var eq = (update ? "=" : "VALUES");
+    if(keyCount) {
+      yield t.query(query, vals);
+    }
 
-  var query = prefix + " inventory " + set + "(" + columns + ") " +
-            eq + " (" + valStr + ")";
+    if(fk['languages'] && fk['languages'].length) {
+      yield t.query('DELETE FROM languages_items WHERE inventory_call = $1', [call]);
+      var valstr = makeValStr(fk['languages']);
+      var query = 'INSERT INTO languages_items(language_code, inventory_call) VALUES '
+        + valstr;
+      yield t.query(query, [call].concat(fk['languages']));
+    }
 
-  if(update)  {
-    vals.push(call);
-    query += " WHERE call = $" + (vals.length);
-  }
+    if(fk['media'] && fk['media'].length) {
+      yield t.query('DELETE FROM media_items WHERE "call" = $1;', [call]);
+      var valstr = makeValStr(fk['media']);
+      var query = 'INSERT INTO media_items(medium, "call") VALUES '
+        + valstr;
+      yield t.query(query, [call].concat(fk['media']));
+    }
 
-  yield client.query(query, vals);
-
-  if(update) {
-    itemHistory.update(call, details);
-  }
-  else
-  {
-    // TODO
-  }
+    if(update) {
+      itemHistory.update(call, details);
+    }
+    else
+    {
+      // TODO
+    }
+  }).catch(console.error);
 });
 
 inventory.create = co.wrap(function*(user, call, details) {

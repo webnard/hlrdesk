@@ -18,46 +18,52 @@ module.exports = function editCatalog(socket, app) {
       }).catch(console.error);
     }
 
-    socket.on('getInfo', function(item){
+    socket.on('inv.get', function(item){
       var that = this;
       var errMessage = ' attempted to get info of ' + item.callNum;
       checkMe(that, errMessage, function success()
       {
-        db().queryOne(query, [item.callNum]).then(function(result) {
-          that.emit('getInfo', result)
+        inv.get(item.callNum).then(function(result) {
+          that.emit('inv.info', result)
         });
       })
     });
 
     socket.on('deleteItem', function(delInfo)
     {
-      var errMessage = ' attempted to get delete item ' + delInfo.origCall;
+      var errMessage = ' attempted to get delete item ' + delInfo.callNum;
+      var that = this;
       checkMe(this, errMessage, function success()
       {
         var client = db();
-        client.query("DELETE FROM inventory WHERE call = $1;", [delInfo.origCall]);
-        var del = "Item ["+ delInfo.origCall + "] was deleted";
+        client.query("DELETE FROM inventory WHERE call = $1;", [delInfo.callNum]);
+        var del = "Item ["+ delInfo.callNum + "] was deleted";
         client.query("INSERT INTO item_history (call_number, type, who, date_changed, notes) VALUES ($1, 'Delete Item', $2, CURRENT_TIMESTAMP, $3) ",
         [delInfo.origCall, that.user, del ])
       })
     });
 
-    socket.on('changeInfo', function(edited)
+    socket.on('inv.create', function(edited)
+    {
+      var client = db();
+      var data = edited.data;
+      var that = this;
+      inv.create(this.user, data.newCall, data).catch(function(e) {
+        console.error(e);
+        that.emit('alertMessage', 'There was an error creating the item.');
+      });
+    });
+
+    socket.on('inv.update', function(edited)
     {
       var client = db();
       var that = this;
-      if (edited.type == "update")
-      {
-        inv.update(this.user, edited.newCall, edited).catch(function() {
-          that.emit('alertMessage', 'There was an error updating the database.');
-        });
-      }
-      else
-      {
-        inv.create(this.user, edited.newCall, edited).catch(function() {
-          that.emit('alertMessage', 'There was an error updating the database.');
-        });
-      }
+      var data = edited.data;
+
+      inv.update(this.user, data.newCall, data).catch(function(e) {
+        console.error(e);
+        that.emit('alertMessage', 'There was an error updating the database.');
+      });
     });
 
   };

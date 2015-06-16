@@ -36,6 +36,29 @@ describe('inventory', function() {
   });
 
   describe('#update', function() {
+
+    it('should update languages for an item', function* () {
+      var call = 'HELLO';
+      var employee = 'tock';
+      var details = {
+        languages: ['deu', 'yue', 'smo', 'quc']
+      };
+      yield inventory.update(employee, call, details);
+      var response = yield inventory.get(call);
+      expect(response.languages).to.deep.equal(details.languages);
+    });
+
+    it('should update media for an item', function* () {
+      var call = 'HELLO';
+      var employee = 'tock';
+      var details = {
+        media: ['EQUIPMENT', 'ONLINE MEDIA']
+      };
+      yield inventory.update(employee, call, details);
+      var response = yield inventory.get(call);
+      expect(response.media).to.deep.equal(details.media);
+    });
+
     it('should throw an error if a non-admin tries to update an item', function() {
       expect(inventory.update('notadm', 'DEADBEEF', {})).to.eventually.be.rejected;
     });
