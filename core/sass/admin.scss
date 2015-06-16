@@ -66,9 +66,9 @@ body
     right: 0;
     bottom: 0;
     z-index: -1;
-  }
-  .behindAll {
-    z-index: 0;
+    &.aboveLoader {
+      z-index: 0;
+    }
   }
 }
 
