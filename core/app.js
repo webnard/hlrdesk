@@ -20,6 +20,7 @@ var email = require('./app_modules/email')
 
 var auth = require('./app_modules/auth')
 var db = require('./app_modules/db')
+var user = require('./app_modules/user');
 const ENV = process.env;
 const SERVICE = auth.service(ENV.HLRDESK_HOST, ENV.PORT, '/signin', !ENV.HLRDESK_DEV);
 
@@ -117,8 +118,18 @@ app.use(_.get('/check-in', function *() {
   var inv = require('./app_modules/inventory');
   var items = yield inv.checked_out;
 
+  var users = items.reduce(function(prev, item) {
+    if(prev.indexOf(item.owner) === -1) {
+      prev.push(item.owner);
+    }
+    return prev;
+  }, []);
+
+  var userDetails = yield user.contactInfo.apply(this, users);
+
   yield this.render('catalog/check-in', {
     items: items,
+    user: userDetails,
     admin: this.session.user,
     moment: require('moment'),
     title: "Check In",

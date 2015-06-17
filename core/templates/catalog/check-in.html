@@ -12,8 +12,11 @@
   <thead>
     <tr>
       <th scope=col><i class="fa fa-sort"></i> Call Number</th>
-      <th scope=col><i class="fa fa-sort"></i> Name</th>
+      <th scope=col><i class="fa fa-sort"></i> Item</th>
       <th scope=col class="colWidth"><i class="fa fa-sort"></i> Net ID</th>
+      <th scope=col class="colWidth"><i class="fa fa-sort"></i> Name</th>
+      <th scope=col class="colWidth"><i class="fa fa-sort"></i> Email</th>
+      <th scope=col class="colWidth"><i class="fa fa-sort"></i> Phone</th>
       <th scope=col class="colWidth"><i class="fa fa-sort"></i> Notes</th>
       <th scope=col class="colWidth col-due"><i class="fa fa-sort"></i> Due</th>
       <!--<th scope=col>More</th>-->
@@ -32,6 +35,9 @@
         <td><%= item.call_number %></td>
         <td><%= item.name %></td>
         <td><%= item.owner %></td>
+        <td><%= user[item.owner].name %></td>
+        <td><%= user[item.owner].email %></td>
+        <td><%= user[item.owner].telephone %></td>
         <td><%= item.notes || "" %></td>
         <td class=due data-date="<%=item.due.getTime()%>">
           <button class="due-extend begin fa fa-calendar" title=Extend></button>
