@@ -90,6 +90,7 @@ app.use(function *(next) {
       this.USE_LAYOUT = 'layout';
     }
   }
+  captionClass = "undefined";
   yield next;
 });
 
@@ -101,7 +102,7 @@ app.use(_.get("/", function *(next) {
     yield next;
     return;
   }
-  yield this.render('layout', {layout: false, body:"", captionClass: "behindAll"});
+  yield this.render('layout', {layout: false, body:"", captionClass: "aboveLoader"});
   yield next;
 }));
 

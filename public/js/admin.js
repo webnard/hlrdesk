@@ -10,7 +10,7 @@
       $("#loader").html('');
       return;
     }
-
+    document.getElementById("caption").classList.remove("aboveLoader");
     if(href.indexOf('?') === - 1) {
       href += '?ajax=true';
     }
