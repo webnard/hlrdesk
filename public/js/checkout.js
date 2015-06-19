@@ -15,7 +15,6 @@ window.HLRDESK.init.checkout = function initCheckout() {
 
   socket.on('alert', function(data){window.HLRDESK.alert.error(data.message)});
 
-  function closeModal(){};
 
   searchForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
@@ -24,10 +23,8 @@ window.HLRDESK.init.checkout = function initCheckout() {
   checkOutButton.addEventListener('click', function handleCheckoutClick() {
     var checkOutPrompt = document.getElementById('check-out-prompt');
     closeModal = window.patternlibrary.displayModal(checkOutPrompt);
-    var checkOutPromptClose = document.querySelector('.modalWindow .close.check-out-prompt');
 
     document.querySelector('.modalWindow .check-out-verify').onsubmit = submitRequest;
-    checkOutPromptClose.addEventListener("click", function() {closeModal();});
     appendInventory(document.querySelector('.modalWindow .check-out-prompt.inventory'));
   });
 
