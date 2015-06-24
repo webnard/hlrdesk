@@ -77,7 +77,6 @@ describe('inventory', function() {
       var props = {'title': 'Hello, Friend'};
       yield inventory.update('tock', 'DEADBEEF', props);
       var result = yield inventory.get('DEADBEEF');
-      console.log(result);
       expect(result.title).to.equal(props.title);
     });
   });

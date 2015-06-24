@@ -73,3 +73,13 @@ npm run deploy production # to update hlrdesk.byu.edu
 
 All versions must needs be from the list of My Little Pony characters
 http://mlp.wikia.com/wiki/Characters
+
+## Sending reminder emails
+
+### Send an email out to users that within the last 24 hours one of their items is overdue
+
+`npm run email-overdue`
+
+### Send an email out to users that within the next 24 hours one of their items is due
+
+`npm run email-reminder`

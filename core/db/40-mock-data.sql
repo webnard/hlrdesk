@@ -31,6 +31,9 @@ update users set admin='TRUE' where netid = 'dylanrh';
 update users set telephone = '801-123-4567' where netid = 'csamuels';
 update users set email = 'fake@mailinator.com' where netid = 'kw9';
 
+update users set email = concat( netid, '.hlrdesk@mailinator.com')
+where netid <> 'kw9' and netid <> 'csamuels';
+
 -- INVENTORY
 insert into inventory(call, quantity, title) values
   ('DEADBEEF', 3, 'Fables of the Reconstruction'),

@@ -1,0 +1,16 @@
+Dear <%= name %>,
+
+This is a courtesy reminder that you have checked items out of the Humanities
+Learning Resources that will be due tomorrow. Please return or renew the
+items listed below before they are due.<%
+items.forEach(function(item) { %>
+
+Due: <%= moment(item.due).format('dddd, MMMM Do YYYY') %>
+Item: <%= item.item %><% });%>
+
+If the item is not returned on time a fine of $1 for each day overdue will be
+charged.
+
+Humanities Learning Resources
+1141 JFSB, Provo, UT, 84604
+801.422.5424

@@ -1,0 +1,15 @@
+Dear <%= name %>,
+
+The item(s) you checked out from the Humanities Learning Resources is (are)
+now overdue.<%
+items.forEach(function(item) { %>
+
+Due: <%= moment(item.due).format('dddd, MMMM Do YYYY') %>
+Item: <%= item.item %><% });%>
+
+You will be charged $1 per day per item until returned.
+Please contact us as soon as possible if the item(s) are lost or damaged.
+
+Humanities Learning Resources
+1141 JFSB, Provo, UT, 84604
+801.422.5424

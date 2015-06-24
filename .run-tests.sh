@@ -30,24 +30,30 @@ printf " Done!\n"
 
 export NODE_TEST=true
 export PGPOOLSIZE=0
+export HOSTNAME=localhost
+export EMAIL=nodetest@example.com
 export PGDATABASE=$TEST_DB
 export TEST_DB_PREFIX=$TEST_DB_PREFIX
 export TEMPLATE_DB=$TEMPLATE_DB
 export PHANTOMJS_EXECUTABLE=$(npm root)/casperjs/node_modules/phantomjs/bin/phantomjs
+export EMAILSERVICE=
 
 # NOTE: potential race condition
 which netstat && \
   USED_PORTS=`netstat -lnt | awk '{print $4}' | tail -n+3 | awk -F ":" '{print $NF}' | sort -nr | uniq`
 
-# modified from Chris Down's post on StackExchange
-# http://unix.stackexchange.com/a/55918/37560
-read lowerPort upperPort < /proc/sys/net/ipv4/ip_local_port_range
-while :; do
-  port=`expr $(($RANDOM % ($upperPort + 1 - $lowerPort))) + $lowerPort`
-  [[ $USED_PORTS =~ $port ]] || break
-done
+function get_unused_port() {
+  # modified from Chris Down's post on StackExchange
+  # http://unix.stackexchange.com/a/55918/37560
+  read lowerPort upperPort < /proc/sys/net/ipv4/ip_local_port_range
+  while :; do
+    port=`expr $(($RANDOM % ($upperPort + 1 - $lowerPort))) + $lowerPort`
+    [[ $USED_PORTS =~ $port ]] || break
+  done
+  echo $port
+}
 
-export PORT=$port
+export SMTP_PORT=`get_unused_port`
 
 function cleanupPostgres {
   TEST_DBS_TO_DELETE=`psql -Atqc "SELECT datname FROM pg_database WHERE datistemplate IS FALSE AND datname LIKE '${TEST_DB_PREFIX}%';"`
@@ -60,8 +66,14 @@ function cleanupPostgres {
 }
 trap cleanupPostgres EXIT
 
-node --harmony $ISTANBUL_BIN cover $MOCHA_BIN -- --require co-mocha --harmony tests/ "$@"
+# NB: the istanbul harmony branch broke because an older version of esprima no longer builds
+# the latest stable version of istanbul does not support generator functions
+#
+#node --harmony $ISTANBUL_BIN --harmony cover $MOCHA_BIN -- --require co-mocha --harmony tests/ "$@"
 
+node --harmony $MOCHA_BIN --require co-mocha --harmony tests/ "$@"
+
+export PORT=`get_unused_port`
 echo "Starting server in background on port $PORT"
 nohup npm run server -- COME_AND_GET_ME &>nohup.out &
 

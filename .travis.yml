@@ -14,7 +14,8 @@ cache:
 before_install:
 - psql -c 'CREATE DATABASE travis;' -U postgres
 - cat core/db/*.sql | psql
-- npm install -g codeclimate-test-reporter
+# needed for istanbul coverage reports, but istanbul isn't working
+#- npm install -g codeclimate-test-reporter
 
 # reqs for SlimerJS
 - export DISPLAY=:99.0
@@ -45,7 +46,7 @@ after_success: >
 
     if [ "$TRAVIS_BRANCH" == "master" ]; then
       npm run deploy dev;
-      codeclimate < coverage/lcov.info
+      #codeclimate < coverage/lcov.info
     elif [ "$TRAVIS_BRANCH" == "staging" ]; then
       npm run deploy staging;
     elif [ "$TRAVIS_BRANCH" == "production" ]; then
