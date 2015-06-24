@@ -51,6 +51,7 @@ after_success: >
       npm run deploy staging;
     elif [ "$TRAVIS_BRANCH" == "production" ]; then
       npm run deploy production;
+    fi
   fi
 
 notifications:
