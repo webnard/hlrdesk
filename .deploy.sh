@@ -11,6 +11,7 @@ case "$1" in
     APP=hlrdesk
     DB=hlrdesk
     cd core/db
+    ./drop-db.sh
     cat *.sql | psql $DEVELOPMENT_POSTGRES_URI $DB
     cd -
     ;;

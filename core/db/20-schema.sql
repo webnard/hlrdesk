@@ -202,17 +202,6 @@ CREATE TABLE checked_out (
     CONSTRAINT checked_out_call_fkey FOREIGN KEY (call) REFERENCES inventory(call)
 );
 
---
--- TOC entry 1982 (class 0 OID 0)
--- Dependencies: 5
--- Name: public; Type: ACL; Schema: -; Owner: postgres
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
-
 
 -- Completed on 2014-12-02 13:12:59 MST
 
