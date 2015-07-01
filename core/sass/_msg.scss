@@ -1,4 +1,4 @@
-@import 'admin';
+
 #center_panel {
   @include basic_panel(75%,$creme,black);
   min-width: 200px;
@@ -84,14 +84,14 @@
 .message_title{
   margin: .6em;
   position:relative;
-  color: $byu-blue;
+  color: $byuBlue;
   clear: right;
   float:both;
 }
 
 .message_body{
   font-size:.8em;
-  color: $byu-blue;
+  color: $byuBlue;
   margin: .5em;
 }
 
