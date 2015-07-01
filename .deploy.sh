@@ -11,7 +11,7 @@ case "$1" in
     APP=hlrdesk
     DB=hlrdesk
     cd core/db
-    cat *.sql | ssh dokku@$REMOTE postgresql:restore $DB
+    cat *.sql | psql $DEVELOPMENT_POSTGRES_URI $DB
     cd -
     ;;
   staging)
