@@ -1,7 +1,23 @@
-#checkIn{
-  button{
-    float:right;
+@media (max-width: 1200px) {
+  #checkIn #checked-out-items {
+    font-size: 0.85em;
+    th, td {
+      padding: 0.8em !important;
+    }
   }
+}
+
+@media (max-width: 750px) {
+  #checkIn #checked-out-items {
+    font-size: 0.7em;
+    th, td {
+      padding: 0.8em !important;
+    }
+  }
+}
+
+#checkIn{
+  background-color: $creme;
 
   .check-in-btn[disabled] {
     background-color:$disabledGrey;
@@ -51,21 +67,32 @@
     margin: 0;
   }
 
-  .checkIN {
-    padding:1em;
-  }
-  .checkIN th {
-    background-color:#1c305d;
-    color:white;
-    font-weight: 800;
+  #checked-out-items {
+    margin-top: 4em;
+
+    th {
+      background-color:#1c305d;
+      color:white;
+      font-weight: 800;
+    }
+
+    td {
+      word-break: break-all;
+    }
+
+    td, th {
+      white-space: normal;
+      padding: 1em;
+      margin: 0;
+      vertical-align: middle;
+      text-align: left;
+      cursor: pointer;
+    }
+
   }
 
   .colWidth{
     width:10%;
-  }
-
-  .checkIN tr {
-    background-color:#efefef;
   }
 
   .fa-plus-square-o {
@@ -75,19 +102,22 @@
     cursor:pointer;
   }
 
-  fieldset {
+  #live-search {
     border:none;
+    outline: 1px solid black;
     background:$creme;
-  }
+    position: fixed;
+    z-index: 5;
+    padding-left: 0.5em;
 
-  td, th {
-    word-wrap: break-word;
-    white-space: normal;
-    padding: 1em;
-    margin: 0;
-    vertical-align: middle;
-    text-align: left;
-    cursor: pointer;
+    button, input {
+      display: inline-block;
+      vertical-align: center;
+      margin-right: 1em;
+    }
+    button {
+      margin-left: 0;
+    }
   }
 
   td:hover {
@@ -98,14 +128,13 @@
 
   table{
     border-collapse:collapse;
-    height: 6em;
     margin:0;
+    padding: 0;
     cursor:pointer;
   }
 
   tr {
-    //border: 1px solid #D9E4E6;
-    max-height:3em;
+    background-color:#efefef;
     &:nth-child(odd) {
       background-color: $creme;
     }
