@@ -1,146 +1,139 @@
-
-
 #checkIn{
-button{
-  float:right;
-}
+  button{
+    float:right;
+  }
 
-.check-in-btn[disabled] {
-background-color:$disabledGrey;
-background:$disabledGrey;
-box-shadow:none;
-cursor: default;
-}
+  .check-in-btn[disabled] {
+    background-color:$disabledGrey;
+    background:$disabledGrey;
+    box-shadow:none;
+    cursor: default;
+  }
 
-tr td.due {
-  &:not(.editing) {
-    input[type=date], .due-extend.cancel, .due-extend.save {
+  tr td.due {
+    &:not(.editing) {
+      input[type=date], .due-extend.cancel, .due-extend.save {
+        display: none;
+      }
+    }
+    &.editing .due-extend.begin {
       display: none;
     }
   }
-  &.editing .due-extend.begin {
+
+  tr td.due.editing .date-truncated {
     display: none;
   }
-}
-tr td.due.editing .date-truncated {
-  display: none;
-}
 
-tr:hover .due-extend {
-  visibility: visible;
-  &:hover {
-    text-shadow: black 1px 1px 0px;
-  }
-}
-
-.date-truncated {
-  display: inline-block;
-  vertical-align: center;
-}
-
-.due-extend {
-  visibility: hidden;
-  border: none;
-  background: none;
-  color: inherit;
-  box-shadow: none;
-  float: none;
-  display: inline-block;
-  vertical-align: center;
-  border-radius: 0;
-  padding: 0;
-  margin: 0;
-}
-
-.checkIN {
-  padding:1em;
-}
-.checkIN th {
-  padding:1em;
-  font-family:arial;
-  font-size:1em;
-  background-color:#1c305d;
-  color:white;
-}
-
-.colWidth{
-  width:10%;
-}
-
-.checkIN tr {
-  background-color:#efefef;
-}
-
-.fa-plus-square-o {
+  tr:hover .due-extend {
+    visibility: visible;
     &:hover {
-    color:red;
+      text-shadow: black 1px 1px 0px;
+    }
   }
-  cursor:pointer;
-}
 
-fieldset{
-  border:none;
-  background:$creme;
-}
-
-td {
-  word-wrap: break-word;
-  min-width:3.5em;
-  padding: 1em;
-  margin:none;
-}
-
-td:hover{
-  background:none;
-  transition:none;
-}
-
-table{
-  border-collapse:collapse;
-  height: 6em;
-  margin:0;
-  cursor:pointer;
-}
-
-th{
-  text-align:left;
-  cursor:pointer;
-}
-
-tr {
-  //border: 1px solid #D9E4E6;
-  max-height:3em;
-  &:nth-child(odd) {
-    background-color: $creme;
+  .date-truncated {
+    display: inline-block;
+    vertical-align: center;
   }
-  &:hover {
-    background-color: $byuBlueHL;
+
+  .due-extend {
+    visibility: hidden;
+    border: none;
+    background: none;
+    color: inherit;
+    box-shadow: none;
+    float: none;
+    display: inline-block;
+    vertical-align: center;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .checkIN {
+    padding:1em;
+  }
+  .checkIN th {
+    background-color:#1c305d;
     color:white;
   }
-}
 
-
-tr.overdue {
-  color:$red;
-  font-weight:bold;
-  &:hover {
-    background-color: $redHL;
-    color:white;
+  .colWidth{
+    width:10%;
   }
-}
 
-body {
-  font-family: Arial, sans-serif;
-  //color: $mainBlue;
-  background: $creme;
-}
+  .checkIN tr {
+    background-color:#efefef;
+  }
 
-tr.selected{
-  background-color: $mainBlueHL;
-  color:white;
+  .fa-plus-square-o {
     &:hover {
-    background-color: $byuBlueHL;
+      color:red;
+    }
+    cursor:pointer;
   }
-}
 
+  fieldset {
+    border:none;
+    background:$creme;
+  }
+
+  td, th {
+    word-wrap: break-word;
+    white-space: normal;
+    padding: 1em;
+    margin: 0;
+    vertical-align: middle;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  td:hover {
+    background:none;
+    transition:none;
+    color: white;
+  }
+
+  table{
+    border-collapse:collapse;
+    height: 6em;
+    margin:0;
+    cursor:pointer;
+  }
+
+  tr {
+    //border: 1px solid #D9E4E6;
+    max-height:3em;
+    &:nth-child(odd) {
+      background-color: $creme;
+    }
+    &:hover {
+      background-color: $byuBlueHL;
+      color:white;
+    }
+  }
+
+  tr.overdue {
+    color:$red;
+    font-weight:bold;
+    &:hover {
+      background-color: $redHL;
+      color:white;
+    }
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    //color: $mainBlue;
+    background: $creme;
+  }
+
+  tr.selected{
+    background-color: $mainBlueHL;
+    color:white;
+      &:hover {
+      background-color: $byuBlueHL;
+    }
+  }
 }

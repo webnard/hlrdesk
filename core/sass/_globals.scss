@@ -23,17 +23,6 @@ body
   background-color: black;
 }
 
-button {
-    height: 40px;
-    width: 200px;
-    border-radius: 5px;
-    background-color: #690000;
-    text-align: center;
-    color: #FFFFFF;
-    font-family: Verdana, Arial, Sans-Serif;
-    opacity: 0.8;
-}
-
 html, body
 {
   height:100%;
@@ -42,7 +31,7 @@ html, body
   overflow:hidden;
 }
 
-section,table,thead
+section
 {
   height:100%;
   width:100%;

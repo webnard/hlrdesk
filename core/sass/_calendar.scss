@@ -1,9 +1,8 @@
+$cal-red: red;
+$cal-green: green;
+$cal-blue:  #1c305d;
 $bg: #f6f3ea;
-$blue:  #1c305d;
-$red: red;
-$green: green;
 $highlight: #b3b1aa;
-$disabledGray: #cac9c9;
 
 #calendar
 {
@@ -164,20 +163,20 @@ $disabledGray: #cac9c9;
 
   .selected
   {
-    background-color: $blue;
+    background-color: $cal-blue;
     cursor: pointer;
   }
 
   .disabled
   {
-    background-color: $disabledGray;
+    background-color: $disabledGrey;
     cursor: default;
     border-width: 0px;
   }
 
   .requested
   {
-    background-color: $green;
+    background-color: $cal-green;
     cursor: default;
   }
 
