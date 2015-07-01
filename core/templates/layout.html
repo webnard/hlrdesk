@@ -2,87 +2,83 @@
 <html>
 
 <head>
- <title><%= title %></title>
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="/css/msg.css">
-<link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" sizes="180x180">
-<link rel="icon" href="/android-chrome-36x36.png" sizes="36x36">
-<link rel="icon" href="/android-chrome-192x192.png" sizes="192x192">
-<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" sizes="180x180">
+  <link rel="icon" href="/android-chrome-36x36.png" sizes="36x36">
+  <link rel="icon" href="/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48">
 
-<script>
-  window.HLRDESK = window.HLRDESK || {};
-  window.HLRDESK.init = {};
-  <% if(token) { %>
-  window.HLRDESK.token = '<%=token%>';
-  <% } else { %>
-    window.HLRDESK.token = null;
-  <% } %>
-</script>
-<script src="/socket.io/socket.io.js"></script>
-<script type='text/javascript' src='https://code.jquery.com/jquery-2.1.1.min.js'></script>
-<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-<script type="text/javascript" src="/js/lib/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="/js/lib/patternLibrary.js"></script>
-<script type='text/javascript' src='/js/checkin.js'></script>
-<script type='text/javascript' src='/js/msg.js'></script>
-<script type='text/javascript' src='/js/mkadmin.js'></script>
-<script type='text/javascript' src='/js/checkout.js'></script>
-<script type='text/javascript' src='/js/alerts.js'></script>
-<script type='text/javascript' src='/js/search-plugin.js'></script>
-<script type='text/javascript' src='/js/edit-catalog.js'></script>
-<script type='text/javascript' src='/js/languages.js'></script>
-<script type='text/javascript' src='/js/media.js'></script>
-<script type='text/javascript' src='/js/viewHistory.js'></script>
+  <script>
+    window.HLRDESK = window.HLRDESK || {};
+    window.HLRDESK.init = {};
+    <% if(token) { %>
+    window.HLRDESK.token = '<%=token%>';
+    <% } else { %>
+      window.HLRDESK.token = null;
+    <% } %>
+  </script>
 
+  <script src="/socket.io/socket.io.js"></script>
+  <script type='text/javascript' src='https://code.jquery.com/jquery-2.1.1.min.js'></script>
+  <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+  <script type="text/javascript" src="/js/lib/jquery.tablesorter.min.js"></script>
+  <script type="text/javascript" src="/js/lib/patternLibrary.js"></script>
+  <script type='text/javascript' src='/js/checkin.js'></script>
+  <script type='text/javascript' src='/js/msg.js'></script>
+  <script type='text/javascript' src='/js/mkadmin.js'></script>
+  <script type='text/javascript' src='/js/checkout.js'></script>
+  <script type='text/javascript' src='/js/alerts.js'></script>
+  <script type='text/javascript' src='/js/search-plugin.js'></script>
+  <script type='text/javascript' src='/js/edit-catalog.js'></script>
+  <script type='text/javascript' src='/js/languages.js'></script>
+  <script type='text/javascript' src='/js/media.js'></script>
+  <script type='text/javascript' src='/js/viewHistory.js'></script>
 
-<link rel="stylesheet" type="text/css" href="/css/admin.css">
-<link rel="stylesheet" type="text/css" href="/css/check-out.css">
-<link rel="stylesheet" type="text/css" href="/css/mkadmin.css">
-<link rel="stylesheet" type="text/css" href="/css/search-plugin.css">
-<link rel="stylesheet" type="text/css" href="/css/languages.css">
-<link rel="stylesheet" type="text/css" href="/css/flash-message.css">
-<link rel="stylesheet" type="text/css" href="/css/media.css">
-<link rel="stylesheet" type="text/css" href="/css/viewHistory.css">
-<link rel="stylesheet" type="text/css" href="/css/checkIN.css" />
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
 </head>
+
 <body>
-<small id='caption' class="<%= captionClass %>">Background licensed under <a href="https://creativecommons.org/licenses/by-nc/2.0/">CC 2.0 by NC</a>,
-  <a href="https://www.flickr.com/photos/cedwardbrice/15293165136/in/photolist-piptbY-sBCYV-jWGQpm-dBbMnD-dBbPmT-goXQL8-9upoJR-dBbNZ2-os1wL3-rwYYqj-r5ySAd-6ZmQUT-pismSB-q56k3D-5UKu56-f14Wh7-aNdbMz-agN1Ey-ft31RU-u9zjo-mmYvP-8Tr9E-d83uYq-5dDUmn-d83yfE-pkt4M9-eJbaxB-ecFaLN-4jqe1P-5K4L7T-bKyyzi-nPQVkB-keD6Xb-f9cY5E-2tXW6x-pTXBDB-nDg3VR-oGv16y-6GtaJj-nio9Vd-ndQDZY-r2KZAd-7vCBHt-dBbLhX-jo7Nxe-oXm9Qd-mNegfa-bKeS8r-sagffJ-5epssc">CEBImagery</a>
-</small>
-<section id="left_panel">
-<div id="logo_container"><img id="logo" alt="Logo" src="/resources/logo.png"/></div>
-<a class="lpanel check-in" href=/check-in data-init=checkin data-title="Check In">Check In</a>
-<a class="lpanel check-out" href=/check-out data-init=checkout data-title="Check Out">Check Out</a>
-<a class="lpanel edit-catalog" href=/edit-catalog data-init=editCatalog data-title="Edit Catalog">Edit Catalog</a>
-<a class="lpanel" href="https://hummedia.byu.edu/api/v2//account/login?r=https://hummedia.byu.edu">Hummedia</a>
-<a class="lpanel" data-title=Messages href="/message">Messaging</a>
-<!--<a class="lpanel calendar" href=/calendar data-title=Calendar>Calendar</a>-->
-<a class="lpanel calendar" href="https://hlr.byu.edu/schedule/">Calendar</a>
-<a class="lpanel" href=/viewHistory data-title="View History" data-init=viewHistory>View History</a>
-<a class="lpanel" href=/languages data-title="Languages" data-init=languages>Edit Languages</a>
-<a class="lpanel" href=/media data-title="Media" data-init=media>Edit Media</a>
-<a class="lpanel" href=/employees data-title="Employees" data-init=mkadmin>Edit Employees</a>
-<a class="lpanel" id="logout" href="/logout">Sign Out</a>
-</section>
-<section id="loader">
-<%- body %>
-</section>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', "<%=process.env.GAID %>", 'auto');
-  ga('require', 'linkid', 'linkid.js');
-  ga('send', 'pageview');
+  <small id='caption' class="<%= captionClass %>">Background licensed under <a href="https://creativecommons.org/licenses/by-nc/2.0/">CC 2.0 by NC</a>,
+    <a href="https://www.flickr.com/photos/cedwardbrice/15293165136/in/photolist-piptbY-sBCYV-jWGQpm-dBbMnD-dBbPmT-goXQL8-9upoJR-dBbNZ2-os1wL3-rwYYqj-r5ySAd-6ZmQUT-pismSB-q56k3D-5UKu56-f14Wh7-aNdbMz-agN1Ey-ft31RU-u9zjo-mmYvP-8Tr9E-d83uYq-5dDUmn-d83yfE-pkt4M9-eJbaxB-ecFaLN-4jqe1P-5K4L7T-bKyyzi-nPQVkB-keD6Xb-f9cY5E-2tXW6x-pTXBDB-nDg3VR-oGv16y-6GtaJj-nio9Vd-ndQDZY-r2KZAd-7vCBHt-dBbLhX-jo7Nxe-oXm9Qd-mNegfa-bKeS8r-sagffJ-5epssc">CEBImagery</a>
+  </small>
 
-</script>
-<script src="/js/admin.js"></script>
+  <section id="left_panel">
+    <div id="logo_container"><img id="logo" alt="Logo" src="/resources/logo.png"/></div>
+    <a class="lpanel check-in" href=/check-in data-init=checkin data-title="Check In">Check In</a>
+    <a class="lpanel check-out" href=/check-out data-init=checkout data-title="Check Out">Check Out</a>
+    <a class="lpanel edit-catalog" href=/edit-catalog data-init=editCatalog data-title="Edit Catalog">Edit Catalog</a>
+    <a class="lpanel" href="https://hummedia.byu.edu/api/v2//account/login?r=https://hummedia.byu.edu">Hummedia</a>
+    <a class="lpanel" data-title=Messages href="/message">Messaging</a>
+    <!--<a class="lpanel calendar" href=/calendar data-title=Calendar>Calendar</a>-->
+    <a class="lpanel calendar" href="https://hlr.byu.edu/schedule/">Calendar</a>
+    <a class="lpanel" href=/viewHistory data-title="View History" data-init=viewHistory>View History</a>
+    <a class="lpanel" href=/languages data-title="Languages" data-init=languages>Edit Languages</a>
+    <a class="lpanel" href=/media data-title="Media" data-init=media>Edit Media</a>
+    <a class="lpanel" href=/employees data-title="Employees" data-init=mkadmin>Edit Employees</a>
+    <a class="lpanel" id="logout" href="/logout">Sign Out</a>
+  </section>
 
-<% include error-modal.html %>
+  <div id="loader">
+    <%- body %>
+  </div>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', "<%=process.env.GAID %>", 'auto');
+    ga('require', 'linkid', 'linkid.js');
+    ga('send', 'pageview');
+  </script>
+
+  <script src="/js/admin.js"></script>
+
+  <% include error-modal.html %>
 </body>
 </html>

@@ -1,36 +1,21 @@
-#login {
-	position: absolute;
-	top: 50%;
-	left :50%;
-	transform: translateX(-50%) translateY(-50%);
-	text-align: center
-}
+$byu-blue: #2b3044;
 
-#leaveMessage
-{
-position: absolute;
-	top: 20%;
-	left :20%;
-	transform: translateX(-50%) translateY(-50%);
-	text-align: center;
-
-}
-
-body
-{
-	background-size:cover;
-	display: flex;
-  background-repeat:none;
-  background-color: black;
-}
-
-button {
-    height: 40px;
-    width: 200px;
-    border-radius: 5px;
-    background-color: #690000;
-    text-align: center;
-    color: #FFFFFF;
-    font-family: Verdana, Arial, Sans-Serif;
-    opacity: 0.8;
-}
+@import '_reset.scss';
+@import '_colors.scss';
+@import '_patternLibrary.scss';
+@import '_globals.scss';
+@import '_navigation.scss';
+@import '_animation.scss';
+@import '_calendar.scss';
+@import '_check-out.scss';
+@import '_checkIN.scss';
+@import '_editCatalog.scss';
+@import '_flash-message.scss';
+@import '_languages.scss';
+@import '_media.scss';
+@import '_mkadmin.scss';
+@import '_msg.scss';
+@import '_navigation.scss';
+@import '_search-plugin.scss';
+@import '_viewHistory.scss';
+@import '_loader.scss';

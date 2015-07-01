@@ -127,7 +127,7 @@ app.use(_.get('/check-in', function *() {
 
   var userDetails = yield user.contactInfo.apply(this, users);
 
-  yield this.render('catalog/check-in', {
+  yield this.render('check-in', {
     items: items,
     user: userDetails,
     admin: this.session.user,
@@ -138,7 +138,7 @@ app.use(_.get('/check-in', function *() {
 }));
 
 app.use(_.get('/check-out', function *() {
-  yield this.render('catalog/check-out', {
+  yield this.render('check-out', {
     title: "Check Out",
     layout: this.USE_LAYOUT
   });
@@ -148,7 +148,7 @@ app.use(_.get('/edit-catalog', function *() {
   var client = db();
   var media_types = yield client.query("SELECT * FROM media ORDER BY media ASC;");
   var lang = yield client.query("SELECT * FROM languages ORDER BY name ASC;");
-  yield this.render('catalog/edit-catalog', {
+  yield this.render('edit-catalog', {
     title: "Edit Item",
     layout: this.USE_LAYOUT,
     media_types: media_types,
@@ -158,7 +158,7 @@ app.use(_.get('/edit-catalog', function *() {
 
 app.use(_.get('/viewHistory', function *() {
   var client = db();
-  yield this.render('catalog/viewHistory', {
+  yield this.render('view-history', {
     title: "Item History",
     layout: this.USE_LAYOUT,
   });
