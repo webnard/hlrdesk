@@ -77,6 +77,7 @@ module.exports = {
     }
   });},
 
+  // template defaults to reminder.txt
   reminder: function(items, name, email, template) {
     return new Promise(function(resolve, reject) {
       Reminder(items, name, email, template).then(function(opts) {
