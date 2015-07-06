@@ -35,15 +35,15 @@ window.HLRDESK.init.checkout = function initCheckout() {
   }
 
   function submitRequest(evt) {
+    evt.preventDefault();
+
     // temporarily disable buttons
     var submitBtn = document.querySelector('.modalWindow .check-out-verify input[type=submit]');
     var closeBtn = document.querySelector('.modalWindow .check-out-verify button.close');
     var oldText = submitBtn.textContent;
     submitBtn.value = 'Submitting...';
     submitBtn.disabled = true;
-    closeBtn.disabled = true;
 
-    evt.preventDefault();
 
     var el = evt.srcElement || evt.target;
     var items = el.querySelectorAll('.ready-for-checkout');
@@ -72,8 +72,11 @@ window.HLRDESK.init.checkout = function initCheckout() {
       clear();
       socket.removeAllListeners('inv.checkout.success');
       submitBtn.value = 'Success!';
-      setTimeout(function() { closeModal();
+      setTimeout(function() {
+        closeModal(),
+        HLRDESK.alert.flash("Item(s) checked out.");
       }, 750);
+
     });
   };
 
