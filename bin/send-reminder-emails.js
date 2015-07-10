@@ -5,6 +5,7 @@ var inv = require('../core/app_modules/inventory');
 var co = require('co');
 var extend = require('extend');
 
+const DAY_BEFORE_YESTERDAY = moment().subtract(2, 'days');
 const YESTERDAY = moment().subtract(1, 'days');
 const TOMORROW = moment().add(1, 'days');
 const NOW = moment();
@@ -55,7 +56,7 @@ var promise = null;
 
 switch(process.argv[2]) {
   case '--overdue':
-    promise = run.bind(this, YESTERDAY, NOW, 'overdue');
+    promise = run.bind(this, DAY_BEFORE_YESTERDAY, YESTERDAY, 'overdue');
     break;
   case '--reminder':
     promise = run.bind(this, NOW, TOMORROW, 'reminder');
