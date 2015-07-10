@@ -40,11 +40,21 @@
   tr td.due.editing .date-truncated {
     display: none;
   }
+  $hover-shadow: black 1px 1px 0px;
 
   tr:hover .due-extend {
     visibility: visible;
     &:hover {
-      text-shadow: black 1px 1px 0px;
+      text-shadow: $hover-shadow;
+    }
+  }
+  .send-email-icon {
+    visibility: hidden;
+  }
+  .send-email:hover {
+    text-shadow: $hover-shadow;
+    .send-email-icon {
+      visibility: visible;
     }
   }
 
