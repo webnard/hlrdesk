@@ -1,10 +1,13 @@
 window.HLRDESK.init.checkin = function() {
   var socket = io();
 
-  var employee = window.patron
+  var employee = window.patron;
+
   socket.on('checkin event', clearItems);
   socket.on('extend success', itemExtended);
   socket.on('extend error', itemError);
+  socket.on('extend error', itemError);
+  socket.on('email.sent', emailSent);
 
   function itemError(data) {
     var el = document.getElementById(data.id);
@@ -102,5 +105,44 @@ window.HLRDESK.init.checkin = function() {
 
   $("#remove").click(function(){
     $( '#checked-out-items tbody tr:visible' ).removeClass( "selected" );
+  });
+
+  var closeModal = function() {};
+  function emailSent(data) {
+    // this is capricious and i don't like it and really
+    // we need a better way of handling modal windows
+    // so here i lay a big fat TODO:
+    //
+    // CloseModal could be a different function by the time
+    // this function (i.e., emailSent) is called. It would
+    // be beneficial to have an encapsulating object for
+    // modal windows to manage event binding etc.
+    closeModal();
+    HLRDESK.alert.flash(data);
+  }
+
+  $(".send-email").click(function(evt) {
+    evt.preventDefault();
+    var emailPrompt = document.getElementById('send-reminder-email-warning');
+    closeModal = window.patternlibrary.displayModal(emailPrompt);
+    var $btn = $('.modalWindow .send-email');
+    var $tr = $(this).parents('tr');
+    var netid = $tr.data('patron');
+    $('.modalWindow .netid').text(netid);
+
+    $btn.click(function(e) {
+      this.disabled = 'disabled';
+      $(this).val('Waiting');
+
+      var method = 'email.' + ($tr.hasClass('overdue') ? 'overdue' : 'reminder');
+      socket.emit(method, {
+        netid: netid,
+        items: [{
+          item: $tr.data('call'),
+          due: $tr.data('due')
+        }],
+        token: window.HLRDESK.token
+      });
+    });
   });
 }

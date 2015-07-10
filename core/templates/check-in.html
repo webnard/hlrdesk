@@ -17,7 +17,6 @@
       <th scope=col class="colWidth"><i class="fa fa-sort"></i> Phone</th>
       <th scope=col class="colWidth"><i class="fa fa-sort"></i> Notes</th>
       <th scope=col class="colWidth col-due"><i class="fa fa-sort"></i> Due</th>
-      <!--<th scope=col>More</th>-->
     </tr>
   </thead>
   <tbody>
@@ -34,7 +33,10 @@
         <td><%= item.name %></td>
         <td><%= item.owner %></td>
         <td><%= user[item.owner].name %></td>
-        <td><%= user[item.owner].email %></td>
+        <td>
+          <a class=send-email title="Send reminder email"><%= user[item.owner].email %>
+          <i class='send-email-icon fa fa-envelope-o'></i></a>
+        </td>
         <td><%= user[item.owner].telephone %></td>
         <td><%= item.notes || "" %></td>
         <td class=due data-date="<%=item.due.getTime()%>">
@@ -54,3 +56,10 @@
 </table>
 <script>window.HLRDESK.init.checkin();</script>
 </section>
+<template id='send-reminder-email-warning'>
+  <header>Send Reminder Email</header>
+  <p>Would you like to send a reminder email to <span class=netid></span> about
+     their due date? Remember, patrons automatically receive an email the day before
+     and the day after items are due. Be prudent!</p>
+  <input type=submit value='Submit' class='mainBtn send-email submit'>
+</template>
