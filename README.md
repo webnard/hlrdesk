@@ -52,6 +52,25 @@ EMAILSERVICE=Gmail (note the cap)
 EMAILPASS=my.password.here
 ```
 
+## Commands
+
+### Starting the server
+
+`npm start`
+
+### Sending reminder emails
+
+You may want to automatically send out reminder emails to users about overdue
+or soon-to-be due items.
+
+```bash
+# Send reminder emails for items that became due yesterday (and are now overdue)
+npm run email-overdue
+
+# Send reminder emails to users with items due within the next 24 hours
+npm run email-reminder
+```
+
 ### Testing
 
 Test files can be found under `tests/`, with mock session data in
@@ -62,24 +81,22 @@ Run `npm test` to run the tests.
 ### Deployment
 
 Deployment to our servers can be done using one of the following commands and
-should typically only take place through Travis (see the `.travis.yml` file for
-specification).
+should typically only take place through Travis.
 
 ```bash
-npm run deploy dev # to update ianh.hlrdev.byu.edu
+
+# automatically run when code is merged into development
+npm run deploy dev # to update hlrdesk.hlrdev.byu.edu
+
+# automatically run when code is merged into staging
 npm run deploy staging # to update hlrdesk-staging.byu.edu
+
+# automatically run when a commit is tagged, preferably
+# by adding a release through Github's interface.
+# Pushing to production automatically updates the database on staging.
+# It is assumed that staging is up-to-date when a tag is added.
 npm run deploy production # to update hlrdesk.byu.edu
 ```
 
 All versions must needs be from the list of My Little Pony characters
 http://mlp.wikia.com/wiki/Characters
-
-## Sending reminder emails
-
-### Send an email out to users that within the last 24 hours one of their items is overdue
-
-`npm run email-overdue`
-
-### Send an email out to users that within the next 24 hours one of their items is due
-
-`npm run email-reminder`
