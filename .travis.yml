@@ -12,6 +12,7 @@ cache:
   directories:
   - node_modules
 before_install:
+- psql -c 'DROP DATABASE IF EXISTS travis;' -U postgres
 - psql -c 'CREATE DATABASE travis;' -U postgres
 - cat core/db/*.sql | psql
 # needed for istanbul coverage reports, but istanbul isn't working
