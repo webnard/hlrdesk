@@ -5,6 +5,12 @@ hlrdesk
 
 [Recent Build Screenshots](https://byu-odh.github.io/hlrdesk)
 
+## Requirements
+
+* Node.js 0.12.x
+* Postgres >= 9.3
+* Redis
+
 ## Setup
 
 ### Configuration
