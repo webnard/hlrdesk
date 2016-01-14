@@ -48,7 +48,8 @@ REDIS_IP=hostname
 # Email G00dness
 
 EMAIL=hlr.dev.useyouremailN00Bulous@gmail.com
-EMAILSERVICE=Gmail (note the cap)
+# note the cap
+EMAILSERVICE=Gmail
 EMAILPASS=my.password.here
 ```
 
