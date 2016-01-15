@@ -104,5 +104,7 @@ npm run deploy staging # to update hlrdesk-staging.byu.edu
 npm run deploy production # to update hlrdesk.byu.edu
 ```
 
+If you need to re-deploy on the server (the server is down), run `dokku deploy hlrdesk` on the server.
+
 All versions must needs be from the list of My Little Pony characters
 http://mlp.wikia.com/wiki/Characters
