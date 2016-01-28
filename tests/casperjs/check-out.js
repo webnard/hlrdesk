@@ -42,12 +42,7 @@ casper.test.begin('check out page', function(test) {
     this.wait(250).then(function() {
       casper.capture(SHOTS + 'checkout-modal-window.png');
       test.assertExists('.modalWindow form.check-out-verify');
-      var due = new Date();
-      var twoDays = 1.728e8;
-      due.setTime(due.getTime() + twoDays);
       var el = '.modalWindow form.check-out-verify .due';
-      var dueStr = due.toISOString().substr(0,10);
-      casper.sendKeys(el, dueStr);
       casper.sendKeys('#check-out-netid', 'prabbit');
       casper.capture(SHOTS + 'checkout-modal-window-filled.png');
     });
