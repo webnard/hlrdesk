@@ -100,7 +100,12 @@ window.HLRDESK.init.checkout = function initCheckout() {
       li.querySelector('.input-call').value = call;
       li.querySelector('.input-copy').value = copy;
 
+      var threeDays = new Date();
+      threeDays.setDate(threeDays.getDate() + 3);
+      threeDays = ($.datepicker.formatDate("yy-mm-dd", threeDays));
+      li.querySelector(".due").value = threeDays;
       fragment.appendChild(li);
+
     }
     ol.appendChild(fragment);
   }
