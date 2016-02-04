@@ -53,7 +53,6 @@ window.HLRDESK.init.checkout = function initCheckout() {
     for(var i = 0; i<items.length; i++) {
       var dueDate = new Date(items[i].querySelector('input[name=due]').value);
       dueDate.setHours(21);
-      console.log(dueDate);
       toSubmit.push({
         due: dueDate,
         call: items[i].querySelector('input[name=call]').value,
