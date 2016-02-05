@@ -90,6 +90,8 @@ Run `npm test` to run the tests.
 Deployment to our servers can be done using one of the following commands and
 should typically only take place through Travis.
 
+**This is done when a passing master branch is given a tag.**
+
 ```bash
 
 # automatically run when code is merged into development
