@@ -295,7 +295,7 @@ app.use(_.post("/employees",function *(){
 app.use(_.get("/employees",function *(){
   var isAdmin = yield auth.isAdmin(this.session.user);
   var client = db();
-  var allAdmins = yield client.query("SELECT netid FROM users WHERE admin = TRUE;");
+  var allAdmins = yield client.query("SELECT netid, email FROM users WHERE admin = TRUE;");
   if (isAdmin){
     if (this.request.query.status == "false"){
       yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf, allAdminsFromDB: allAdmins, alert : true, to_mk : this.request.query.toMk});
