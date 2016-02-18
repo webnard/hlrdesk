@@ -256,7 +256,7 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
       var due = item.due;
       var call = item.call;
       var copy = item.copy;
-      assert(new Date(due) >= (new Date()), "Due date " + due + " is earlier than now.");
+      assert(new Date(due) >= (new Date().setHours(0,0,0,0)), "Due date " + due + " is earlier than now.");
       var checked_out = yield inventory.is_checked_out(call, copy);
       assert(!checked_out, call + " (copy #" + copy + ") is already checked out");
       assert(yield inventory.exists(call), call + " doesn't exist; cannot rent");
@@ -267,8 +267,7 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
       var notes ='Item checked out by ' + employee + ' due on ' + due.toString().substring(0,10);
       yield client.nonQuery("INSERT INTO item_history (call_number, type, who, date_changed, notes) VALUES ($1, 'Checkout', $2, CURRENT_TIMESTAMP, $3) ", [call, patron, notes ])
 
-      var dueFmt = moment(due).format();
-      yield client.nonQuery(q , [call, copy, patron, employee, dueFmt]);
+      yield client.nonQuery(q , [call, copy, patron, employee, due]);
     };
     client.nonQuery('COMMIT');
   }catch(e) {
@@ -293,10 +292,9 @@ Object.defineProperty(inventory, 'checked_out', {
     var results = (yield client.query(query)).rows;
 
     var formatted = results.map(function(a) {
-      a.due = moment(new Date(a.due).setHours(24)).hour(21).toDate(); //hacky way to compensate for a weird bug where it would take 7 hours (the difference between UTC and here) from all the due dates
-      a.due = new Date(a.due);
       a.call_number = a.call;
-      a.overdue = moment(a.due).isBefore(new Date());
+      a.due = new Date(a.due.setHours((new Date().getTimezoneOffset() > 0) ? 24 : 0)); //Compensates for bug created by being in different hemisphere
+      a.overdue = moment(a.due).isBefore(new Date().setHours(0, 0, 0, 0));
       return a;
     });
     return yield Promise.resolve(formatted);

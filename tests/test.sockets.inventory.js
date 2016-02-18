@@ -47,8 +47,9 @@ describe('socket: inv.checkout', function() {
       done();
     });
 
-    var due = new Date();
-    due = due.setYear(due.getUTCFullYear()+1);
+    var due = new Date(Date.now() + 86400000);
+    //var due = new Date();
+    //due = due.setYear(due.getUTCFullYear()+1);
     var data = {
       items: [{
         'call': 'M347FEST',
