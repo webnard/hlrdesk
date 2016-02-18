@@ -293,7 +293,7 @@ Object.defineProperty(inventory, 'checked_out', {
 
     var formatted = results.map(function(a) {
       a.call_number = a.call;
-      a.due = new Date(a.due.setHours((new Date().getTimezoneOffset() > 0) ? 24 : 0)); //Compensates for bug created by being in different hemisphere
+      a.due = new Date(a.due.setHours(((new Date().getTimezoneOffset() > 0) ? 24 : 0),0,0,0)); //Compensates for bug created by being in different hemisphere
       a.overdue = moment(a.due).isBefore(new Date().setHours(0, 0, 0, 0));
       return a;
     });
