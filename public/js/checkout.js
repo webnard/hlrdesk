@@ -51,9 +51,10 @@ window.HLRDESK.init.checkout = function initCheckout() {
     var toSubmit = [];
 
     for(var i = 0; i<items.length; i++) {
-      var dueDate = new Date(items[i].querySelector('input[name=due]').value);
-      dueDate.setHours(21);
+      var dateArr = items[i].querySelector('input[name=due]').value.split('-');
+      var dueDate = new Date(dateArr[0], dateArr[1]-1, dateArr[2]);
       toSubmit.push({
+        //due: new Date(items[i].querySelector('input[name=due]').value+" 21:00:00 GMT-0700 (MST)"),
         due: dueDate,
         call: items[i].querySelector('input[name=call]').value,
         copy: items[i].querySelector('input[name=copy]').value
