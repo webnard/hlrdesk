@@ -5,7 +5,12 @@ window.HLRDESK.init.messages = function() {
   $(".message-delete").click(function(){
     delMsg($(this).data('message-id'));
   });
-  //var newTaskOrder;
+  $("#messagePage").click(function(){
+    $("#messageDisplay").hide();
+    //TODO: Send database as read message here
+    socket.emit('message read', {token: window.HLRDESK.token});
+  }).one();
+  var current_message;//checking against the socket that comes in, should redo with broadcast
   //Lets you sort the list
   $(function(event, ui) {
     $("#task_sort" ).sortable({
@@ -59,18 +64,18 @@ window.HLRDESK.init.messages = function() {
     document.getElementById("add_message").innerHTML = msg_form;
     $('#m_form').submit(function(){
       var msg = { "title":$('#m_title').val(), "body":$('#m_body').val(), token: window.HLRDESK.token }
+      current_message = msg.title;
       socket.emit('write message', msg);
       document.getElementById("add_message").innerHTML = '';
       return false;
     });
   };
   socket.on('write message', function(msg){
-    //console.log("Title = " + msg.title + " Body = " + msg.body);
-    //var new_msg = "<div class='message' id='-1'
-    //add all of the properties here + 
-
-    //$('#all_m').append($("<div class='message'></div>").text(msg.title));
-    //$('#all_m').append($("<div class='message'>msg.title</div>").text(msg.title, msg.body));
+    if (current_message == msg.title){
+      $("#messageDisplay").hide();}
+    else {    
+      $("#messageDisplay").show();
+    }
   });
 
   //Delete Message
@@ -132,5 +137,7 @@ window.HLRDESK.init.messages = function() {
         document.getElementById('task_sort').appendChild(thing);
       }
     }});
-  });
+  }); 
 };
+
+

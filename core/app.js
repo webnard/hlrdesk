@@ -82,6 +82,7 @@ app.use(function *(next) {
       var is_admin = yield auth.isAdmin(this.session.user)
       if (is_admin){
         this.USE_LAYOUT = 'layout';
+        //TODO: May add read message check here. Likely the best spot
       }
       else{
         this.USE_LAYOUT = 'simple_layout';
@@ -224,9 +225,11 @@ app.use(_.post('/media', function*() {
   }
 
   if(body['delete']) {
+    console.log("Delete " );
     yield media.remove(body['delete']);
   }
   else if(body['create']) {
+    console.log("Create " +body['new-media']);//TODO add functionality to this
     yield media.add(body['new-media']);
   }
 
@@ -319,8 +322,6 @@ socket.use(function*(next){
   this.socket.user = yield auth.getUser(this.data.token);
   yield next;
 });
-
-//console.log(socket);
 
 // Load in all socket files
 fs.readdir(path.join(__dirname, 'sockets'), function (err, files) {

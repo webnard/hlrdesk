@@ -24,6 +24,7 @@ module.exports = function messages(socket, app) {
       {
         var client = db();
         client.query("INSERT INTO messages(title, username, message_body) VALUES ($1, $2, $3);", [msg.title, usr.user , msg.body]);
+        //check if message needs to display
         app.io.emit('write message', msg);
       })
     });
@@ -68,9 +69,34 @@ module.exports = function messages(socket, app) {
         var client = db();
         newTaskOrder.order.forEach(function (arrayVal, arrayLocation)
         {
-          client.query("update tasks set priority = $1 where task_id = $2", [arrayLocation,arrayVal]);
+          client.query("UPDATE tasks SET priority = $1 WHERE task_id = $2", [arrayLocation,arrayVal]);
         })
         app.io.emit('reorder tasks', newTaskOrder);
+      })
+    });
+    
+    socket.on('message read', function(object){
+      var that = this;
+      checkMe(this, ' tried to read messages', function success() 
+      {
+        var client = db();
+        client.query("UPDATE users SET last_login = current_timestamp WHERE netid = $1", [that.user]);
+      })
+    });
+    
+    socket.on('unread message', function(object){
+      var that = this;
+      checkMe(this, ' tried to read messages', function success() 
+      {
+        var client = db();
+        //TODO: move, send this when page is reloaded to only that user
+        client.transaction(function*(t) {
+          var query = "SELECT CASE WHEN (SELECT posted FROM messages WHERE username != $1 ORDER BY posted DESC LIMIT 1) > (SELECT last_login FROM users WHERE netid = $1) THEN TRUE ELSE FALSE END return_column";
+          var result = yield t.queryOne(query, [that.user]);
+          if (result.return_column == true) {
+            that.emit('unread message');
+          }
+        }).catch(console.error);
       })
     });
   };

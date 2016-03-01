@@ -4,6 +4,7 @@ var db = require('./db');
 module.exports = {
   remove: co.wrap(function*(media) {
     var client = db();
+    console.log("Media to delete: "+media);
     var query = 'DELETE FROM media WHERE medium = $1';
     var results = yield client.nonQuery(query, [media]);
 
@@ -13,6 +14,7 @@ module.exports = {
 
   add: co.wrap(function*(media) {
     var client = db();
+    console.log("Media to add: ("+media+")");
     var query = 'INSERT INTO media(medium) VALUES($1)';
     var results = yield client.nonQuery(query, [media]);
 
@@ -24,11 +26,13 @@ module.exports = {
 Object.defineProperty(module.exports, 'list', {
   get: co.wrap(function*() {
     var client = db();
-    var query = 'SELECT medium FROM media ORDER BY medium ASC;';
+    var query = 'SELECT * FROM media ORDER BY medium ASC;';
     var results = yield client.query(query);
+    //console.log(results.rows);
     var data = results.rows.map(function(r) {
       return r.medium;
     });
-    return yield Promise.resolve(data);
+    //console.log("DATA" + data);
+    return yield Promise.resolve(results.rows);
   })
 });

@@ -63,3 +63,12 @@ button{
   position: relative;
 }
 
+#messageDisplay{
+  display:none;
+  padding-left:.4em;
+}
+
+.fa-envelope:before{
+  color:#FA191C;
+}
+
