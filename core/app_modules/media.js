@@ -14,7 +14,6 @@ module.exports = {
 
   add: co.wrap(function*(media) {
     var client = db();
-    console.log("Media to add: ("+media+")");
     var query = 'INSERT INTO media(medium) VALUES($1)';
     var results = yield client.nonQuery(query, [media]);
 
@@ -28,11 +27,9 @@ Object.defineProperty(module.exports, 'list', {
     var client = db();
     var query = 'SELECT * FROM media ORDER BY medium ASC;';
     var results = yield client.query(query);
-    //console.log(results.rows);
     var data = results.rows.map(function(r) {
       return r.medium;
     });
-    //console.log("DATA" + data);
     return yield Promise.resolve(results.rows);
   })
 });

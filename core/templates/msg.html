@@ -7,7 +7,7 @@
 <div id="add_message"></div>
 <div id='all_m'>
 <% all_messages.rows.forEach(function(rows){%>
-<div class="message" id='message_<%=rows.message_id%>' ><img class="message_image" src="http://www.placecage.com/gif/<%=rows.message_id + 80%>/<%=rows.message_id + 80%>" alt="Message #<%=rows.message_id %>" width="75" height="75">
+<div class="message" id='message_<%=rows.message_id%>' ><img class="message_image" src="http://www.placecage.com/g/<%=rows.message_id + 80%>/<%=rows.message_id + 80%>" alt="Message #<%=rows.message_id %>" width="75" height="75">
 <i class="fa fa-times message-delete" id='icon_exit' data-message-id="<%=rows.message_id%>"></i>
 <text class="message_title"><%=rows.title %></text>
 <text class="message_body"><%=rows.message_body %></text>

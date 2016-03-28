@@ -1,13 +1,13 @@
 window.HLRDESK.init.messages = function() {
   var socket = window.io();
-  $(".message-add").click(newMsg);
-  $(".task-add").click(newTask);
+  var taskName =false;
+  $(".message-add").click(newMsg).one();
+  $(".task-add").click(newTask).one();
   $(".message-delete").click(function(){
     delMsg($(this).data('message-id'));
-  });
+  }).one();
   $("#messagePage").click(function(){
     $("#messageDisplay").hide();
-    //TODO: Send database as read message here
     socket.emit('message read', {token: window.HLRDESK.token});
   }).one();
   var current_message;//checking against the socket that comes in, should redo with broadcast
@@ -102,6 +102,7 @@ window.HLRDESK.init.messages = function() {
     $('#t_form').submit(function(evt){
       evt.preventDefault();
       var write_task = {"text":$('#new_task').val(), "task_id":-1 , token: window.HLRDESK.token };
+      taskName = $('#new_task').val();
       socket.emit('write task', write_task);
       document.getElementById("add_task").innerHTML = '';
     });
@@ -109,7 +110,7 @@ window.HLRDESK.init.messages = function() {
 
   //newTask
   socket.on('write task', function(task){
-    $('#task_sort').append($("<div class='projects' id='"+task.task_id+"'></div>").text(task.text));
+    if(!taskName)$('#task_sort').append($("<div class='projects' id='"+task.task_id+"'></div>").text(task.text)).one();
   });
 
   //Delete Task

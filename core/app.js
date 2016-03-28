@@ -225,11 +225,9 @@ app.use(_.post('/media', function*() {
   }
 
   if(body['delete']) {
-    console.log("Delete " );
     yield media.remove(body['delete']);
   }
   else if(body['create']) {
-    console.log("Create " +body['new-media']);//TODO add functionality to this
     yield media.add(body['new-media']);
   }
 

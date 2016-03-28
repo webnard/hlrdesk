@@ -1,5 +1,6 @@
 var auth = require('../app_modules/auth');
 var db = require('../app_modules/db');
+var msg = require('../app_modules/messages');
   
 module.exports = function messages(socket, app) {
 
@@ -17,23 +18,20 @@ module.exports = function messages(socket, app) {
       }).catch(console.error);
     }
   
-    socket.on('write message', function(msg){
+    socket.on('write message', function(mesg){
       var usr = this;
-      var errMessage = ' attempted to write a message ' + msg.title + " " + msg.body;
+      var errMessage = ' attempted to write a message \n' + mesg.title + "\n" + mesg.body;
       checkMe(this, errMessage, function success() 
       {
-        var client = db();
-        client.query("INSERT INTO messages(title, username, message_body) VALUES ($1, $2, $3);", [msg.title, usr.user , msg.body]);
-        //check if message needs to display
-        app.io.emit('write message', msg);
+        msg.addMessage(usr.user, mesg.title, mesg.body);
+        app.io.emit('write message', mesg);
       })
     });
 
     socket.on('delete message', function(delMessage){    
       var errMessage = ' attempted to delete message number ' + delMessage.message_number
       checkMe(this, errMessage, function success() {
-        var client = db();
-        client.query("DELETE FROM messages WHERE message_id = $1;", [delMessage.message_number]);
+        msg.deleteMessage(delMessage);
         app.io.emit('delete message', delMessage);
       })
     });
@@ -42,14 +40,9 @@ module.exports = function messages(socket, app) {
       var usr = this
       var errMessage = ' attempted to write task ' + task.text;
       checkMe(usr, errMessage, function success() {
-        var uID = usr.user;
-        var client = db();
-        client.transaction(function*(t) {
-          var query = "INSERT INTO tasks(task, username, priority) VALUES ($1, $2, -1) RETURNING task_id";
-          var result = yield t.queryOne(query, [task.text, uID]);
-          task.task_id = result.task_id;
-          app.io.emit('write task', task);
-        }).catch(console.error);
+        msg.addTask(usr.user, task.text);
+        app.io.emit('write task', task);
+        
       })
     });
 
@@ -57,8 +50,7 @@ module.exports = function messages(socket, app) {
       var errMessage = ' attempted to delete task number ' + t_number.text;
       checkMe(this, errMessage, function success() 
       {
-        var client = db();
-        client.query("DELETE FROM tasks WHERE task = $1;", [t_number.text]);
+        msg.deleteTask(t_number);
         app.io.emit('delete task', t_number);
       });
     });
@@ -66,11 +58,7 @@ module.exports = function messages(socket, app) {
     socket.on('reorder tasks', function(newTaskOrder){
       checkMe(this, ' attempted to reorder the tasks', function success() 
       {
-        var client = db();
-        newTaskOrder.order.forEach(function (arrayVal, arrayLocation)
-        {
-          client.query("UPDATE tasks SET priority = $1 WHERE task_id = $2", [arrayLocation,arrayVal]);
-        })
+        msg.updateTaskOrder(newTaskOrder);
         app.io.emit('reorder tasks', newTaskOrder);
       })
     });
