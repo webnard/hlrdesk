@@ -49,18 +49,8 @@
   
 })();
 
-window.HLRDESK.init.messages();
+window.HLRDESK.init.messages();//not sure this is the best way to load messages sockets
 
-function showMessage(){//not working because the javascript doesn't load for msg.js functions until it is loaded
+function showMessage(){
   $("#messageDisplay").show().one();
-  /*  colors = ['#FA191C', '#af2527' ]
-    var i = 0;
-    animate_loop = function() {
-            $('.fa-envelope').animate({color:colors[(i++)%colors.length]
-            }, 1000, function(){
-                        animate_loop();
-            });
-    }
-    animate_loop();//TODO this is a little hacky, get a regular animation working (not supported the way I am doing it)
-    */
   }

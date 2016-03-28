@@ -26,12 +26,4 @@ begin
         end if;
 return col_name;
 end;
-$$
-
-
---TODO's
---add a custom price option in the edit item menu?
---have check in window compute prices and add totals
---tests for prices
-
-
+$$                                          

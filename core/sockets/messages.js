@@ -77,7 +77,6 @@ module.exports = function messages(socket, app) {
       checkMe(this, ' tried to read messages', function success() 
       {
         var client = db();
-        //TODO: move, send this when page is reloaded to only that user
         client.transaction(function*(t) {
           var query = "SELECT CASE WHEN (SELECT posted FROM messages WHERE username != $1 ORDER BY posted DESC LIMIT 1) > (SELECT last_login FROM users WHERE netid = $1) THEN TRUE ELSE FALSE END return_column";
           var result = yield t.queryOne(query, [that.user]);
