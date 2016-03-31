@@ -36,17 +36,17 @@
   var href = location.pathname + location.search;
   var title = document.title;
   history.pushState({href: href, title: title}, title, href);
-  
+
   $('document').ready(function(){checkForUnread();});
   var socket = window.io();
   function checkForUnread(){
     socket.emit('unread message', {token: window.HLRDESK.token});
   };
-    
+
   socket.on('unread message', function(){
     $("#messageDisplay").show().one();
   });
-  
+
 })();
 
 window.HLRDESK.init.messages();//not sure this is the best way to load messages sockets
