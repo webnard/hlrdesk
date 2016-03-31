@@ -59,11 +59,9 @@ module.exports = {
     var is_user = yield check_id(obj.username);
     if (is_user){
       client.query("UPDATE users set email = $2, last_login = current_timestamp  WHERE netid = $1;", [obj.username, obj.attributes.emailAddress]);
-      //console.log("Test Me!");//TODO write test for this
     }
     else{
       client.query("INSERT INTO users(netid, email, last_login) VALUES ($1, $2, $3, current_timestamp);", [obj.username, obj.attributes.emailAddress]);
-      //console.log("Test Me Too!");//TODO: still need to test this
     }
   }),
 
