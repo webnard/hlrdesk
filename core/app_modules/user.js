@@ -17,8 +17,7 @@ var user = {
 
     var details_whitelist = [
       'email',
-      'telephone',
-      'name'
+      'telephone'
     ];
     var client = db();
     var updateQuery = '';

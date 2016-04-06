@@ -295,13 +295,19 @@ app.use(_.post("/employees",function *(){
 app.use(_.get("/employees",function *(){
   var isAdmin = yield auth.isAdmin(this.session.user);
   var client = db();
-  var allAdmins = yield client.query("SELECT netid, email, name FROM users WHERE admin = TRUE;");
+  var allAdmins = yield client.query("SELECT netid, email FROM users WHERE admin = TRUE;");
+  var names = []
+  for(var x = 0; x < allAdmins.rows.length; x++){
+    var db_id = (allAdmins.rows[x]).netid;
+    var data = yield user.ldapInfo(db_id);
+    names.push(data[db_id].cn);
+  }
   if (isAdmin){
     if (this.request.query.status == "false"){
-      yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf, allAdminsFromDB: allAdmins, alert : true, to_mk : this.request.query.toMk});
+      yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf, allAdminsFromDB: allAdmins, alert : true, to_mk : this.request.query.toMk, namesFromDB : names});
     }
     else{
-      yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf, allAdminsFromDB: allAdmins, alert : false, to_mk : undefined});
+      yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf, allAdminsFromDB: allAdmins, alert : false, to_mk : undefined, namesFromDB : names});
     }
   }
   else{
