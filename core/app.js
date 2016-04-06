@@ -296,12 +296,9 @@ app.use(_.get("/employees",function *(){
   var isAdmin = yield auth.isAdmin(this.session.user);
   var client = db();
   var allAdmins = yield client.query("SELECT netid, email FROM users WHERE admin = TRUE;");
-  var names = []
-  for(var x = 0; x < allAdmins.rows.length; x++){
-    var db_id = (allAdmins.rows[x]).netid;
-    var data = yield user.ldapInfo(db_id);
-    names.push(data[db_id].cn);
-  }
+  var netids = allAdmins.rows.map(function (a){return a.netid});
+  var ldapDetails = yield user.ldapInfo.apply(null, netids);
+  var names = Object.keys(ldapDetails).map(function(k){return ldapDetails[k].cn});
   if (isAdmin){
     if (this.request.query.status == "false"){
       yield this.render('mkadmin', {layout: this.USE_LAYOUT, csrf: this.csrf, allAdminsFromDB: allAdmins, alert : true, to_mk : this.request.query.toMk, namesFromDB : names});

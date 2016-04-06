@@ -7,8 +7,7 @@
   </form>
 
   <ul id="admin_list">
-    <% var x = 0 %>
-    <% allAdminsFromDB.rows.forEach(function(admin) { %>
+    <% allAdminsFromDB.rows.forEach(function(admin, x) { %>
       <li><form method=post>
         <%= admin.netid %>
         <%= namesFromDB[x] %>
@@ -17,7 +16,6 @@
         <input type='hidden' value='remove' name='action'>
         <input type='hidden' id = 'csrf' value='<%=csrf%>' name='csrf'>
       </form></li>
-      <% x++ %>
     <% }); %>
   </ul>
 </section>
