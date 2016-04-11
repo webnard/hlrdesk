@@ -31,13 +31,13 @@ module.exports = function editCatalog(socket, app) {
 
     socket.on('deleteItem', function(delInfo)
     {
-      var errMessage = ' attempted to get delete item ' + delInfo.callNum;
+      var errMessage = ' attempted to get delete item ' + delInfo.origCall;
       var that = this;
       checkMe(this, errMessage, function success()
       {
         var client = db();
-        client.query("DELETE FROM inventory WHERE call = $1;", [delInfo.callNum]);
-        var del = "Item ["+ delInfo.callNum + "] was deleted";
+        client.query("DELETE FROM inventory WHERE call = $1;", [delInfo.origCall]);
+        var del = "Item ["+ delInfo.origCall + "] was deleted";
         client.query("INSERT INTO item_history (call_number, type, who, date_changed, notes) VALUES ($1, 'Delete Item', $2, CURRENT_TIMESTAMP, $3) ",
         [delInfo.origCall, that.user, del ])
       })
