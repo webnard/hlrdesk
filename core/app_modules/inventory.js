@@ -219,6 +219,8 @@ inventory.check_in = co.wrap(function*(call, patron, employee) {
   var result = yield client.query(query, [call, patron, employee]);
 
   // TODO: record this transaction in the database
+  var notes ='Item checked in by ' + employee;
+  yield client.nonQuery("INSERT INTO item_history (call_number, type, who, date_changed, notes) VALUES ($1, 'Check In', $2, CURRENT_TIMESTAMP, $3) ", [call, patron, notes ])
 
   return yield Promise.resolve(true);
 });
