@@ -1,11 +1,16 @@
 window.HLRDESK.init.messages = function() {
   var socket = window.io();
+  var taskName =false;
   $(".message-add").click(newMsg);
   $(".task-add").click(newTask);
   $(".message-delete").click(function(){
     delMsg($(this).data('message-id'));
-  });
-  //var newTaskOrder;
+  }).one();
+  $("#messagePage").click(function(){
+    $("#messageDisplay").hide();
+    socket.emit('message read', {token: window.HLRDESK.token});
+  }).one();
+  var current_message;//checking against the socket that comes in, should redo with broadcast
   //Lets you sort the list
   $(function(event, ui) {
     $("#task_sort" ).sortable({
@@ -59,18 +64,18 @@ window.HLRDESK.init.messages = function() {
     document.getElementById("add_message").innerHTML = msg_form;
     $('#m_form').submit(function(){
       var msg = { "title":$('#m_title').val(), "body":$('#m_body').val(), token: window.HLRDESK.token }
+      current_message = msg.title;
       socket.emit('write message', msg);
       document.getElementById("add_message").innerHTML = '';
       return false;
     });
   };
   socket.on('write message', function(msg){
-    //console.log("Title = " + msg.title + " Body = " + msg.body);
-    //var new_msg = "<div class='message' id='-1'
-    //add all of the properties here + 
-
-    //$('#all_m').append($("<div class='message'></div>").text(msg.title));
-    //$('#all_m').append($("<div class='message'>msg.title</div>").text(msg.title, msg.body));
+    if (current_message == msg.title){
+      $("#messageDisplay").hide();}
+    else {
+      $("#messageDisplay").show();
+    }
   });
 
   //Delete Message
@@ -97,6 +102,7 @@ window.HLRDESK.init.messages = function() {
     $('#t_form').submit(function(evt){
       evt.preventDefault();
       var write_task = {"text":$('#new_task').val(), "task_id":-1 , token: window.HLRDESK.token };
+      taskName = $('#new_task').val();
       socket.emit('write task', write_task);
       document.getElementById("add_task").innerHTML = '';
     });
@@ -104,13 +110,13 @@ window.HLRDESK.init.messages = function() {
 
   //newTask
   socket.on('write task', function(task){
-    $('#task_sort').append($("<div class='projects' id='"+task.task_id+"'></div>").text(task.text));
+    if(!taskName)$('#task_sort').append($("<div class='projects' id='"+task.task_id+"'></div>").text(task.text));
   });
 
   //Delete Task
   socket.on('delete task', function(task){
     var del = document.getElementById(task.t_id);
-    del.parentNode.removeChild(del);    
+    del.parentNode.removeChild(del);
   });
 
   function delTask(del_task){
@@ -120,7 +126,7 @@ window.HLRDESK.init.messages = function() {
   socket.on('alertMessage', function(alertMsg){
     alert(alertMsg);
   });
-  
+
   //Reorder Tasks
   socket.on('reorder tasks', function(newTaskOrder){
     newTaskOrder.order.forEach(function (a,b){

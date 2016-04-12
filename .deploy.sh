@@ -13,6 +13,8 @@ case "$1" in
     cd core/db
     ./drop-db.sh
     cat *.sql | psql $DEVELOPMENT_POSTGRES_URI $DB
+    # TODO add migrations here, but then once verified add the alterations to the sql files
+    echo "Inserting migrations"
     cd -
     ;;
   staging)
