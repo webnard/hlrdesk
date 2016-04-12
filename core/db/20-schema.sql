@@ -191,4 +191,3 @@ CREATE TABLE checked_out (
 --
 -- PostgreSQL database dump complete
 --
-

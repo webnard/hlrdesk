@@ -7,9 +7,10 @@
   </form>
 
   <ul id="admin_list">
-    <% allAdminsFromDB.rows.forEach(function(admin) { %>
+    <% allAdminsFromDB.rows.forEach(function(admin, x) { %>
       <li><form method=post>
         <%= admin.netid %>
+        <%= namesFromDB[x] %>
         <button type='submit' class='redBtn' style='padding: 0.2em'>Remove</button>
         <input type='hidden' name='user' value="<%=admin.netid%>">
         <input type='hidden' value='remove' name='action'>
