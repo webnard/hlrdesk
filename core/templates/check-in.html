@@ -9,6 +9,7 @@
 <table id=checked-out-items class="checkIN tablesorter">
   <thead>
     <tr>
+      <th scope=col><i class="fa fa-sort"></i> Media Type</th>
       <th scope=col><i class="fa fa-sort"></i> Call Number</th>
       <th scope=col><i class="fa fa-sort"></i> Item</th>
       <th scope=col><i class="fa fa-sort"></i> Media Type</th>
@@ -30,6 +31,8 @@
         data-copy='<%= item.copy %>'
         class='<%= item.overdue? "overdue" : "" %>'
       >
+
+        <%if (item.media !== null) {%> <td><%= item.media %></td> <% } else { %> <td></td> <% } %>
         <td><%= item.call_number %></td>
         <td><%= item.name %></td>
         <td><%= item.media %></td>
