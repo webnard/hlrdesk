@@ -1,8 +1,8 @@
 window.HLRDESK.init.messages = function() {
   var socket = window.io();
   var taskName =false;
-  $(".message-add").click(newMsg).one();
-  $(".task-add").click(newTask).one();
+  $(".message-add").click(newMsg);
+  $(".task-add").click(newTask);
   $(".message-delete").click(function(){
     delMsg($(this).data('message-id'));
   }).one();
@@ -73,7 +73,7 @@ window.HLRDESK.init.messages = function() {
   socket.on('write message', function(msg){
     if (current_message == msg.title){
       $("#messageDisplay").hide();}
-    else {    
+    else {
       $("#messageDisplay").show();
     }
   });
@@ -110,13 +110,13 @@ window.HLRDESK.init.messages = function() {
 
   //newTask
   socket.on('write task', function(task){
-    if(!taskName)$('#task_sort').append($("<div class='projects' id='"+task.task_id+"'></div>").text(task.text)).one();
+    if(!taskName)$('#task_sort').append($("<div class='projects' id='"+task.task_id+"'></div>").text(task.text));
   });
 
   //Delete Task
   socket.on('delete task', function(task){
     var del = document.getElementById(task.t_id);
-    del.parentNode.removeChild(del);    
+    del.parentNode.removeChild(del);
   });
 
   function delTask(del_task){
@@ -126,7 +126,7 @@ window.HLRDESK.init.messages = function() {
   socket.on('alertMessage', function(alertMsg){
     alert(alertMsg);
   });
-  
+
   //Reorder Tasks
   socket.on('reorder tasks', function(newTaskOrder){
     newTaskOrder.order.forEach(function (a,b){
@@ -138,7 +138,5 @@ window.HLRDESK.init.messages = function() {
         document.getElementById('task_sort').appendChild(thing);
       }
     }});
-  }); 
+  });
 };
-
-

@@ -24,9 +24,26 @@ module.exports.deleteTask = co.wrap(function*(t_number){
   yield client.query("DELETE FROM tasks WHERE task = $1;", [t_number.text]);
 });
 
+module.exports.getTable = co.wrap(function*(table){//Try this out for getting a whole table
+  var client = db();
+  var q = "SELECT * FROM" + table;
+  yield client.query(q);
+});
+
 module.exports.getMessages = co.wrap(function*(){
   var client = db();
-  yield client.query("SELECT * FROM messages");
+  return yield client.query("SELECT * FROM messages");
+});
+
+module.exports.getTasks = co.wrap(function*(){
+  var client = db();
+  return yield client.query("SELECT * FROM tasks");
+});
+
+module.exports.getItemFromTableWhere = co.wrap(function*(table,row, value){
+  var client = db();
+  var q = "SELECT * FROM "+ table +" WHERE " + row + " = " + value;
+  return yield client.query(q);;
 });
 
 module.exports.updateTaskOrder = co.wrap(function*(newTaskOrder){
@@ -36,7 +53,3 @@ module.exports.updateTaskOrder = co.wrap(function*(newTaskOrder){
     client.query("UPDATE tasks SET priority = $1 WHERE task_id = $2", [arrayLocation,arrayVal]);
   })
 });
-
-
-
-
