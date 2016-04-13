@@ -26,6 +26,7 @@ update users set admin='TRUE' where netid = 'luke1298';
 update users set admin='TRUE' where netid = 'dahlal';
 update users set admin='TRUE' where netid = 'prabbit';
 update users set admin='TRUE' where netid = 'trevren1';
+update users set telephone='515-555-5255' where netid = 'trevren1';
 update users set admin='TRUE' where netid = 'dylanrh';
 
 update users set telephone = '801-123-4567' where netid = 'csamuels';
