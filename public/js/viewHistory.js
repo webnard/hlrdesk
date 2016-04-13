@@ -4,6 +4,7 @@ window.HLRDESK.init.viewHistory = function() {
 
   socket.on('getHistory', function(result)
   {
+    $('#hist_table').html("<tr class=list ></tr>");
     for (var i = 0; i < result.rows.length; i++)
     {
       if (i==0)
@@ -32,7 +33,7 @@ window.HLRDESK.init.viewHistory = function() {
   window.HLRDESK.plugins.search({
     search: '#editCatalog-search',
     results: '#editCatalog-search-results',
-    
+
     clickCallback: function()
     {
       var item = this;
