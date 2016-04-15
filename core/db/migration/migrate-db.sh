@@ -1,10 +1,10 @@
 #! /bin/sh
 
 tput setaf 6
-echo "\nAdding Database Migrations"
+echo "Adding Database Migrations"
 tput setaf 5
 
-for i in core/db/migration/*.sql; do 
+for i in core/db/migration/*.sql; do
   echo "Adding file: $i"
   psql -f "$i"
 done
@@ -18,4 +18,5 @@ psql -c "select addcol('public','users', 'last_login', 'timestamp', 'current_tim
 psql -c "select addcol('public','media', 'fine_amount', 'real', '0.50');"
 
 tput setaf 6
-echo "Database Migrations Added\033[0m\n"
+echo "Database Migrations Added"
+tput setaf 7
