@@ -36,6 +36,7 @@ window.HLRDESK.init.editCatalog = function() {
     function updateDatabase(){
       var newCall = $('#callNumber').val();
       var title = $('#title').val();
+      var icn = $('#icn').val()
       var media = $('#media').val();
       var languages = $('#language').val();
       var quantity = parseInt($('#quantity').val(),10);
@@ -49,6 +50,7 @@ window.HLRDESK.init.editCatalog = function() {
           call: origCall,
           newCall,
           title,
+          icn,
           media,
           languages,
           quantity,
@@ -80,6 +82,9 @@ window.HLRDESK.init.editCatalog = function() {
     $('#title').val(result.title);
     $('#title').attr('placeholder', result.title);
 
+    $('#icn').val(result.icn);
+    $('#icn').attr('placeholder', result.icn);
+    
     $('#checkoutLength').val(result.checkout_period);
     $('#checkoutLength').attr('placeholder', result.checkout_period);
 
