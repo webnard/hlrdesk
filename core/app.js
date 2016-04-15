@@ -183,7 +183,11 @@ app.use(_.get("/calendar", function *(next) {
 
 app.use(_.get("/signin", function *(next){
   ticket=this.request.query.ticket;
-  var obj = yield auth.cas_login(ticket, SERVICE);
+  try {
+    var obj = yield auth.cas_login(ticket, SERVICE);
+  } catch (e){
+    this.redirect('https://cas.byu.edu/cas/login?service=' + SERVICE);
+  }
   auth.login(this, obj);
   if (yield auth.isAdmin(this.session.user)){
     this.redirect('/');
