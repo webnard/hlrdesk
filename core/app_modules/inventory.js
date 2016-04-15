@@ -252,7 +252,7 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
 
   var client = db();
   try{
-    client.nonQuery('BEGIN TRANSACTION');
+    yield client.nonQuery('BEGIN TRANSACTION');
     for(var i = 0; i<items.length; i++) {
       var item = items[i];
       var due = item.due;
@@ -271,7 +271,7 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
 
       yield client.nonQuery(q , [call, copy, patron, employee, due]);
     };
-    client.nonQuery('COMMIT');
+    yield client.nonQuery('COMMIT');
   }catch(e) {
     client.nonQuery('ROLLBACK');
     throw e;
