@@ -15,7 +15,8 @@ echo "Implementing Migrations"
 #Note: If this becomes very long, may need to make individual files for readability
 
 psql -c "select addcol('public','users', 'last_login', 'timestamp', 'current_timestamp');"
-psql -c "select addcol('public','media', 'fine_amount', 'real', '0.50', 'icn');"
+psql -c "select addcol('public','media', 'fine_amount', 'real', '0.50');"
+psql -c "select addcol('public','inventory', 'icn', '' )"
 
 tput setaf 6
 echo "Database Migrations Added\033[0m\n"
