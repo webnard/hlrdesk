@@ -1,6 +1,18 @@
 <section id=check-out><!--need to change this-->
   <form id=check-out-form class=check-out-form>
     <label class=check-out-main-label for=editCatalog-search>Enter an item or call number</label>
+    <select class="check-out-language">
+      <option value="" disabled selected>Filter By Specific Language</option>
+      <% languages.forEach(function(langs) { %>
+        <option value="<%= langs.name %>"><%= langs.name %></option>
+        <% }); %>
+    </select>
+    <select class="check-out-media">
+      <option value="" disabled selected>Filter By Specific Media</option>
+      <% media.forEach(function(medium) { %>
+        <option value="<%= medium %>"><%= medium %></option>
+        <% }); %>
+    </select>
     <input id=editCatalog-search class=check-out-search autofocus incremental name=search type=search placeholder=" The Rock - Starring Nicholas Cage, NOT THE BEES!, ERS-ELI-F14">
   </form>
   <button id=newItem class="mainBtn">Add Item</button>

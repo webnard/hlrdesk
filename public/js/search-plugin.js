@@ -147,9 +147,9 @@ window.HLRDESK.plugins.search = function(parameters) {
     var evt = evt || this;
     var target = evt.target || evt.srcElement || evt.originalTarget;
     var text = target.value;
-    var language = document.getElementById('check-out-language').value;
+    var language = document.getElementsByClassName('check-out-language')[0].value;
     language = language === '' ? ' AND (l.name LIKE(\'%\')OR l.name IS null) ' : ' AND (l.name like(\'%' + language + '%\')) '
-    var media = document.getElementById('check-out-media').value;
+    var media = document.getElementsByClassName('check-out-media')[0].value;
     media = media === '' ? ' AND (m.medium LIKE(\'%\')OR m.medium IS null) ' : ' AND (m.medium like(\'%' + media + '%\')) '
     if(text === '') {
       clearResults();
