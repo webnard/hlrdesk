@@ -95,7 +95,7 @@ window.HLRDESK.plugins.search = function(parameters) {
     }
     return li;
   }
-  
+
   function populateResults(items) {
     clearResults();
     var fragment = document.createDocumentFragment();
@@ -137,22 +137,28 @@ window.HLRDESK.plugins.search = function(parameters) {
     results.appendChild(fragment);
   }
 
-  
+
   function clearResults() {
     results.innerHTML='';
     resultsCount.innerText = '';
   };
-  
+
   function handleSearchEvt(evt) {
     var evt = evt || this;
     var target = evt.target || evt.srcElement || evt.originalTarget;
     var text = target.value;
+    var language = document.getElementById('check-out-language').value;
+    language = language === '' ? ' AND (l.name LIKE(\'%\')OR l.name IS null) ' : ' AND (l.name like(\'%' + language + '%\')) '
+    var media = document.getElementById('check-out-media').value;
+    media = media === '' ? ' AND (m.medium LIKE(\'%\')OR m.medium IS null) ' : ' AND (m.medium like(\'%' + media + '%\')) '
     if(text === '') {
       clearResults();
       return;
     }
     socket.emit('inv.search', {
       'text': text,
+      'language': language,
+      'media': media,
       token: window.HLRDESK.token
     });
   }
