@@ -37,6 +37,12 @@ if(ENV.NODE_TEST === 'true') {
   // e.g., /logmein?as=prabbit
   // see tests/sessions/* for available users
   require('./app_modules/mock-login')(app);
+  var util = require('util');
+  var log_file = fs.createWriteStream(path.join(__dirname, '/../', 'debug.log'), {flags : 'w'});
+  log_file.write(new Date() + '\n');
+  console.error = function(d) { //
+    log_file.write(util.format(d) + '\n\n');
+  };
 }
 
 app.use(function*(next){
