@@ -48,9 +48,10 @@
   });
 
   socket.on('expired token', function(service){
-    alert('Your session has expired. Please log in again.');
-    window.location.replace('https://cas.byu.edu/cas/logout');
-    window.location.replace('https://cas.byu.edu/cas/login?service=' + service);
+    window.HLRDESK.alert.error('Your session has expired. Please log in again.');
+    window.setTimeout(function(){
+      window.location.href = '/logout';
+    }, 3000);
   });
 })();
 
