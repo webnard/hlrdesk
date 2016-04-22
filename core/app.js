@@ -38,7 +38,7 @@ if(ENV.NODE_TEST === 'true') {
   // see tests/sessions/* for available users
   require('./app_modules/mock-login')(app);
   var util = require('util');
-  var log_file = fs.createWriteStream(path.join(__dirname, '/../', 'debug.log'), {flags : 'w'});
+  var log_file = fs.createWriteStream(path.join(__dirname, '/../', 'debug.log'), {flags : 'a'});
   log_file.write(new Date() + '\n');
   console.error = function(d) { //
     log_file.write(util.format(d) + '\n\n');
