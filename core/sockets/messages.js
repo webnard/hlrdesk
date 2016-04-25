@@ -24,7 +24,7 @@ module.exports = function messages(socket, app) {
       checkMe(this, errMessage, function success()
       {
         msg.addMessage(_this.user, mesg.title, mesg.body);
-        _this.emit('write message', mesg);
+        app.io.emit('write message', mesg);
       })
     });
 
@@ -33,7 +33,7 @@ module.exports = function messages(socket, app) {
       var errMessage = ' attempted to delete message number ' + delMessage.message_number
       checkMe(this, errMessage, function success() {
         msg.deleteMessage(delMessage);
-        _this.emit('delete message', delMessage);
+        app.io.emit('delete message', delMessage);
       })
     });
 
@@ -42,7 +42,7 @@ module.exports = function messages(socket, app) {
       var errMessage = ' attempted to write task ' + task.text;
       checkMe(_this, errMessage, function success() {
         msg.addTask(_this.user, task.text);
-        _this.emit('write task', task);
+        app.io.emit('write task', task);
 
       })
     });
@@ -53,7 +53,7 @@ module.exports = function messages(socket, app) {
       checkMe(this, errMessage, function success()
       {
         msg.deleteTask(t_number);
-        _this.emit('delete task', t_number);
+        app.io.emit('delete task', t_number);
       });
     });
 
@@ -62,7 +62,7 @@ module.exports = function messages(socket, app) {
       checkMe(this, ' attempted to reorder the tasks', function success()
       {
         msg.updateTaskOrder(newTaskOrder);
-        _this.emit('reorder tasks', newTaskOrder);
+        app.io.emit('reorder tasks', newTaskOrder);
       })
     });
 
@@ -84,7 +84,7 @@ module.exports = function messages(socket, app) {
           var query = "SELECT CASE WHEN (SELECT posted FROM messages WHERE username != $1 ORDER BY posted DESC LIMIT 1) > (SELECT last_login FROM users WHERE netid = $1) THEN TRUE ELSE FALSE END return_column";
           var result = yield t.queryOne(query, [_this.user]);
           if (result.return_column == true) {
-            _this.emit('unread message');
+            app.io.emit('unread message');
           }
         }).catch(console.error);
       })
