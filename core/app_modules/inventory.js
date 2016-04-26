@@ -284,7 +284,7 @@ Object.defineProperty(inventory, 'checked_out', {
   get: co.wrap(function*() {
     var client = db();
     var query = 'SELECT c.due, c.attendant, c.netid as owner, c.copy, ' +
-                'c.extensions, i.notes,i.title as name, i.call, ' +
+                'c.extensions, i.notes,i.title as name, i.call, i.price, ' +
                 '( SELECT array_agg(l.name) as languages FROM languages l ' +
                 'JOIN languages_items li ON li.language_code = l.code AND ' +
                 'li.inventory_call = i.call ), ' +
