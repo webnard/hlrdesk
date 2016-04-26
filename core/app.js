@@ -325,6 +325,9 @@ socket.start(app);
 
 socket.use(function*(next){
   this.socket.user = yield auth.getUser(this.data.token);
+  if(!this.socket.user){
+    this.socket.emit('expired token', SERVICE);
+  }
   yield next;
 });
 
