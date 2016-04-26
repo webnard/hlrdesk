@@ -40,6 +40,7 @@ window.HLRDESK.init.editCatalog = function() {
       var languages = $('#language').val();
       var quantity = parseInt($('#quantity').val(),10);
       var checkout_period = parseInt($('#checkoutLength').val(),10);
+      var price = parseFloat($('#price').val());
       var is_reserve = document.getElementById('onReserve').checked;
       var on_hummedia = document.getElementById('HLROnline').checked;
       var is_duplicatable = document.getElementById('duplicatable').checked;
@@ -53,6 +54,7 @@ window.HLRDESK.init.editCatalog = function() {
           languages,
           quantity,
           checkout_period,
+          price,
           is_reserve,
           on_hummedia,
           is_duplicatable,
@@ -82,6 +84,9 @@ window.HLRDESK.init.editCatalog = function() {
 
     $('#checkoutLength').val(result.checkout_period);
     $('#checkoutLength').attr('placeholder', result.checkout_period);
+
+    $('#price').val(result.price);
+    $('#price').attr('placeholder', result.price);
 
     $('#onReserve').attr('checked', result.is_reserve);
 

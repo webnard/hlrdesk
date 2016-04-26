@@ -82,6 +82,7 @@ var upsert = co.wrap(function*(call, user, details, update) {
       'quantity',
       'title',
       'checkout_period',
+      'price',
       'is_reserve',
       'is_duplicatable',
       'on_hummedia',
