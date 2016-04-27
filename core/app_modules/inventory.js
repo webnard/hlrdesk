@@ -289,6 +289,9 @@ Object.defineProperty(inventory, 'checked_out', {
                 'li.inventory_call = i.call ), ' +
                 '( SELECT array_agg(m.code) as media FROM media m ' +
                 'JOIN media_items mi ON mi.medium = m.medium AND ' +
+                'mi.call = i.call ), ' +
+                '( SELECT array_agg(m.medium) as media_type FROM media m ' +
+                'JOIN media_items mi ON mi.medium = m.medium AND ' +
                 'mi.call = i.call ) ' +
                 'FROM checked_out c JOIN inventory i ON c.call = i.call;';
 
