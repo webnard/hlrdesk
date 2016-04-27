@@ -54,7 +54,6 @@ window.HLRDESK.init.editCatalog = function() {
           languages,
           quantity,
           checkout_period,
-          price,
           is_reserve,
           on_hummedia,
           is_duplicatable,

@@ -16,7 +16,6 @@ echo "Implementing Migrations"
 
 psql -c "select addcol('public','users', 'last_login', 'timestamp', 'current_timestamp');"
 psql -c "select addcol('public','media', 'fine_amount', 'real', '0.50');"
-psql -c "select addcol('public','inventory', 'price', 'money', '1.00' );"
 
 tput setaf 6
 echo "Database Migrations Added\033[0m\n"

@@ -125,7 +125,6 @@ CREATE TABLE inventory (
   quantity integer DEFAULT 1 NOT NULL,
   title character varying(255),
   checkout_period int default 1, --in days
-  price money default 1.00,
   is_reserve BOOLEAN DEFAULT FALSE, -- these are for items left by professors for us to check out
   is_duplicatable BOOLEAN DEFAULT FALSE,
   on_hummedia BOOLEAN DEFAULT FALSE,
@@ -151,7 +150,8 @@ CREATE TABLE languages (
 );
 
 CREATE TABLE media (
-  medium character varying(150) NOT NULL PRIMARY KEY
+  medium character varying(150) NOT NULL PRIMARY KEY,
+  fine_amount real DEFAULT 0.50
 );
 
 CREATE TABLE media_items (

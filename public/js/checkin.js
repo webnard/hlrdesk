@@ -28,7 +28,7 @@ window.HLRDESK.init.checkin = function() {
       if ($(this).data('overdue')) {
         var due = new Date($(this).data('due'));
         var diffDays = Math.round((Math.abs(due - new Date())) / (1000 * 3600 * 24));
-        var priceOwed = diffDays * parseFloat(($(this).data('price')).replace('$',''));
+        var priceOwed = diffDays * ($(this).data('price'));
         HLRDESK.alert.notice('This item is ' + diffDays + ' days overdue. You should charge a payment of $' + priceOwed.toFixed(2))
       }
       socket.emit('checkin event', {

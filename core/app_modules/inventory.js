@@ -82,7 +82,6 @@ var upsert = co.wrap(function*(call, user, details, update) {
       'quantity',
       'title',
       'checkout_period',
-      'price',
       'is_reserve',
       'is_duplicatable',
       'on_hummedia',
@@ -284,10 +283,13 @@ Object.defineProperty(inventory, 'checked_out', {
   get: co.wrap(function*() {
     var client = db();
     var query = 'SELECT c.due, c.attendant, c.netid as owner, c.copy, ' +
-                'c.extensions, i.notes,i.title as name, i.call, i.price, ' +
+                'c.extensions, i.notes,i.title as name, i.call, ' +
                 '( SELECT array_agg(l.name) as languages FROM languages l ' +
                 'JOIN languages_items li ON li.language_code = l.code AND ' +
                 'li.inventory_call = i.call ), ' +
+                '( SELECT array_agg(m.fine_amount) as fine FROM media m ' +
+                'JOIN media_items mi ON mi.medium = m.medium AND ' +
+                'mi.call = i.call ), ' +
                 '( SELECT array_agg(m.medium) as media FROM media_items m ' +
                 'WHERE m.call = i.call ) ' +
                 'FROM checked_out c JOIN inventory i ON c.call = i.call;';
