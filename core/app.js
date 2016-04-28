@@ -257,8 +257,7 @@ app.use(_.post("/employees",function *(){
   this.assertCSRF(body.csrf);
   if (body.action == "add") {
     try {
-      var to_mk=body.user;
-      var status = yield auth.mkadmin(this.session.user, to_mk, true);
+      var status = yield auth.mkadmin(this.session.user, body, true);
       if(!status){
         this.redirect('/employees?status='+status+'&toMk='+to_mk);
       }
