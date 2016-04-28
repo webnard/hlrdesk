@@ -16,6 +16,12 @@ inventory.exists = co.wrap(function*(call) {
   return yield Promise.resolve(result.rows.length > 0);
 });
 
+inventory.download = co.wrap(function*(){
+  var client = db();
+  var results = yield client.query("SELECT * FROM inventory;");
+  return yield Promise.resolve(results);
+});
+
 inventory.get = co.wrap(function*(call) {
   var client = db();
   var query = 'SELECT inv.*,' +

@@ -5,6 +5,7 @@ window.HLRDESK.init.editCatalog = function() {
     var type;
 
     document.getElementById('newItem').addEventListener('click', addItem);
+    document.getElementById('downloadItems').addEventListener('click', downloadItems);
 
     function reserveAlert(){
       if (document.getElementById('onReserve').checked == true)
@@ -27,6 +28,9 @@ window.HLRDESK.init.editCatalog = function() {
       document.getElementById('onReserve').addEventListener('change', reserveAlert);
       document.getElementById('delete-item').addEventListener('click', deleteItem);
       document.getElementById('save-item').addEventListener('click', updateDatabase);
+    }
+    function downloadItems(){
+      socket.emit('downloadItems', {token: window.HLRDESK.token});
     }
     function deleteItem()
     {
