@@ -98,22 +98,22 @@ window.HLRDESK.init.editCatalog = function() {
       var date = result.date_added.substring(0,10);
     }
 
-    $('#dateAdded').val(date);
+    $('#dateAdded').text(date);
 
-    $('#editedBy').val(result.edited_by);
+    $('#editedBy').text(result.edited_by);
 
-    if ($('#editedBy').val())
+    if ($('#editedBy').text())
     {
       if(result.date_edited)
       {
         var edited = result.date_edited.substring(0,10);
         $('#dateEdited').attr('type', 'date');
-        $('#dateEdited').val(edited);
+        $('#dateEdited').text(edited);
       }
     }
     else{
-      $('#dateEdited').val(" N/A");
-      $('#editedBy').val(" N/A");
+      $('#dateEdited').text(" N/A");
+      $('#editedBy').text(" N/A");
      }
 
     $('#notes').val(result.notes);
