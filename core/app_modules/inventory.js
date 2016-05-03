@@ -288,6 +288,9 @@ Object.defineProperty(inventory, 'checked_out', {
                 '( SELECT array_agg(l.name) as languages FROM languages l ' +
                 'JOIN languages_items li ON li.language_code = l.code AND ' +
                 'li.inventory_call = i.call ), ' +
+                '( SELECT array_agg(m.fine_amount) as fine FROM media m ' +
+                'JOIN media_items mi ON mi.medium = m.medium AND ' +
+                'mi.call = i.call ), ' +
                 '( SELECT array_agg(m.medium) as media FROM media_items m ' +
                 'WHERE m.call = i.call ) ' +
                 'FROM checked_out c JOIN inventory i ON c.call = i.call;';
