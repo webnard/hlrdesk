@@ -81,6 +81,7 @@ var upsert = co.wrap(function*(call, user, details, update) {
       'call',
       'quantity',
       'title',
+      'icn',
       'checkout_period',
       'is_reserve',
       'is_duplicatable',
@@ -252,7 +253,7 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
 
   var client = db();
   try{
-    client.nonQuery('BEGIN TRANSACTION');
+    yield client.nonQuery('BEGIN TRANSACTION');
     for(var i = 0; i<items.length; i++) {
       var item = items[i];
       var due = item.due;
@@ -271,7 +272,7 @@ inventory.check_out = co.wrap(function*(items, patron, employee) {
 
       yield client.nonQuery(q , [call, copy, patron, employee, due]);
     };
-    client.nonQuery('COMMIT');
+    yield client.nonQuery('COMMIT');
   }catch(e) {
     client.nonQuery('ROLLBACK');
     throw e;
@@ -291,6 +292,9 @@ Object.defineProperty(inventory, 'checked_out', {
                 'JOIN media_items mi ON mi.medium = m.medium AND ' +
                 'mi.call = i.call ), ' +
                 '( SELECT array_agg(m.medium) as media_type FROM media m ' +
+                'JOIN media_items mi ON mi.medium = m.medium AND ' +
+                'mi.call = i.call ), ' +
+                '( SELECT array_agg(m.fine_amount) as fine FROM media m ' +
                 'JOIN media_items mi ON mi.medium = m.medium AND ' +
                 'mi.call = i.call ) ' +
                 'FROM checked_out c JOIN inventory i ON c.call = i.call;';

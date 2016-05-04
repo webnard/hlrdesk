@@ -122,6 +122,7 @@ ALTER TABLE ONLY messages
 
 CREATE TABLE inventory (
   call character varying(32) NOT NULL,
+  icn character varying(16),
   quantity integer DEFAULT 1 NOT NULL,
   title character varying(255),
   checkout_period int default 1, --in days
@@ -151,7 +152,8 @@ CREATE TABLE languages (
 
 CREATE TABLE media (
   medium character varying(150) NOT NULL PRIMARY KEY,
-  code character varying(2)
+  code character varying(2),
+  fine_amount real DEFAULT 0.50
 );
 
 CREATE TABLE media_items (
