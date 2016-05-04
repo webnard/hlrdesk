@@ -1,14 +1,16 @@
 <section id=check-out>
   <form id=check-out-form class=check-out-form>
     <label class=check-out-main-label for=check-out-search>Enter an item or call number</label>
-    <select class="check-out-language">
+    <select id="check-out-language" class="check-out-language">
       <option value="" disabled selected>Filter By Specific Language</option>
+      <option value="">All</option>
       <% languages.forEach(function(lang) { %>
         <option value="<%= lang.name %>"><%= lang.name %></option>
         <% }); %>
     </select>
-    <select class="check-out-media">
+    <select id="check-out-media" class="check-out-media">
       <option value="" disabled selected>Filter By Specific Media</option>
+      <option value="">All</option>
       <% media.forEach(function(medium) { %>
         <option value="<%= medium %>"><%= medium %></option>
         <% }); %>
