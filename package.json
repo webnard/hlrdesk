@@ -52,6 +52,7 @@
     "test": "./.run-tests.sh",
     "server": "node --harmony core/runserver.js",
     "start": "(export $(./.env.sh) && $(npm bin)/pm2 start core/runserver.js )",
+    "logs": "pm2 logs runserver",
     "cool-server": "nodemon --harmony core/runserver.js",
     "cool-start": "(export $(./.env.sh) && npm run cool-server)",
     "email-reminder": "(export $(./.env.sh) && node --harmony  bin/send-reminder-emails.js --reminder)",
