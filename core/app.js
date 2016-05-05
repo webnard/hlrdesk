@@ -30,7 +30,7 @@ if(ENV.HLRDESK_DEV) {
 
 process.on("uncaughtException", function(err) {
   email.serverCrash(err.message, err.stack);
-  process.exit(1);
+  throw err;
 });
 
 app.keys = ['TODO MAKE ME AN ENV VARIABLE', 'I SHOULD NOT BE HARDCODED', 'MY DOG HAS NO NOSE', 'HOW DOES HE SMELL?', 'AWFUL'];
