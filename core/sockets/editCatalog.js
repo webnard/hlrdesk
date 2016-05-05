@@ -1,8 +1,6 @@
 var auth = require('../app_modules/auth');
 var db = require('../app_modules/db');
 var inv = require('../app_modules/inventory');
-var fs = require('fs');
-var json2csv = require('json2csv');
 
 module.exports = function editCatalog(socket, app) {
 
@@ -65,19 +63,6 @@ module.exports = function editCatalog(socket, app) {
       inv.update(this.user, data.newCall, data).catch(function(e) {
         console.error(e);
         that.emit('alertMessage', 'There was an error updating the database.');
-      });
-    });
-
-    socket.on('downloadItems', function(data){
-      inv.download().then(function(results) {
-        var fields = Object.keys(results.rows[0]);
-        json2csv({ data: results.rows, fields: fields }, function(err, csv) {
-          if (err) console.log(err);
-          fs.writeFile('inventory.csv', csv, function(err) {
-            if (err) throw err;
-            console.log('file saved');
-          });
-        });
       });
     });
 
